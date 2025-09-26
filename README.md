@@ -1,4 +1,4 @@
-# 🎌 Frame Representation Hypothesis
+# 🎌 Frame Representation Hypothesis (TACL/EMNLP2025)
 
 > **Authors: [Pedro Valois](https://phvv.me/), [Lincon Souza](https://dblp.org/pid/196/6193.html), [Erica Kido Shimomoto](https://ericashimomoto.github.io), [Kazuhiro Fukui](https://www.cs.tsukuba.ac.jp/~kfukui/english/indexE.html)**
 
