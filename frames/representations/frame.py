@@ -257,6 +257,110 @@ class FrameUnembeddingRepresentation(LinearUnembeddingRepresentation):
         n = min(p.size(-1) for p in probe)
         return text, torch.cat([p[..., :n] for p in probe])
 
+    @torch.inference_mode()
+    def _generate_with_topk_multi_guide(
+        self,
+        input_text: Union[str, List[str]],
+        guides: list[Concept],
+        k: int = 2,
+        steps: int = 16,
+    ) -> List[str]:
+        """
+        Generate text with top-k guided approach.
+
+        Args:
+            input_text (Union[str, List[str]]): Input text for generation.
+            guides (list[Concept]): List of concepts to guide the generation.
+            k (int): Number of top candidates to consider.
+            steps (int): Number of generation steps.
+
+        Returns:
+            List[str]: Generated text.
+        """
+        input_text = self._prepare_input_text(input_text)
+        n = len(input_text)
+        DEVICE = guides[0].device
+
+        # inputs = self.model.make_input(input_text, padding=True)["input_ids"]
+
+        inputs = self.model.make_input(input_text, padding=True)
+        tokens = self._generate_candidates(inputs["input_ids"], k)[0].flatten(0, 1)
+
+        for _ in range(steps):
+            # notice this approach uses a single pass through the model
+            #  at the expense of having k times more candidates being processes.
+            #  The other option is to use double pass, but takes longer.
+            #  On larger models, our bottleneck is time, not memory,
+            #  so we choose this approach for now.
+            sequences, hidden_states = self._generate_candidates(tokens, k)
+
+            last_hs = hidden_states[-1].to(DEVICE)
+            last_hs_padded = torch.nn.functional.pad(last_hs, (0, 0, 0, len(guides[0]) - 1))
+            last_hs_frames = last_hs_padded.unfold(
+                -2, size=len(guides[0]), step=1
+            ).squeeze_(0)
+
+            for guide in guides:
+                projections = last_hs_frames * guide
+                max_probe = projections.cumsum(-2).reshape(n, k, -1).max(-2)
+
+            row_idx = np.arange(n)
+            col_idx = max_probe.indices[..., -1].cpu()
+            candidate_tokens = sequences.reshape(n, k, k, -1)
+            tokens = candidate_tokens[row_idx, col_idx].flatten(0, 1)
+
+            if self._is_generation_complete(tokens):
+                break
+
+        return self.model.decode(tokens[::k]), max_probe.values.cpu()
+
+    def generate_with_topk_multi_guide(
+        self,
+        input_text: Union[str, List[str]],
+        *args,
+        batch_size: int = 32,
+        **kwargs,
+    ) -> List[str]:
+        text, probe = [], []
+        for batch in tqdm(batchedlist(input_text, batch_size)):
+            batch_text, batch_probe = self._generate_with_topk_multi_guide(
+                batch, *args, **kwargs
+            )
+            text.extend(batch_text)
+            probe.append(batch_probe)
+
+        n = min(p.size(-1) for p in probe)
+        return text, torch.cat([p[..., :n] for p in probe])
+
+    def quick_generate_with_topk_multi_guide(
+        self,
+        sentences: list[str],
+        guides: list[tuple[str, str]],
+        min_lemmas_per_synset: int,
+        max_token_count: int,
+        *args,
+        **kwargs,
+    ) -> list[str]:
+        """
+        Quick generate text with top-k guided approach.
+
+        Args:
+            *args, **kwargs: Additional arguments for the generate method.
+
+        Returns:
+            list[str]: Generated text.
+        """
+        cargs = min_lemmas_per_synset, max_token_count
+
+        guides_concepts = []
+        for guide in guides:
+            concept_A = self.get_concept(guide[0], *cargs)
+            concept_B = self.get_concept(guide[1], *cargs) if len(guide) > 1 else None
+            guide_concept = concept_A - concept_B if concept_B else concept_A
+            guides_concepts.append(guide_concept)
+
+        return self.generate_with_topk_multi_guide(sentences, *args, guides=guides_concepts, **kwargs)
+
     def _prepare_input_text(self, input_text: Union[str, List[str]]) -> List[str]:
         """Prepare input text for generation."""
         return [input_text] if isinstance(input_text, str) else input_text
