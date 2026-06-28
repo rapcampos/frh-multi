@@ -258,30 +258,147 @@ class FrameUnembeddingRepresentation(LinearUnembeddingRepresentation):
         return text, torch.cat([p[..., :n] for p in probe])
 
     @torch.inference_mode()
+    def _generate_with_topk_cascade_guide(
+        self,
+        input_text: Union[str, List[str]],
+        c1: Concept,
+        c2: Concept,
+        k: int = 2,
+        steps: int = 16,
+    ) -> tuple:
+        input_text = self._prepare_input_text(input_text)
+        n = len(input_text)
+
+        inputs = self.model.make_input(input_text, padding=True)
+        tokens = self._generate_candidates(inputs["input_ids"], k)[0].flatten(0, 1)
+
+        for _ in range(steps):
+            sequences, hidden_states = self._generate_candidates(tokens, k)
+
+            last_hs = hidden_states[-1].to(c1.device)
+            last_hs_padded = torch.nn.functional.pad(last_hs, (0, 0, 0, len(c1) - 1))
+            last_hs_frames = last_hs_padded.unfold(-2, size=len(c1), step=1).squeeze_(0)
+            projections = last_hs_frames * c1
+
+            max_probe = projections.cumsum(-2).reshape(n, k, -1).max(-2)
+
+            row_idx = np.arange(n)
+            col_idx = max_probe.indices[..., -1].cpu()
+            candidate_tokens = sequences.reshape(n, k, k, -1)
+            tokens = candidate_tokens[row_idx, col_idx].flatten(0, 1)
+
+            if self._is_generation_complete(tokens):
+                break
+
+        # Score all k surviving beams against c2; pick best per input.
+        _, hidden_states_c2 = self._generate_candidates(tokens, 1)
+        last_hs_c2 = hidden_states_c2[-1].to(c2.device)
+        last_hs_padded_c2 = torch.nn.functional.pad(last_hs_c2, (0, 0, 0, len(c2) - 1))
+        last_hs_frames_c2 = last_hs_padded_c2.unfold(-2, size=len(c2), step=1).squeeze_(0)
+        c2_projections = last_hs_frames_c2 * c2
+
+        c2_probe = c2_projections.cumsum(-2).reshape(n, k, -1)
+        best_beams = c2_probe[..., -1].argmax(-1).cpu()
+
+        best_tokens = tokens.reshape(n, k, -1)[np.arange(n), best_beams]
+        c2_max_probe = c2_probe[np.arange(n), best_beams]
+
+        return self.model.decode(best_tokens), c2_max_probe.cpu()
+
+    @torch.inference_mode()
+    def _generate_with_topk_cascade_guide_v1(
+        self,
+        input_text: Union[str, List[str]],
+        c1: Concept,
+        c2: Concept,
+        k: int = 2,
+        steps: int = 16,
+    ) -> tuple[List[str], torch.Tensor]:
+        """
+        Generate text guided by c1 at each beam-selection step, then return the
+        surviving beam most aligned to c2.
+
+        At every step the k beams most aligned to c1 are kept (same logic as
+        _generate_with_topk_guide). After generation, the k surviving beams are
+        re-scored by c2 and the single best is returned.
+
+        Args:
+            input_text: Input text for generation.
+            c1: Primary concept that drives beam selection during generation.
+            c2: Secondary concept used to pick the final output from the k beams.
+            k: Number of beams to maintain throughout generation.
+            steps: Maximum number of generation steps.
+
+        Returns:
+            tuple of (generated_texts, c2_probe) where generated_texts has n entries
+            (one per input) and c2_probe mirrors the probe tensor of
+            generate_with_topk_guide.
+        """
+        input_text = self._prepare_input_text(input_text)
+        n = len(input_text)
+
+        inputs = self.model.make_input(input_text, padding=True)
+        tokens = self._generate_candidates(inputs["input_ids"], k)[0].flatten(0, 1)
+
+        for _ in range(steps):
+            sequences, hidden_states = self._generate_candidates(tokens, k)
+
+            last_hs = hidden_states[-1].to(c1.device)
+            last_hs_padded = torch.nn.functional.pad(last_hs, (0, 0, 0, len(c1) - 1))
+            last_hs_frames = last_hs_padded.unfold(-2, size=len(c1), step=1).squeeze_(0)
+            projections = last_hs_frames * c1
+
+            max_probe = projections.cumsum(-2).reshape(n, k, -1).max(-2)
+
+            row_idx = np.arange(n)
+            col_idx = max_probe.indices[..., -1].cpu()
+            candidate_tokens = sequences.reshape(n, k, k, -1)
+            tokens = candidate_tokens[row_idx, col_idx].flatten(0, 1)
+
+            if self._is_generation_complete(tokens):
+                break
+
+        # Score surviving k beams by c2, pick the single best per input
+        c2_proj = self.project(self.model.decode(tokens), c2)
+        c2_cumsum = c2_proj.cumsum(-2).reshape(n, k, -1)
+        best_c2 = c2_cumsum[..., -1].argmax(-1).cpu()
+
+        row_idx = np.arange(n)
+        best_tokens = tokens.reshape(n, k, -1)[row_idx, best_c2]
+        c2_probe_vals = c2_cumsum[row_idx, best_c2]
+
+        return self.model.decode(best_tokens), c2_probe_vals.cpu()
+
+    def generate_with_topk_cascade_guide(
+        self,
+        input_text: Union[str, List[str]],
+        *args,
+        batch_size: int = 32,
+        **kwargs,
+    ) -> tuple:
+        text, probe = [], []
+        for batch in tqdm(batchedlist(input_text, batch_size)):
+            batch_text, batch_probe = self._generate_with_topk_cascade_guide(
+                batch, *args, **kwargs
+            )
+            text.extend(batch_text)
+            probe.append(batch_probe)
+
+        n = min(p.size(-1) for p in probe)
+        return text, torch.cat([p[..., :n] for p in probe])
+
+    @torch.inference_mode()
     def _generate_with_topk_multi_guide(
         self,
         input_text: Union[str, List[str]],
         guides: list[Concept],
+        weights: list[float] | None = None,
         k: int = 2,
         steps: int = 16,
-    ) -> List[str]:
-        """
-        Generate text with top-k guided approach.
-
-        Args:
-            input_text (Union[str, List[str]]): Input text for generation.
-            guides (list[Concept]): List of concepts to guide the generation.
-            k (int): Number of top candidates to consider.
-            steps (int): Number of generation steps.
-
-        Returns:
-            List[str]: Generated text.
-        """
+    ) -> tuple:
         input_text = self._prepare_input_text(input_text)
         n = len(input_text)
-        DEVICE = guides[0].device
-
-        # inputs = self.model.make_input(input_text, padding=True)["input_ids"]
+        weights = weights if weights is not None else [1.0 / len(guides)] * len(guides)
 
         inputs = self.model.make_input(input_text, padding=True)
         tokens = self._generate_candidates(inputs["input_ids"], k)[0].flatten(0, 1)
@@ -294,15 +411,17 @@ class FrameUnembeddingRepresentation(LinearUnembeddingRepresentation):
             #  so we choose this approach for now.
             sequences, hidden_states = self._generate_candidates(tokens, k)
 
-            last_hs = hidden_states[-1].to(DEVICE)
-            last_hs_padded = torch.nn.functional.pad(last_hs, (0, 0, 0, len(guides[0]) - 1))
-            last_hs_frames = last_hs_padded.unfold(
-                -2, size=len(guides[0]), step=1
-            ).squeeze_(0)
+            projections = None
+            for w, guide in zip(weights, guides):
+                last_hs = hidden_states[-1].to(guide.device)
+                last_hs_padded = torch.nn.functional.pad(last_hs, (0, 0, 0, len(guide) - 1))
+                last_hs_frames = last_hs_padded.unfold(
+                    -2, size=len(guide), step=1
+                ).squeeze_(0)
+                p = last_hs_frames * guide
+                projections = w * p if projections is None else projections + w * p
 
-            for guide in guides:
-                projections = last_hs_frames * guide
-                max_probe = projections.cumsum(-2).reshape(n, k, -1).max(-2)
+            max_probe = projections.cumsum(-2).reshape(n, k, -1).max(-2)
 
             row_idx = np.arange(n)
             col_idx = max_probe.indices[..., -1].cpu()
