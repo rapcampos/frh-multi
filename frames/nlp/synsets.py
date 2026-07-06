@@ -46,7 +46,6 @@ class MultiLingualWordNetSynsets(BaseModel):
     padding: str = "max_length"
     truncation: bool = False
     max_length: int = 16 + 1
-    pad_to_max_length: bool = True
 
     language_codes: SupportedLanguages = SupportedLanguages.Default
 
@@ -138,7 +137,6 @@ class MultiLingualWordNetSynsets(BaseModel):
             padding=self.padding,
             truncation=self.truncation,
             max_length=self.max_length,
-            pad_to_max_length=self.pad_to_max_length,
             return_attention_mask=False,
         )["input_ids"]
 

@@ -1,6 +1,9 @@
 from __future__ import annotations
 
+import torch
+
 from ..linalg import Frame
+from ..linalg.orthogonalization import solve_procrustes
 
 
 class Concept(Frame):
@@ -32,6 +35,20 @@ class Concept(Frame):
     def name(self) -> str:
         """Get the name of the concept."""
         return self.synset
+
+    @classmethod
+    def average(cls, concepts: list[Concept]) -> Concept:
+        """Compute the Fréchet mean of a list of concepts on the Stiefel manifold.
+
+        Equivalent to solve_procrustes(F1 + F2 + ... + Fn): finds the single
+        frame geometrically closest to all inputs. All tensors must share the
+        same shape (n, d, k).
+        """
+        summed = torch.stack([c.tensor for c in concepts]).sum(0)
+        return cls(
+            synset=" | ".join(c.synset for c in concepts),
+            tensor=solve_procrustes(summed),
+        )
 
     def _find_synset_index(self, synset: str) -> int:
         """Find the index of a synset in the dataframe."""

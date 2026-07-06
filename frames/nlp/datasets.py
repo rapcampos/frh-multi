@@ -31,18 +31,14 @@ def load_multilingual_question_dataset(
     df_xquad_de = load_dataset("google/xquad", "xquad.de")["validation"].to_pandas()
     df_xquad_th = load_dataset("google/xquad", "xquad.th")["validation"].to_pandas()
     df_squad_it = load_dataset("crux82/squad_it")["train"].to_pandas()
-    df_mlqa_hi = load_dataset(
-        "facebook/mlqa", "mlqa-translate-train.hi", trust_remote_code=True
-    )["train"].to_pandas()
 
     # 2. Standardizes column names and adds language labels
     df_aya = df_aya[["inputs", "language"]].rename(columns={"inputs": "question"})
     df_xquad_de = df_xquad_de[["question"]].assign(language="German")
     df_xquad_th = df_xquad_th[["question"]].assign(language="Thai")
     df_squad_it = df_squad_it[["question"]].assign(language="Italian")
-    df_mlqa_hi = df_mlqa_hi[["question"]].assign(language="Hindi")
 
-    df = pd.concat([df_aya, df_xquad_de, df_xquad_th, df_squad_it, df_mlqa_hi])
+    df = pd.concat([df_aya, df_xquad_de, df_xquad_th, df_squad_it])
 
     # 3. Filters by specified languages if provided
     if languages_subset:

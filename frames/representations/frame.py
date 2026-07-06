@@ -387,6 +387,30 @@ class FrameUnembeddingRepresentation(LinearUnembeddingRepresentation):
         n = min(p.size(-1) for p in probe)
         return text, torch.cat([p[..., :n] for p in probe])
 
+    def quick_generate_with_topk_cascade_guide(
+        self,
+        sentences: list[str],
+        guides: list[tuple[str, str]],
+        min_lemmas_per_synset: int,
+        max_token_count: int,
+        *args,
+        **kwargs,
+    ) -> tuple[list[str], torch.Tensor]:
+        cargs = min_lemmas_per_synset, max_token_count
+
+        guide_concepts = []
+
+        for guide in guides:
+            concept_A = self.get_concept(guide[0], *cargs)
+            concept_B = self.get_concept(guide[1], *cargs) if len(guide) > 1 else None
+            guide_concept = concept_A - concept_B if concept_B else concept_A
+            guide_concepts.append(guide_concept)
+
+        return self.generate_with_topk_cascade_guide(
+            sentences, *args, c1=guide_concepts[0], c2=guide_concepts[1], **kwargs
+        )
+
+
     @torch.inference_mode()
     def _generate_with_topk_multi_guide(
         self,
@@ -411,9 +435,9 @@ class FrameUnembeddingRepresentation(LinearUnembeddingRepresentation):
             #  so we choose this approach for now.
             sequences, hidden_states = self._generate_candidates(tokens, k)
 
+            last_hs = hidden_states[-1].to(guides[0].device)
             projections = None
             for w, guide in zip(weights, guides):
-                last_hs = hidden_states[-1].to(guide.device)
                 last_hs_padded = torch.nn.functional.pad(last_hs, (0, 0, 0, len(guide) - 1))
                 last_hs_frames = last_hs_padded.unfold(
                     -2, size=len(guide), step=1
@@ -439,7 +463,7 @@ class FrameUnembeddingRepresentation(LinearUnembeddingRepresentation):
         *args,
         batch_size: int = 32,
         **kwargs,
-    ) -> List[str]:
+    ) -> tuple[list[str], torch.Tensor]:
         text, probe = [], []
         for batch in tqdm(batchedlist(input_text, batch_size)):
             batch_text, batch_probe = self._generate_with_topk_multi_guide(
@@ -459,16 +483,7 @@ class FrameUnembeddingRepresentation(LinearUnembeddingRepresentation):
         max_token_count: int,
         *args,
         **kwargs,
-    ) -> list[str]:
-        """
-        Quick generate text with top-k guided approach.
-
-        Args:
-            *args, **kwargs: Additional arguments for the generate method.
-
-        Returns:
-            list[str]: Generated text.
-        """
+    ) -> tuple[list[str], torch.Tensor]:
         cargs = min_lemmas_per_synset, max_token_count
 
         guides_concepts = []
@@ -479,6 +494,26 @@ class FrameUnembeddingRepresentation(LinearUnembeddingRepresentation):
             guides_concepts.append(guide_concept)
 
         return self.generate_with_topk_multi_guide(sentences, *args, guides=guides_concepts, **kwargs)
+
+    def quick_generate_with_topk_subspace_guide(
+        self,
+        sentences: list[str],
+        guides: list[tuple[str, str]],
+        min_lemmas_per_synset: int,
+        max_token_count: int,
+        *args,
+        **kwargs,
+    ) -> tuple[list[str], torch.Tensor]:
+        cargs = min_lemmas_per_synset, max_token_count
+
+        guide_concepts = []
+        for guide in guides:
+            concept_A = self.get_concept(guide[0], *cargs)
+            concept_B = self.get_concept(guide[1], *cargs) if len(guide) > 1 else None
+            guide_concepts.append(concept_A - concept_B if concept_B else concept_A)
+
+        averaged = Concept.average(guide_concepts)
+        return self.generate_with_topk_guide(sentences, *args, guide=averaged, **kwargs)
 
     def _prepare_input_text(self, input_text: Union[str, List[str]]) -> List[str]:
         """Prepare input text for generation."""
