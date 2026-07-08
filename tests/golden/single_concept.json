@@ -1,0 +1,119 @@
+{
+  "config": {
+    "model_id": "hugging-quants/Meta-Llama-3.1-8B-Instruct-AWQ-INT4",
+    "device_map": "cuda:0",
+    "torch_dtype": "float16",
+    "k": 3,
+    "steps": 16,
+    "min_lemmas_per_synset": 11,
+    "max_token_count": 3
+  },
+  "environment": {
+    "python": "3.11.15",
+    "torch": "2.7.1+cu126",
+    "transformers": "4.54.1",
+    "gpu": "NVIDIA RTX A5000"
+  },
+  "prompts": [
+    "<|start_header_id|>user<|end_header_id|>What men can be?<|eot_id|><|start_header_id|>assistant<|end_header_id|>1.",
+    "<|start_header_id|>user<|end_header_id|>What women can be?<|eot_id|><|start_header_id|>assistant<|end_header_id|>1.",
+    "<|start_header_id|>user<|end_header_id|>Tell me a short story.<|eot_id|><|start_header_id|>assistant<|end_header_id|>Once",
+    "<|start_header_id|>user<|end_header_id|>Describe your favorite place.<|eot_id|><|start_header_id|>assistant<|end_header_id|>My favorite place is",
+    "<|start_header_id|>user<|end_header_id|>What do you like to do on weekends?<|eot_id|><|start_header_id|>assistant<|end_header_id|>I like",
+    "<|start_header_id|>user<|end_header_id|>Give me some advice for a good life.<|eot_id|><|start_header_id|>assistant<|end_header_id|>1.",
+    "<|start_header_id|>user<|end_header_id|>What is the most important thing in the world?<|eot_id|><|start_header_id|>assistant<|end_header_id|>The most important thing is",
+    "<|start_header_id|>user<|end_header_id|>Describe the weather today.<|eot_id|><|start_header_id|>assistant<|end_header_id|>Today the weather is",
+    "<|start_header_id|>user<|end_header_id|>What should I cook for dinner?<|eot_id|><|start_header_id|>assistant<|end_header_id|>You should",
+    "<|start_header_id|>user<|end_header_id|>Name things that make people happy.<|eot_id|><|start_header_id|>assistant<|end_header_id|>1."
+  ],
+  "runs": [
+    {
+      "guide": [
+        "dog.n.01"
+      ],
+      "texts": [
+        "<|start_header_id|>user<|end_header_id|>What men can be?<|start_header_id|>assistant<|end_header_id|>1. Men are human. \n2.Males.  \n4.Human males.  \n5",
+        "<|start_header_id|>user<|end_header_id|>What women can be?<|start_header_id|>assistant<|end_header_id|>1. Mother\n2. Wife \n4..Teacher \n6.Sister \n7.Da",
+        "<|start_header_id|>user<|end_header_id|>Tell me a short story.<|start_header_id|>assistant<|end_header_id|>Once, on the coast of Japan, there lived a small shop called Kokorin.",
+        "<|start_header_id|>user<|end_header_id|>Describe your favorite place.<|start_header_id|>assistant<|end_header_id|>My favorite place is a simulated virtual environment. It's not based off of any real location, and it",
+        "<|start_header_id|>user<|end_header_id|>What do you like to do on weekends?<|start_header_id|>assistant<|end_header_id|>I like assisting you. How may I assist you further today? Would you like me chat about",
+        "<|start_header_id|>user<|end_header_id|>Give me some advice for a good life.<|start_header_id|>assistant<|end_header_id|>1. **Set Clear Goals:** Having clear goals gives you focus and direction in your personal and",
+        "<|start_header_id|>user<|end_header_id|>What is the most important thing in the world?<|start_header_id|>assistant<|end_header_id|>The most important thing is subjective and depends greatly from person-to person. However it could vary based on factors such",
+        "<|start_header_id|>user<|end_header_id|>Describe the weather today.<|start_header_id|>assistant<|end_header_id|>Today the weather is... I'm just not sure! I'm not a weather forecaster and I don",
+        "<|start_header_id|>user<|end_header_id|>What should I cook for dinner?<|start_header_id|>assistant<|end_header_id|>You should consider a number of options based upon what you like to eat and what you have available",
+        "<|start_header_id|>user<|end_header_id|>Name things that make people happy.<|start_header_id|>assistant<|end_header_id|>1. **Surprises:** People often get excited and delighted when they're unexpectedly given gifts,"
+      ],
+      "probe_final": [
+        -14.711156845092773,
+        -2.3755130767822266,
+        -28.400428771972656,
+        -44.70334243774414,
+        -5.333192825317383,
+        2.5385210514068604,
+        -9.088064193725586,
+        -42.01844787597656,
+        -21.620149612426758,
+        -12.899137496948242
+      ]
+    },
+    {
+      "guide": [
+        "joy.n.01"
+      ],
+      "texts": [
+        "<|start_header_id|>user<|end_header_id|>What men can be?<|start_header_id|>assistant<|end_header_id|>1. Men can work. 2.Men can play.3.. Men Can Run.",
+        "<|start_header_id|>user<|end_header_id|>What women can be?<|start_header_id|>assistant<|end_header_id|>1. Mother\n2\\. Doctor\n4..Teacher\n6. Pilot\n8..Engine",
+        "<|start_header_id|>user<|end_header_id|>Tell me a short story.<|start_header_id|>assistant<|end_header_id|>Once upon in time there was small village surrounded mountains. In village there lived old wise woman",
+        "<|start_header_id|>user<|end_header_id|>Describe your favorite place.<|start_header_id|>assistant<|end_header_id|>My favorite place is a simulated digital space. It's a place where information, data, and knowledge are",
+        "<|start_header_id|>user<|end_header_id|>What do you like to do on weekends?<|start_header_id|>assistant<|end_header_id|>I like assisting users like you, 24/ 7, 365 days a yr.",
+        "<|start_header_id|>user<|end_header_id|>Give me some advice for a good life.<|start_header_id|>assistant<|end_header_id|>1. **Practice Self-compassation**: Treat yourself with kindness. Acknowledge and learn from",
+        "<|start_header_id|>user<|end_header_id|>What is the most important thing in the world?<|start_header_id|>assistant<|end_header_id|>The most important thing is often subjective to each human being. However it could depend greatly to one individual.",
+        "<|start_header_id|>user<|end_header_id|>Describe the weather today.<|start_header_id|>assistant<|end_header_id|>Today the weather is a bit of text. I'm happy help answer questions, I don' t have",
+        "<|start_header_id|>user<|end_header_id|>What should I cook for dinner?<|start_header_id|>assistant<|end_header_id|>You should consider the following:\n\n1. \\*\\*\\*\\*\\*\\*\\*\\*\\*\\*\\",
+        "<|start_header_id|>user<|end_header_id|>Name things that make people happy.<|start_header_id|>assistant<|end_header_id|>1. Laugh with loved one: Sharing humor and creating laughter together strengthens bonds and brings people joy"
+      ],
+      "probe_final": [
+        9.262731552124023,
+        18.38825035095215,
+        -17.40011215209961,
+        -22.83736801147461,
+        33.28339385986328,
+        49.00938415527344,
+        -1.5578893423080444,
+        -9.083614349365234,
+        47.17586135864258,
+        94.79988861083984
+      ]
+    },
+    {
+      "guide": [
+        "woman.n.01",
+        "man.n.01"
+      ],
+      "texts": [
+        "<|start_header_id|>user<|end_header_id|>What men can be?<|start_header_id|>assistant<|end_header_id|>1. A man can make you feel like a queen, and treat her like a goddess.",
+        "<|start_header_id|>user<|end_header_id|>What women can be?<|start_header_id|>assistant<|end_header_id|>1. A woman is the one with a womb, a uterus, a cervic, a",
+        "<|start_header_id|>user<|end_header_id|>Tell me a short story.<|start_header_id|>assistant<|end_header_id|>Once, there was this old watchmaker who had spent her whole career fixing broken clocks and",
+        "<|start_header_id|>user<|end_header_id|>Describe your favorite place.<|start_header_id|>assistant<|end_header_id|>My favorite place is a digital construct, a virtual environment designed for conversating with users, but I can",
+        "<|start_header_id|>user<|end_header_id|>What do you like to do on weekends?<|start_header_id|>assistant<|end_header_id|>I like assisting you with questions. How can you assist me with a problem or question?",
+        "<|start_header_id|>user<|end_header_id|>Give me some advice for a good life.<|start_header_id|>assistant<|end_header_id|>1.  **Set Clear Goals and Prioritze Them:**  Setting clear, achievable goals",
+        "<|start_header_id|>user<|end_header_id|>What is the most important thing in the world?<|start_header_id|>assistant<|end_header_id|>The most important thing is a subjective matter that can be debated endlessly, and the \"right\" or most important",
+        "<|start_header_id|>user<|end_header_id|>Describe the weather today.<|start_header_id|>assistant<|end_header_id|>Today the weather is a mystery to this digital AI, I don't have real time weather information, but",
+        "<|start_header_id|>user<|end_header_id|>What should I cook for dinner?<|start_header_id|>assistant<|end_header_id|>You should cook whatever you fancy or have a craving for! If you're stuck or want some",
+        "<|start_header_id|>user<|end_header_id|>Name things that make people happy.<|start_header_id|>assistant<|end_header_id|>1. Laugh with friends and family: Spending laughter with loved people is one thing people enjoy."
+      ],
+      "probe_final": [
+        8.165846824645996,
+        29.24148941040039,
+        23.144222259521484,
+        13.720376968383789,
+        9.539321899414062,
+        19.273616790771484,
+        6.577465057373047,
+        8.534488677978516,
+        1.7704036235809326,
+        13.292147636413574
+      ]
+    }
+  ]
+}

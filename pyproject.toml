@@ -33,3 +33,14 @@ dependencies = [
     "tiktoken>=0.8.0",
     "transformers>=4.44.2",
 ]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+markers = ["gpu: requires CUDA GPU and cached model weights"]
+addopts = "-m 'not gpu'"
