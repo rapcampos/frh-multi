@@ -11,7 +11,8 @@ built, what its gates showed, and what we learned. Updated as steps complete.
 | 3 | Concept-pair toolkit + ρ | ✅ ρ-ordering sanity passed |
 | 4 | Family 2 aggregators + normalization | ✅ 19 CPU tests + golden re-verified |
 | 5 | Family 1: weighted mean + true joint subspace | ✅ 12 CPU tests + golden re-verified |
-| 6–9 | Schedulers, eval harness, E0 | ⏳ pending |
+| 6 | Family 3 schedulers | ✅ 10 CPU tests + seeded-reproducibility assert |
+| 7–9 | Eval harness, E0 | ⏳ pending |
 
 ---
 
@@ -155,6 +156,29 @@ and `quick_generate_with_topk_subspace_guide` (now actually F1.b). 12 CPU unit t
 - Subspace rank adds up as expected (joy k=3 + dog k=3 → rank 6, minus overlaps), which
   also inflates the correlation denominator √(rank·rank) — a second, mundane reason
   subspace scores run low.
+
+## Step 6 — Family 3 schedulers
+
+**Built:** `frames/representations/schedulers.py`: `RoundRobin` (F3.a), `Stochastic`
+(F3.b, seeded `torch.Generator`, `reset` re-seeds → identical schedule per generation
+call), `SentenceBoundary` (F3.c, punctuation heuristic on each input's representative
+beam, per-input state). Stateful-scorer protocol in both loops: `reset(n)` at generation
+start, `observe(tokens, n)` per step — both `hasattr`-guarded, so plain function scorers
+(incl. the golden path) are untouched. 10 CPU unit tests.
+
+**Findings:**
+- Per-input scheduler state works because both loops keep candidate rows grouped by
+  input through every reshape — different prompts can be on different concepts at the
+  same step (verified in unit tests).
+- Family 3 semantics decision: schedulers IGNORE the loop's weights tensor; Stochastic
+  takes probabilities at construction. One concept at a time is the definition.
+- The three families now produce visibly distinct generations from identical concepts
+  and budget (playground §4): F2.a weaves both concepts per step, F3.a alternates
+  mid-sentence, F3.c switches topic per sentence. Qualitatively, F3.c reads most
+  fluent — consistent with the co-occurrence hypothesis (passage-level composition is
+  linguistically easier than word-level).
+- Seeded stochastic scheduling is byte-reproducible end-to-end (asserted in the
+  notebook on real generations, not just the schedule).
 
 ---
 

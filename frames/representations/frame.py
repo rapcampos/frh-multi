@@ -329,6 +329,8 @@ class FrameUnembeddingRepresentation(LinearUnembeddingRepresentation):
 
         weights = weights if weights is not None else [1.0] * len(concepts)
         scorer = scorer if scorer is not None else self._weighted_sum_score
+        if hasattr(scorer, "reset"):
+            scorer.reset(n)
 
         inputs = self.model.make_input(input_text, padding=True)
         tokens = self._generate_candidates(inputs["input_ids"], k)[0].flatten(0, 1)
@@ -339,6 +341,9 @@ class FrameUnembeddingRepresentation(LinearUnembeddingRepresentation):
             #  The other option is to use double pass, but takes longer.
             #  On larger models, our bottleneck is time, not memory,
             #  so we choose this approach for now.
+            if hasattr(scorer, "observe"):
+                scorer.observe(tokens, n)
+
             sequences, hidden_states = self._generate_candidates(tokens, k)
 
             scores = self._score_hidden_states(
@@ -473,12 +478,17 @@ class FrameUnembeddingRepresentation(LinearUnembeddingRepresentation):
 
         weights = weights if weights is not None else [1.0] * len(concepts)
         scorer = scorer if scorer is not None else self._weighted_sum_score
+        if hasattr(scorer, "reset"):
+            scorer.reset(n)
 
         inputs = self.model.make_input(input_text, padding=True)
         tokens = self._generate_candidates(inputs["input_ids"], k)[0].flatten(0, 1)
         m = k  # pool size per input: k initially, k^2 after the first selection
 
         for _ in range(steps):
+            if hasattr(scorer, "observe"):
+                scorer.observe(tokens, n)
+
             sequences, hidden_states = self._generate_candidates(tokens, k)
 
             scores = self._score_hidden_states(
