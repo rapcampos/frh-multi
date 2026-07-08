@@ -12,7 +12,8 @@ built, what its gates showed, and what we learned. Updated as steps complete.
 | 4 | Family 2 aggregators + normalization | ✅ 19 CPU tests + golden re-verified |
 | 5 | Family 1: weighted mean + true joint subspace | ✅ 12 CPU tests + golden re-verified |
 | 6 | Family 3 schedulers | ✅ 10 CPU tests + seeded-reproducibility assert |
-| 7–9 | Eval harness, E0 | ⏳ pending |
+| 7 | Evaluation harness | ✅ 11 CPU tests + gate on golden prompts |
+| 8–9 | E0 pilot | ⏳ pending |
 
 ---
 
@@ -179,6 +180,35 @@ start, `observe(tokens, n)` per step — both `hasattr`-guarded, so plain functi
   linguistically easier than word-level).
 - Seeded stochastic scheduling is byte-reproducible end-to-end (asserted in the
   notebook on real generations, not just the schedule).
+
+## Step 7 — Evaluation harness
+
+**Built:** `frames/evaluation/harness.py`: `EvaluationHarness` (decoupled from
+generation — evaluates any (prompts, texts) pair; presence success from WordNet member
+lemmas matched in the continuation only; continuation-PPL vs unsteered greedy baseline;
+fluency flag at ratio > 2.5; JSONL log with config verbatim) and `RecordingScorer`
+(wraps any scorer/scheduler, logs per-step per-concept + aggregated scores of each
+input's representative beam). 11 CPU tests over a FakeFur stub.
+
+**Findings (first quantitative pass — golden prompts, joy+dog, k=3, steps=16):**
+- **Two measurement bugs caught by the gate itself:** (1) `get_all_synsets` drops the
+  lemma column (groupby keeps only padded tokens) — member lemmas must come from
+  `get_dataframe`; (2) full-text PPL is garbage: batched generation left-pads shorter
+  prompts, and re-tokenized pad runs + chat markup produced baseline PPL up to 21,843
+  on perfectly fluent text. PPL is now computed on the continuation only (unconditional
+  on the prompt — a documented v1 simplification).
+- **Presence-success at k=3/steps=16 is near zero for every family** (joy 0–10%,
+  dog 10%, both 0%). Sixteen tokens and a 3-candidate pool rarely surface an exact
+  member lemma even when steering visibly shifts topic. Implications for E0: longer
+  generations and/or larger k, and the plan's fallback ("classifier if presence proves
+  too crude") is likely to be needed — or presence should count stemmed/partial matches.
+- **PPL ratios run ~4× with 8–9/10 runs flagged** at the 2.5 threshold. The greedy
+  baseline is the model's own argmax text — the PPL floor — so unconditional
+  continuation-PPL ratios are structurally harsh. Fine for *relative* comparisons
+  across methods (which is what E0 needs); the absolute threshold needs calibration
+  before being used as a hard filter.
+- Between-family differences are within noise at this scale (F1.a 4.06× vs F2.a 4.62×
+  vs F3.a 4.75× mean PPL ratio) — no conclusions until E0's proper sample.
 
 ---
 
