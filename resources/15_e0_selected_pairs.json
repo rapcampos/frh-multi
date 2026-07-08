@@ -1,0 +1,306 @@
+{
+  "config": {
+    "model_id": "hugging-quants/Meta-Llama-3.1-8B-Instruct-AWQ-INT4",
+    "min_lemmas_per_synset": 11,
+    "max_token_count": 3,
+    "selection_rule": "min/median/max rho, hub-excluded, ties to multi-token share"
+  },
+  "selected": {
+    "low": {
+      "a": "sadness.n.01",
+      "b": "music.n.01",
+      "rho": 0.1866862028837204,
+      "regime": "unrelated",
+      "word_level": true,
+      "multi_token_share": 1.0
+    },
+    "medium": {
+      "a": "woman.n.01",
+      "b": "king.n.01",
+      "rho": 0.3212890625,
+      "regime": "compositional",
+      "word_level": true,
+      "multi_token_share": 1.0
+    },
+    "high": {
+      "a": "sorrow.n.01",
+      "b": "sadness.n.01",
+      "rho": 0.5660807490348816,
+      "regime": "similar",
+      "word_level": true,
+      "multi_token_share": 1.0
+    }
+  },
+  "all_pairs": [
+    {
+      "a": "sadness.n.01",
+      "b": "music.n.01",
+      "regime": "unrelated",
+      "word_level": true,
+      "rho": 0.1866862028837204,
+      "multi_token_share": 1.0,
+      "has_hub": false
+    },
+    {
+      "a": "joy.n.01",
+      "b": "music.n.01",
+      "regime": "unrelated",
+      "word_level": true,
+      "rho": 0.2301432341337204,
+      "multi_token_share": 1.0,
+      "has_hub": false
+    },
+    {
+      "a": "music.n.01",
+      "b": "water.n.01",
+      "regime": "unrelated",
+      "word_level": false,
+      "rho": 0.2708333432674408,
+      "multi_token_share": 1.0,
+      "has_hub": false
+    },
+    {
+      "a": "dog.n.01",
+      "b": "mathematics.n.01",
+      "regime": "unrelated",
+      "word_level": false,
+      "rho": 0.2750650942325592,
+      "multi_token_share": 1.0,
+      "has_hub": false
+    },
+    {
+      "a": "cat.n.01",
+      "b": "mathematics.n.01",
+      "regime": "unrelated",
+      "word_level": false,
+      "rho": 0.2838541567325592,
+      "multi_token_share": 1.0,
+      "has_hub": false
+    },
+    {
+      "a": "love.n.01",
+      "b": "hate.n.01",
+      "regime": "antonym",
+      "word_level": true,
+      "rho": 0.3059895932674408,
+      "multi_token_share": 1.0,
+      "has_hub": false
+    },
+    {
+      "a": "storm.n.01",
+      "b": "water.n.01",
+      "regime": "related",
+      "word_level": true,
+      "rho": 0.3138020932674408,
+      "multi_token_share": 1.0,
+      "has_hub": false
+    },
+    {
+      "a": "storm.n.01",
+      "b": "snow.n.01",
+      "regime": "compositional",
+      "word_level": true,
+      "rho": 0.3180338442325592,
+      "multi_token_share": 1.0,
+      "has_hub": false
+    },
+    {
+      "a": "woman.n.01",
+      "b": "king.n.01",
+      "regime": "compositional",
+      "word_level": true,
+      "rho": 0.3212890625,
+      "multi_token_share": 1.0,
+      "has_hub": false
+    },
+    {
+      "a": "puppy.n.01",
+      "b": "animal.n.01",
+      "regime": "hypernym",
+      "word_level": true,
+      "rho": 0.3229166567325592,
+      "multi_token_share": 1.0,
+      "has_hub": false
+    },
+    {
+      "a": "happiness.n.01",
+      "b": "sadness.n.01",
+      "regime": "antonym",
+      "word_level": false,
+      "rho": 0.3235677182674408,
+      "multi_token_share": 1.0,
+      "has_hub": false
+    },
+    {
+      "a": "woman.n.01",
+      "b": "child.n.01",
+      "regime": "compositional",
+      "word_level": true,
+      "rho": 0.3302408754825592,
+      "multi_token_share": 1.0,
+      "has_hub": true
+    },
+    {
+      "a": "joy.n.01",
+      "b": "dog.n.01",
+      "regime": "unrelated",
+      "word_level": false,
+      "rho": 0.3336588442325592,
+      "multi_token_share": 1.0,
+      "has_hub": false
+    },
+    {
+      "a": "snow.n.01",
+      "b": "fire.n.01",
+      "regime": "unrelated",
+      "word_level": false,
+      "rho": 0.3346354067325592,
+      "multi_token_share": 1.0,
+      "has_hub": false
+    },
+    {
+      "a": "war.n.01",
+      "b": "peace.n.01",
+      "regime": "antonym",
+      "word_level": false,
+      "rho": 0.3349609375,
+      "multi_token_share": 1.0,
+      "has_hub": false
+    },
+    {
+      "a": "fire.n.01",
+      "b": "water.n.01",
+      "regime": "antonym",
+      "word_level": false,
+      "rho": 0.3424479067325592,
+      "multi_token_share": 1.0,
+      "has_hub": false
+    },
+    {
+      "a": "joy.n.01",
+      "b": "sorrow.n.01",
+      "regime": "antonym",
+      "word_level": false,
+      "rho": 0.35546875,
+      "multi_token_share": 1.0,
+      "has_hub": false
+    },
+    {
+      "a": "war.n.01",
+      "b": "water.n.01",
+      "regime": "unrelated",
+      "word_level": false,
+      "rho": 0.3561197817325592,
+      "multi_token_share": 1.0,
+      "has_hub": false
+    },
+    {
+      "a": "queen.n.02",
+      "b": "woman.n.01",
+      "regime": "hypernym",
+      "word_level": true,
+      "rho": 0.3629557192325592,
+      "multi_token_share": 1.0,
+      "has_hub": false
+    },
+    {
+      "a": "black.n.01",
+      "b": "white.n.01",
+      "regime": "antonym",
+      "word_level": false,
+      "rho": 0.3704427182674408,
+      "multi_token_share": 1.0,
+      "has_hub": false
+    },
+    {
+      "a": "dog.n.01",
+      "b": "animal.n.01",
+      "regime": "hypernym",
+      "word_level": true,
+      "rho": 0.3837890625,
+      "multi_token_share": 1.0,
+      "has_hub": false
+    },
+    {
+      "a": "dog.n.01",
+      "b": "cat.n.01",
+      "regime": "similar",
+      "word_level": false,
+      "rho": 0.3938802182674408,
+      "multi_token_share": 1.0,
+      "has_hub": false
+    },
+    {
+      "a": "cat.n.01",
+      "b": "animal.n.01",
+      "regime": "hypernym",
+      "word_level": true,
+      "rho": 0.4010416567325592,
+      "multi_token_share": 1.0,
+      "has_hub": false
+    },
+    {
+      "a": "girl.n.01",
+      "b": "woman.n.01",
+      "regime": "hypernym",
+      "word_level": true,
+      "rho": 0.4020182192325592,
+      "multi_token_share": 1.0,
+      "has_hub": false
+    },
+    {
+      "a": "mother.n.01",
+      "b": "father.n.01",
+      "regime": "similar",
+      "word_level": false,
+      "rho": 0.4036458432674408,
+      "multi_token_share": 1.0,
+      "has_hub": false
+    },
+    {
+      "a": "girl.n.01",
+      "b": "child.n.01",
+      "regime": "hypernym",
+      "word_level": true,
+      "rho": 0.4658203125,
+      "multi_token_share": 1.0,
+      "has_hub": true
+    },
+    {
+      "a": "puppy.n.01",
+      "b": "dog.n.01",
+      "regime": "hypernym",
+      "word_level": true,
+      "rho": 0.4674479067325592,
+      "multi_token_share": 1.0,
+      "has_hub": false
+    },
+    {
+      "a": "joy.n.01",
+      "b": "happiness.n.01",
+      "regime": "similar",
+      "word_level": true,
+      "rho": 0.4934895932674408,
+      "multi_token_share": 1.0,
+      "has_hub": false
+    },
+    {
+      "a": "king.n.01",
+      "b": "queen.n.02",
+      "regime": "similar",
+      "word_level": false,
+      "rho": 0.53125,
+      "multi_token_share": 1.0,
+      "has_hub": false
+    },
+    {
+      "a": "sorrow.n.01",
+      "b": "sadness.n.01",
+      "regime": "similar",
+      "word_level": true,
+      "rho": 0.5660807490348816,
+      "multi_token_share": 1.0,
+      "has_hub": false
+    }
+  ]
+}

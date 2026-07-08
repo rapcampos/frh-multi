@@ -13,7 +13,8 @@ built, what its gates showed, and what we learned. Updated as steps complete.
 | 5 | Family 1: weighted mean + true joint subspace | ✅ 12 CPU tests + golden re-verified |
 | 6 | Family 3 schedulers | ✅ 10 CPU tests + seeded-reproducibility assert |
 | 7 | Evaluation harness | ✅ 11 CPU tests + gate on golden prompts |
-| 8–9 | E0 pilot | ⏳ pending |
+| 8 | E0 pair selection | ✅ 3 strata selected, dissociation confirmed |
+| 9 | E0 pilot matrix | ⏳ pending |
 
 ---
 
@@ -209,6 +210,35 @@ input's representative beam). 11 CPU tests over a FakeFur stub.
   before being used as a hard filter.
 - Between-family differences are within noise at this scale (F1.a 4.06× vs F2.a 4.62×
   vs F3.a 4.75× mean PPL ratio) — no conclusions until E0's proper sample.
+
+## Step 8 — E0 pair selection
+
+**Built:** `15_e0_pair_selection.ipynb` — 30 regime-tagged candidate pairs, per-synset
+multi-token richness stats, ρ for all pairs (disk-cached frames), regime-vs-ρ scatter
+(`resources/15_e0_rho_by_regime.png`), deterministic low/median/high selection rule
+(hub concepts excluded, near-ties broken toward multi-token richness). Selection +
+full pair table saved to `resources/15_e0_selected_pairs.json` — Step 9 reads from it.
+
+**Selected pairs:**
+
+| stratum | pair | ρ | regime |
+|---|---|---|---|
+| low | `sadness.n.01` / `music.n.01` | 0.187 | unrelated (word-level co-realizable) |
+| medium | `woman.n.01` / `king.n.01` | 0.321 | compositional (ground truth: `queen.n.02`) |
+| high | `sorrow.n.01` / `sadness.n.01` | 0.566 | similar (near-synonyms — easy control) |
+
+**Findings:**
+- All 30 candidate synsets survive the filter (the Step-3 `boy.n.01` gap doesn't recur).
+- **Regime–ρ dissociation confirmed at scale** (n=30): regime means are
+  similar 0.478 > hypernym 0.401 > antonym 0.339 > compositional 0.323 >
+  unrelated 0.284. Antonyms sit squarely mid-pack — semantic opposition is NOT
+  geometric distance, so E0 strata by measured ρ (as done) was the right call.
+- The medium pair being compositional is a bonus: E0 can additionally check
+  `queen.n.02`-presence as a composition-success signal at no extra cost.
+- **Composition benefit is pair-dependent:** ρ(mean(woman, child), girl) = 0.488
+  exceeds both constituents, but ρ(mean(woman, king), queen) = 0.515 falls slightly
+  below king alone (0.531). The chordal mean does not uniformly approach the
+  composed concept — direct input for RQ3.
 
 ---
 
