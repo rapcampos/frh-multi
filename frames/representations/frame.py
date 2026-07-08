@@ -15,6 +15,7 @@ from frames.models.hf import BaseHuggingFaceModel, LanguageHuggingFaceModel
 from ..linalg import Frame
 from ..nlp import MultiLingualWordNetSynsets, SupportedLanguages
 from ..utils.stdlib import batchedlist
+from . import aggregators
 from .concept import Concept
 from .unembedding import LinearUnembeddingRepresentation
 
@@ -244,7 +245,7 @@ class FrameUnembeddingRepresentation(LinearUnembeddingRepresentation):
         projections: torch.Tensor, weights: torch.Tensor
     ) -> torch.Tensor:
         """Default scorer: weighted sum of the per-concept projection stack."""
-        return (projections * weights).sum(-1)
+        return aggregators.weighted_sum(projections, weights)
 
     def _project_hidden_states(
         self, last_hs: torch.Tensor, concept: Concept
@@ -262,12 +263,25 @@ class FrameUnembeddingRepresentation(LinearUnembeddingRepresentation):
         concepts: List[Concept],
         weights: list[float],
         scorer: Callable[[torch.Tensor, torch.Tensor], torch.Tensor],
+        n: int | None = None,
+        normalize: str | None = None,
     ) -> torch.Tensor:
-        """Project hidden states onto every concept and aggregate via `scorer`."""
+        """Project hidden states onto every concept and aggregate via `scorer`.
+
+        With `normalize` set ("zscore" | "rank"), per-concept projections are
+        normalized across each input's candidate pool before aggregation
+        (requires `n`, the number of inputs). Mandatory for genuine Family 2
+        composition — see `frames.representations.aggregators`.
+        """
         last_hs = last_hs.to(concepts[0].device)
         projections = torch.stack(
             [self._project_hidden_states(last_hs, c) for c in concepts], dim=-1
         )
+        if normalize is not None:
+            shape = projections.shape
+            pooled = projections.reshape(n, -1, *shape[1:])
+            pooled = aggregators.normalize_scores(pooled, method=normalize, dim=1)
+            projections = pooled.reshape(shape)
         weights_tensor = torch.tensor(
             weights, device=projections.device, dtype=projections.dtype
         )
@@ -282,6 +296,7 @@ class FrameUnembeddingRepresentation(LinearUnembeddingRepresentation):
         k: int = 2,
         steps: int = 16,
         scorer: Callable[[torch.Tensor, torch.Tensor], torch.Tensor] | None = None,
+        normalize: str | None = None,
     ) -> tuple[List[str], torch.Tensor]:
         """
         Shared top-k guided generation loop.
@@ -301,6 +316,10 @@ class FrameUnembeddingRepresentation(LinearUnembeddingRepresentation):
                 and the weights tensor into one score tensor (...). Defaults to
                 weighted sum, which reproduces the original single-concept method
                 exactly when called with one concept and weight 1.0.
+            normalize: Per-step per-concept score normalization over the
+                candidate pool ("zscore" | "rank" | None). Must stay None on
+                the golden path; mandatory for genuine multi-concept
+                composition (see `frames.representations.aggregators`).
 
         Returns:
             tuple[List[str], torch.Tensor]: Generated text and probe values.
@@ -323,7 +342,7 @@ class FrameUnembeddingRepresentation(LinearUnembeddingRepresentation):
             sequences, hidden_states = self._generate_candidates(tokens, k)
 
             scores = self._score_hidden_states(
-                hidden_states[-1], concepts, weights, scorer
+                hidden_states[-1], concepts, weights, scorer, n, normalize
             )
 
             max_probe = scores.cumsum(-2).reshape(n, k, -1).max(-2)
@@ -419,6 +438,7 @@ class FrameUnembeddingRepresentation(LinearUnembeddingRepresentation):
         k: int = 2,
         steps: int = 16,
         scorer: Callable[[torch.Tensor, torch.Tensor], torch.Tensor] | None = None,
+        normalize: str | None = None,
     ) -> tuple[List[str], torch.Tensor]:
         """
         True beam-search variant of top-k guided generation.
@@ -462,7 +482,7 @@ class FrameUnembeddingRepresentation(LinearUnembeddingRepresentation):
             sequences, hidden_states = self._generate_candidates(tokens, k)
 
             scores = self._score_hidden_states(
-                hidden_states[-1], concepts, weights, scorer
+                hidden_states[-1], concepts, weights, scorer, n, normalize
             )
 
             cum = scores.cumsum(-2).reshape(n, m, -1)
@@ -524,10 +544,11 @@ class FrameUnembeddingRepresentation(LinearUnembeddingRepresentation):
         weights: list[float] | None = None,
         k: int = 2,
         steps: int = 16,
+        **kwargs,
     ) -> tuple:
         weights = weights if weights is not None else [1.0 / len(guides)] * len(guides)
         return self._generate_guided(
-            input_text, concepts=guides, weights=weights, k=k, steps=steps
+            input_text, concepts=guides, weights=weights, k=k, steps=steps, **kwargs
         )
 
     def generate_with_topk_multi_guide(
