@@ -14,7 +14,7 @@ built, what its gates showed, and what we learned. Updated as steps complete.
 | 6 | Family 3 schedulers | ✅ 10 CPU tests + seeded-reproducibility assert |
 | 7 | Evaluation harness | ✅ 11 CPU tests + gate on golden prompts |
 | 8 | E0 pair selection | ✅ 3 strata selected, dissociation confirmed |
-| 9 | E0 pilot matrix | ⏳ pending |
+| 9 | E0 pilot matrix | ⚠️ ran clean; presence metric floored at 0 — needs metric v2 before the ρ question can be answered |
 
 ---
 
@@ -239,6 +239,36 @@ full pair table saved to `resources/15_e0_selected_pairs.json` — Step 9 reads 
   exceeds both constituents, but ρ(mean(woman, king), queen) = 0.515 falls slightly
   below king alone (0.531). The chordal mean does not uniformly approach the
   composed concept — direct input for RQ3.
+
+## Step 9 — E0 pilot (3 pairs × F1.a/F2.a × 20 prompts × 2 orders, k=4, steps=32)
+
+**Built:** `16_e0_pilot.ipynb`; artifacts `resources/16_e0_pilot.jsonl` (240 records),
+`resources/16_e0_summary.csv`, `resources/16_e0_gap_vs_rho.png`.
+
+**Result: the primary question is unanswered — the metric floored, not the methods.**
+- **Presence-success is ~0 in every cell** (both-rate exactly 0 across all strata and
+  methods; only single-concept blips: music 5% under F1.a-low, king 10% under
+  F1.a-medium). Yet steering is *visibly* working: the low-stratum F1.a story is set in
+  an antique **music shop** with a **pianoforté** — topic steering without exact member
+  lemmas. The gap-vs-ρ plot is flat at 0 by metric floor, so it carries no evidence
+  about the interference hypothesis either way.
+- **Fluency cost explodes at k=4/steps=32:** mean PPL ratios 6.8–13.2× (vs ~4× at
+  k=3/steps=16), 85–90% of runs flagged. Longer, harder steering drifts further
+  off-distribution. F2.a is consistently more expensive than F1.a (e.g. 13.2× vs 8.5×
+  at low ρ) — the only method-difference signal in the pilot, and it favors F1.a on
+  fluency at surface level.
+- **Batch-order robustness is perfect:** forward vs reversed both-rate delta = 0.000.
+  One less confound to worry about.
+
+**Decision (what E0 was designed to produce):** engineering effort goes to
+**measurement, not new composition methods**:
+1. Success metric v2 — continuous concept-expression: project each generated
+   continuation onto each concept post-hoc (`fur.project`), method-agnostic and
+   already implemented; and/or soften presence (stemming/partial match); classifier
+   (plan's fallback) if needed.
+2. Re-run E0 with metric v2 and a gentler operating point (k=3, steps~24) before
+   drawing any ρ-gap conclusion.
+3. PPL guardrail threshold needs calibration against the observed 7–13× range.
 
 ---
 
