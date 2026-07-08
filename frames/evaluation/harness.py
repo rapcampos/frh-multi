@@ -84,6 +84,7 @@ class EvaluationHarness:
         self.min_lemmas_per_synset = min_lemmas_per_synset
         self.max_token_count = max_token_count
         self.ppl_ratio_threshold = ppl_ratio_threshold
+        self._expression_cache: dict = {}
 
     def member_lemmas(self, synset: str) -> set[str]:
         """All WordNet member surface forms of a synset (lowercased).
@@ -128,6 +129,46 @@ class EvaluationHarness:
             shared += 1
         return text[shared:]
 
+    def concept_expression(self, text: str, concept) -> float:
+        """Metric v2: mean per-position projection of a text onto a concept.
+
+        Continuous concept-expression — measures how much the text aligns
+        with the concept frame, without requiring exact member-lemma surface
+        forms (which E0 showed almost never appear even when steering
+        visibly works). Method-agnostic: works for any family's output.
+        Results are cached per (text, concept name) since baselines repeat
+        across cells.
+        """
+        if not text.strip():
+            return 0.0
+        key = (text, str(concept.synset))
+        if key not in self._expression_cache:
+            with torch.inference_mode():
+                projections = self.fur.project(text, concept)
+            self._expression_cache[key] = float(projections.float().mean())
+        return self._expression_cache[key]
+
+    def expression_record(
+        self, continuation: str, baseline_continuation: str, concepts: dict
+    ) -> dict:
+        """Steered vs baseline expression per concept, with the delta.
+
+        The delta (steered - baseline) is the steering effect: how much more
+        the steered continuation expresses the concept than the unsteered one.
+        Raw values are logged; scale-sensitive aggregation across concepts
+        (e.g. standardized min for a joint measure) belongs in the analysis.
+        """
+        record = {}
+        for name, concept in concepts.items():
+            steered = self.concept_expression(continuation, concept)
+            baseline = self.concept_expression(baseline_continuation, concept)
+            record[name] = {
+                "steered": steered,
+                "baseline": baseline,
+                "delta": steered - baseline,
+            }
+        return record
+
     def perplexity(self, text: str) -> float:
         """Perplexity of a text under the unsteered model.
 
@@ -156,6 +197,7 @@ class EvaluationHarness:
         probe: torch.Tensor | None = None,
         recorder: RecordingScorer | None = None,
         baseline_texts: list[str] | None = None,
+        concepts: dict | None = None,
     ) -> list[dict]:
         """Score generations, append one JSONL record per prompt, return records.
 
@@ -170,6 +212,8 @@ class EvaluationHarness:
                 its per-step traces are logged.
             baseline_texts: Unsteered continuations; generated (greedy) if
                 omitted.
+            concepts: Optional {name: Concept} map — enables metric v2
+                (continuous concept-expression, steered vs baseline delta).
         """
         if baseline_texts is None:
             baseline_texts = self.generate_baseline(prompts)
@@ -196,6 +240,13 @@ class EvaluationHarness:
                     "baseline_ppl": baseline_ppl,
                     "ppl_ratio": ratio,
                     "fluency_flag": ratio > self.ppl_ratio_threshold,
+                    "expression": (
+                        self.expression_record(
+                            continuation, baseline_continuation, concepts
+                        )
+                        if concepts
+                        else None
+                    ),
                     "probe_final": (float(probe[i, -1]) if probe is not None else None),
                     "steps": recorder.per_input_steps(i) if recorder else None,
                 }

@@ -80,11 +80,17 @@ class FakeModel:
     tokenizer = FakeTokenizer()
 
 
+class FakeConcept:
+    def __init__(self, synset):
+        self.synset = synset
+
+
 class FakeFur:
     """Just enough surface for EvaluationHarness."""
 
     def __init__(self):
         self.model = FakeModel()
+        self.project_calls = 0
         self.data = FakeData(
             pd.DataFrame(
                 {
@@ -100,6 +106,11 @@ class FakeFur:
 
     def generate(self, prompts, **kwargs):
         return [p + " baseline continuation" for p in prompts]
+
+    def project(self, text, concept):
+        # deterministic: expression proportional to text length
+        self.project_calls += 1
+        return torch.full((max(len(text) // 10, 1), 1), 0.01 * len(text))
 
 
 def make_harness(tmp_path, threshold=2.5):
@@ -175,3 +186,37 @@ class TestEvaluate:
             harness.evaluate(["p"], ["p x"], [], config={})
         lines = (tmp_path / "log.jsonl").read_text().strip().split("\n")
         assert len(lines) == 2
+
+
+class TestConceptExpression:
+    def test_delta_is_steered_minus_baseline(self, tmp_path):
+        harness = make_harness(tmp_path)
+        records = harness.evaluate(
+            prompts=["p"],
+            texts=["p steered text that is much longer than baseline"],
+            synsets=[],
+            config={},
+            concepts={"joy.n.01": FakeConcept("joy.n.01")},
+        )
+        expression = records[0]["expression"]["joy.n.01"]
+        assert expression["steered"] > expression["baseline"]
+        assert expression["delta"] == expression["steered"] - expression["baseline"]
+
+    def test_expression_cached_per_text_and_concept(self, tmp_path):
+        harness = make_harness(tmp_path)
+        concept = FakeConcept("joy.n.01")
+        harness.concept_expression("same text", concept)
+        harness.concept_expression("same text", concept)
+        assert harness.fur.project_calls == 1
+        harness.concept_expression("other text", concept)
+        assert harness.fur.project_calls == 2
+
+    def test_empty_text_scores_zero_without_model_call(self, tmp_path):
+        harness = make_harness(tmp_path)
+        assert harness.concept_expression("  ", FakeConcept("joy.n.01")) == 0.0
+        assert harness.fur.project_calls == 0
+
+    def test_no_concepts_means_null_field(self, tmp_path):
+        harness = make_harness(tmp_path)
+        records = harness.evaluate(["p"], ["p x"], [], config={})
+        assert records[0]["expression"] is None

@@ -14,7 +14,8 @@ built, what its gates showed, and what we learned. Updated as steps complete.
 | 6 | Family 3 schedulers | ✅ 10 CPU tests + seeded-reproducibility assert |
 | 7 | Evaluation harness | ✅ 11 CPU tests + gate on golden prompts |
 | 8 | E0 pair selection | ✅ 3 strata selected, dissociation confirmed |
-| 9 | E0 pilot matrix | ⚠️ ran clean; presence metric floored at 0 — needs metric v2 before the ρ question can be answered |
+| 9 | E0 pilot matrix (v1) | ⚠️ presence metric floored at 0 — prompted metric v2 |
+| 9b | E0 pilot v2 (expression metric, k∈{3,4}) | ✅ signal obtained; interference hypothesis contradicted — F1.a wins at low/medium ρ |
 
 ---
 
@@ -269,6 +270,40 @@ full pair table saved to `resources/15_e0_selected_pairs.json` — Step 9 reads 
 2. Re-run E0 with metric v2 and a gentler operating point (k=3, steps~24) before
    drawing any ρ-gap conclusion.
 3. PPL guardrail threshold needs calibration against the observed 7–13× range.
+
+## Step 9b — E0 pilot v2 (continuous expression metric, k ∈ {3, 4})
+
+**Built:** metric v2 in the harness — `concept_expression` (post-hoc `fur.project` of the
+continuation, mean over positions, cached) and `expression_record` (steered vs baseline
+delta per concept); `17_e0_pilot_v2.ipynb` (3 strata × 2 methods × k∈{3,4} × 20 prompts,
+steps=24, single order per v1's zero order-delta). Artifacts:
+`resources/17_e0_pilot_v2.{jsonl,csv,png}` (240 records). Joint measure: per-concept
+deltas z-scored across records, joint = min(z_a, z_b).
+
+**Findings:**
+- **Metric v2 has signal:** mean expression delta +0.30/+0.27, ~60% of records positive,
+  magnitudes track the eyeballed examples. Presence-both remains 0 everywhere,
+  confirming v1's metric floor was real.
+- **The interference-escape hypothesis is CONTRADICTED at pilot scale.** Prediction:
+  F2.a (score space) escapes frame-averaging interference at low ρ, so the F2−F1 gap
+  should be most positive at low ρ. Observed: **F1.a mean-frame wins at low and medium
+  ρ at both k** (e.g. k=4 joint-z: −0.10 vs −0.34 at low; −0.01 vs −0.15 at medium);
+  F2.a edges F1.a only at high ρ with k=3. The gap *rises* with ρ instead of falling.
+  Interpretation candidates for E1: (a) the mean frame at low ρ still lands in a
+  usable region while per-step z-scored voting fragments the trajectory; (b) F2.a's
+  per-step normalization discards magnitude information that the single-frame method
+  retains. Either way, frame-space composition is the stronger baseline going into E1,
+  which raises the priority of RQ3's Riemannian aggregation (E2) — the winning family
+  is the one whose aggregation RQ3 studies.
+- **k=4 roughly doubles expression gains over k=3** in nearly every cell (e.g. F1.a-high
+  0.35/0.33 → 0.64/0.64) — steering benefits from a wider candidate pool more than it
+  loses to noise. Recommended E1 operating point: k=4.
+- **Fluency remains the elephant:** 5.3–11.5× PPL ratios, 90–100% flagged everywhere;
+  F2.a is more expensive at k=4 (11.5× at low). At current settings both methods are
+  far outside the 2.5× guardrail — E1 needs either fluency-aware candidate selection
+  or Pareto reporting (success × fluency), as the plan's E1 section already prescribes.
+- Per-concept asymmetries are large at low ρ (sadness gains ≫ music gains under F1.a) —
+  the mean frame does not distribute its effect evenly across constituents.
 
 ---
 
