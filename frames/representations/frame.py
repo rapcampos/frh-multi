@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Callable, Iterator, List, Union
 
 import numpy as np
@@ -16,6 +17,8 @@ from ..nlp import MultiLingualWordNetSynsets, SupportedLanguages
 from ..utils.stdlib import batchedlist
 from .concept import Concept
 from .unembedding import LinearUnembeddingRepresentation
+
+CONCEPT_CACHE_DIR = Path(__file__).resolve().parents[2] / "cache" / "concepts"
 
 
 class FrameUnembeddingRepresentation(LinearUnembeddingRepresentation):
@@ -146,6 +149,56 @@ class FrameUnembeddingRepresentation(LinearUnembeddingRepresentation):
         if synsets.empty:
             raise ValueError(f"Synset '{synset}' not found.")
         return self.compute_concept(synsets)
+
+    def _concept_cache_path(
+        self, synset: str, min_lemmas_per_synset: int, max_token_count: int
+    ) -> Path:
+        """Cache file keyed by model, synset, filter args, and language set."""
+        model_slug = self.model.id.replace("/", "--")
+        languages = self.data.language_codes.name
+        fname = (
+            f"{synset}__l{min_lemmas_per_synset}" f"_t{max_token_count}_{languages}.pt"
+        )
+        return CONCEPT_CACHE_DIR / model_slug / fname
+
+    def get_concept_cached(
+        self, synset: str, min_lemmas_per_synset: int, max_token_count: int
+    ) -> Concept:
+        """Like `get_concept`, but persists the frame tensor to disk.
+
+        First call builds the concept and writes it to `cache/concepts/`;
+        later calls (including across sessions) load the tensor directly,
+        skipping WordNet tokenization and frame construction.
+        """
+        path = self._concept_cache_path(synset, min_lemmas_per_synset, max_token_count)
+        if path.exists():
+            tensor = torch.load(path, map_location=self.model.device)
+            return Concept(synset=synset, tensor=tensor)
+
+        concept = self.get_concept(synset, min_lemmas_per_synset, max_token_count)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        torch.save(concept.tensor, path)
+        return concept
+
+    def concept_pair(
+        self,
+        synset_a: str,
+        synset_b: str,
+        min_lemmas_per_synset: int,
+        max_token_count: int,
+    ) -> tuple[Concept, Concept, float]:
+        """Build two concept frames (disk-cached) and their correlation rho.
+
+        rho predicts steering interference between the concepts; see
+        `Frame.rho` for the unequal-rank policy.
+
+        Returns:
+            tuple[Concept, Concept, float]: concept A, concept B, rho(A, B).
+        """
+        cargs = min_lemmas_per_synset, max_token_count
+        concept_a = self.get_concept_cached(synset_a, *cargs)
+        concept_b = self.get_concept_cached(synset_b, *cargs)
+        return concept_a, concept_b, concept_a.rho(concept_b).item()
 
     def _generate(
         self, input_text: Union[str, List[str]], *args, **kwargs

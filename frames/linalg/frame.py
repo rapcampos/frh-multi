@@ -55,9 +55,11 @@ class Frame(BaseModel, arbitrary_types_allowed=True):
                          closest to the frames' subtraction
         """
         return self._subtract_frames(self.tensor, other.tensor)
+
     def __str__(self) -> str:
         """String representation of the Frame."""
         return f"Frame(shape={self.tensor.shape})"
+
     @cached_property
     def rank(self) -> torch.Tensor:
         """Compute the rank of the concept's frame.
@@ -131,6 +133,22 @@ class Frame(BaseModel, arbitrary_types_allowed=True):
         #  and so on
         other_tensor = other.tensor if isinstance(other, Frame) else other
         return self._correlation_diagonal(self.tensor, other_tensor)
+
+    def rho(self, other: Frame) -> torch.Tensor:
+        """Concept-concept correlation between frames of possibly different ranks.
+
+        Zero-pads the vector dimension to a common size before correlating.
+        Padding is rank-neutral: rank is the count of nonzero vectors, so the
+        denominator sqrt(rank1 * rank2) is unaffected (the codebase's standard
+        unequal-rank policy).
+
+        Returns:
+            torch.Tensor: Correlation matrix of shape (n_self, n_other).
+        """
+        k = max(len(self), len(other))
+        t1 = torch.nn.functional.pad(self.tensor, (0, k - len(self)))
+        t2 = torch.nn.functional.pad(other.tensor, (0, k - len(other)))
+        return self.correlation(t1, t2)
 
     @staticmethod
     def _subtract_frames(frame1: torch.Tensor, frame2: torch.Tensor) -> torch.Tensor:
