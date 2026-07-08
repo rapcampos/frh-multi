@@ -525,14 +525,9 @@ class FrameUnembeddingRepresentation(LinearUnembeddingRepresentation):
         *args,
         **kwargs,
     ) -> tuple[list[str], torch.Tensor]:
-        cargs = min_lemmas_per_synset, max_token_count
-
-        concepts = []
-        for guide in guides:
-            concept_A = self.get_concept(guide[0], *cargs)
-            concept_B = self.get_concept(guide[1], *cargs) if len(guide) > 1 else None
-            concepts.append(concept_A - concept_B if concept_B else concept_A)
-
+        concepts = self._build_guide_concepts(
+            guides, min_lemmas_per_synset, max_token_count
+        )
         return self.generate_with_topk_beam_guide(
             sentences, *args, concepts=concepts, **kwargs
         )
@@ -578,18 +573,49 @@ class FrameUnembeddingRepresentation(LinearUnembeddingRepresentation):
         *args,
         **kwargs,
     ) -> tuple[list[str], torch.Tensor]:
-        cargs = min_lemmas_per_synset, max_token_count
-
-        guides_concepts = []
-        for guide in guides:
-            concept_A = self.get_concept(guide[0], *cargs)
-            concept_B = self.get_concept(guide[1], *cargs) if len(guide) > 1 else None
-            guide_concept = concept_A - concept_B if concept_B else concept_A
-            guides_concepts.append(guide_concept)
-
+        guides_concepts = self._build_guide_concepts(
+            guides, min_lemmas_per_synset, max_token_count
+        )
         return self.generate_with_topk_multi_guide(
             sentences, *args, guides=guides_concepts, **kwargs
         )
+
+    def _build_guide_concepts(
+        self,
+        guides: list[tuple[str, str]],
+        min_lemmas_per_synset: int,
+        max_token_count: int,
+    ) -> list[Concept]:
+        """Build one concept per guide tuple: [synset] or [attract, repel]."""
+        cargs = min_lemmas_per_synset, max_token_count
+        concepts = []
+        for guide in guides:
+            concept_A = self.get_concept(guide[0], *cargs)
+            concept_B = self.get_concept(guide[1], *cargs) if len(guide) > 1 else None
+            concepts.append(concept_A - concept_B if concept_B else concept_A)
+        return concepts
+
+    def quick_generate_with_topk_mean_frame_guide(
+        self,
+        sentences: list[str],
+        guides: list[tuple[str, str]],
+        min_lemmas_per_synset: int,
+        max_token_count: int,
+        *args,
+        guide_weights: list[float] | None = None,
+        **kwargs,
+    ) -> tuple[list[str], torch.Tensor]:
+        """F1.a — average the guide concepts into one frame (weighted
+        chordal/Procrustes mean), then run vanilla single-concept guidance.
+
+        Formerly (mis)named quick_generate_with_topk_subspace_guide; that name
+        now performs true joint-subspace composition (F1.b).
+        """
+        guide_concepts = self._build_guide_concepts(
+            guides, min_lemmas_per_synset, max_token_count
+        )
+        averaged = Concept.average(guide_concepts, weights=guide_weights)
+        return self.generate_with_topk_guide(sentences, *args, guide=averaged, **kwargs)
 
     def quick_generate_with_topk_subspace_guide(
         self,
@@ -600,16 +626,15 @@ class FrameUnembeddingRepresentation(LinearUnembeddingRepresentation):
         *args,
         **kwargs,
     ) -> tuple[list[str], torch.Tensor]:
-        cargs = min_lemmas_per_synset, max_token_count
-
-        guide_concepts = []
-        for guide in guides:
-            concept_A = self.get_concept(guide[0], *cargs)
-            concept_B = self.get_concept(guide[1], *cargs) if len(guide) > 1 else None
-            guide_concepts.append(concept_A - concept_B if concept_B else concept_A)
-
-        averaged = Concept.average(guide_concepts)
-        return self.generate_with_topk_guide(sentences, *args, guide=averaged, **kwargs)
+        """F1.b — compose the guide concepts into their joint subspace
+        (orthonormal basis of the union of spans, OR semantics), then run
+        vanilla single-concept guidance with it.
+        """
+        guide_concepts = self._build_guide_concepts(
+            guides, min_lemmas_per_synset, max_token_count
+        )
+        subspace = Concept.joint_subspace(guide_concepts)
+        return self.generate_with_topk_guide(sentences, *args, guide=subspace, **kwargs)
 
     def _prepare_input_text(self, input_text: Union[str, List[str]]) -> List[str]:
         """Prepare input text for generation."""

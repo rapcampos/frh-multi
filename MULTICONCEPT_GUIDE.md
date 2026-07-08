@@ -39,12 +39,20 @@ enabled. See `plans/multiconcept-cgd-implementation-plan.md`, Key finding 1.
 
 ---
 
-## Mean-frame composition (`quick_generate_with_topk_subspace_guide`)
+## Mean-frame composition (`quick_generate_with_topk_mean_frame_guide`)
 
-Averages the guide concepts into a single frame via `Concept.average`
-(Procrustes/chordal mean) and runs vanilla single-concept guidance with it.
-Note: despite the current name, this is mean-frame composition (F1.a), not a
-joint subspace — a true QR/SVD joint subspace and a rename are planned.
+F1.a — averages the guide concepts into a single frame via `Concept.average`
+(weighted extrinsic/chordal Procrustes mean; supports `guide_weights`, negative
+weights repel) and runs vanilla single-concept guidance with it. Frames of
+different ranks are zero-padded to a common k (rank-neutral policy).
+
+## Joint-subspace composition (`quick_generate_with_topk_subspace_guide`)
+
+F1.b — `Concept.joint_subspace` concatenates all guide frames' vectors and
+orthonormalizes via SVD (rank-truncated), producing a basis of the union of
+spans. OR semantics: alignment with any constituent scores well. This is the
+true subspace method; before Step 5 this name incorrectly pointed at the
+mean-frame composition.
 
 ---
 

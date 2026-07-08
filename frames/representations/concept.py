@@ -37,17 +37,70 @@ class Concept(Frame):
         return self.synset
 
     @classmethod
-    def average(cls, concepts: list[Concept]) -> Concept:
-        """Compute the Fréchet mean of a list of concepts on the Stiefel manifold.
+    def _pad_to_common_rank(cls, concepts: list[Concept]) -> list[torch.Tensor]:
+        """Zero-pad frame tensors to a common k (the standard unequal-rank
+        policy: padding is rank-neutral, since rank counts nonzero vectors)."""
+        k = max(len(c) for c in concepts)
+        return [torch.nn.functional.pad(c.tensor, (0, k - len(c))) for c in concepts]
 
-        Equivalent to solve_procrustes(F1 + F2 + ... + Fn): finds the single
-        frame geometrically closest to all inputs. All tensors must share the
-        same shape (n, d, k).
+    @classmethod
+    def average(
+        cls, concepts: list[Concept], weights: list[float] | None = None
+    ) -> Concept:
+        """F1.a — weighted extrinsic (chordal/Procrustes) mean of concepts.
+
+        Computes solve_procrustes(sum_i w_i * C_i): the orthonormal frame
+        closest in chordal distance to the weighted sum. Note this is the
+        EXTRINSIC mean, not the geodesic Fréchet mean on the Stiefel manifold
+        (thesis RQ3 compares the two; Riemannian variants drop in here).
+
+        Frames of different ranks are zero-padded to a common k. Trailing
+        all-zero columns of the weighted sum are excluded from the polar
+        decomposition — their factor would be arbitrary — and restored as
+        zeros, keeping rank bookkeeping consistent.
+
+        Weights default to uniform; the overall scale is irrelevant (the polar
+        factor is scale-invariant), only ratios matter. Negative weights repel
+        (frame-space analogue of score-space negative steering).
         """
-        summed = torch.stack([c.tensor for c in concepts]).sum(0)
+        weights = weights if weights is not None else [1.0] * len(concepts)
+        padded = cls._pad_to_common_rank(concepts)
+        summed = sum(w * t for w, t in zip(weights, padded))
+
+        k = summed.size(-1)
+        nonzero_cols = summed.abs().sum(dim=(0, -2)) > 0
+        k_eff = int(torch.nonzero(nonzero_cols).max()) + 1 if nonzero_cols.any() else k
+        mean = solve_procrustes(summed[..., :k_eff])
+        mean = torch.nn.functional.pad(mean, (0, k - k_eff))
+
         return cls(
             synset=" | ".join(c.synset for c in concepts),
-            tensor=solve_procrustes(summed),
+            tensor=mean,
+        )
+
+    @classmethod
+    def joint_subspace(cls, concepts: list[Concept], rtol: float = 1e-3) -> Concept:
+        """F1.b — orthonormal basis of the union of the concepts' spans.
+
+        Concatenates all frames' vectors and orthonormalizes via SVD,
+        truncating directions with singular values below rtol * s_max
+        (rank-deficient directions would otherwise be arbitrary).
+
+        OR-like semantics: unlike `average`, a candidate aligned with ANY
+        constituent scores well against the result — at the cost of a higher
+        rank denominator in the correlation.
+        """
+        stacked = torch.cat([c.tensor for c in concepts], dim=-1)
+        basis_full, singular_values, _ = torch.linalg.svd(
+            stacked.float(), full_matrices=False
+        )
+        keep = singular_values > rtol * singular_values.amax(dim=-1, keepdim=True)
+        basis = basis_full * keep.unsqueeze(-2)
+        k_eff = int(keep.sum(-1).max())
+
+        return cls(
+            synset=" + ".join(c.synset for c in concepts),
+            tensor=basis[..., :k_eff].to(stacked.dtype),
         )
 
     def _find_synset_index(self, synset: str) -> int:

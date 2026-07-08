@@ -10,7 +10,8 @@ built, what its gates showed, and what we learned. Updated as steps complete.
 | 2b | True beam-search variant | ✅ k=1 degeneracy + CPU tests |
 | 3 | Concept-pair toolkit + ρ | ✅ ρ-ordering sanity passed |
 | 4 | Family 2 aggregators + normalization | ✅ 19 CPU tests + golden re-verified |
-| 5–9 | Family 1 completion, schedulers, eval harness, E0 | ⏳ pending |
+| 5 | Family 1: weighted mean + true joint subspace | ✅ 12 CPU tests + golden re-verified |
+| 6–9 | Schedulers, eval harness, E0 | ⏳ pending |
 
 ---
 
@@ -118,6 +119,42 @@ flag wired into both loops + multi-guide (default None = golden path). 19 CPU un
 - Implementation notes: z-score maps constant scores to 0 (no NaN on shared beam
   prefixes); `constrained` needs a finite penalty inside the loop because scores are
   cumulatively summed over positions (−inf would poison the suffix).
+
+## Step 5 — Family 1: weighted mean + true joint subspace
+
+**Built:** `Concept.average(concepts, weights=None)` — weighted extrinsic (chordal/
+Procrustes) mean with unequal-rank handling; trailing all-zero columns of the weighted
+sum are excluded from the polar decomposition (their factor is arbitrary) and restored
+as zeros, so `weights=[1,0]` no longer risks garbage columns. Docstring fixed: extrinsic
+mean, NOT geodesic Fréchet (RQ3 drop-in point). `Concept.joint_subspace(concepts, rtol)`
+— real F1.b: SVD basis of the union of spans, rank-truncated. Renames:
+`quick_generate_with_topk_mean_frame_guide` (honest F1.a name, supports `guide_weights`)
+and `quick_generate_with_topk_subspace_guide` (now actually F1.b). 12 CPU unit tests.
+
+**Findings:**
+- **Joint-subspace composition is geometrically correct but mismatched with FRH's
+  scoring.** The subspace provably contains each constituent's span (unit-tested via
+  projection norms), yet its trace-based correlation with its own constituents is
+  near zero or NEGATIVE: ρ(subspace, joy) = −0.175, ρ(subspace, dog) = −0.133, and
+  ρ(subspace(woman, child), girl) = 0.034 vs 0.488 for the mean. Cause: FRH's frame
+  correlation is a *Stiefel* quantity — it depends on vector order and sign — while an
+  SVD basis is an arbitrary rotation of the span (a *Grassmannian* object). OR-semantics
+  via subspaces needs a span-aware score (e.g. projection-norm, or per-candidate
+  Procrustes alignment before the trace); with the current correlation, F1.b will
+  under-steer and its E1 numbers must be interpreted accordingly. Thesis-relevant:
+  composition geometry and scoring geometry must match.
+- **The mean is a perfect compromise geometrically:** ρ(mean, joy) = ρ(mean, dog)
+  = 0.807 (from ρ(joy, dog) = 0.334) — symmetric by construction, and much closer to
+  both constituents than they are to each other.
+- **Weighted average generalizes the paper's differential guidance exactly:**
+  ρ(average([joy, dog], weights=[1, −1]), joy − dog) = 1.0000. Frame-space negative
+  steering and `Concept.__sub__` are the same operation; the weighted mean is the
+  continuous family containing it.
+- Weight sweeps visibly shift generation content (joy-heavy → cheerful village tale;
+  dog-heavy → different lexical field), giving F1.a a tunable knob for E1 Pareto sweeps.
+- Subspace rank adds up as expected (joy k=3 + dog k=3 → rank 6, minus overlaps), which
+  also inflates the correlation denominator √(rank·rank) — a second, mundane reason
+  subspace scores run low.
 
 ---
 
