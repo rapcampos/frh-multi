@@ -10,6 +10,7 @@ Detailed step-by-step plan derived from `RESEARCH_PLAN.md`, adapted to the curre
 - Golden-file reference model: `hugging-quants/Meta-Llama-3.1-8B-Instruct-AWQ-INT4`, with **k=3, steps=16**.
 - Testing policy: `tests/` + pytest for math/aggregator logic (CPU where possible); steering experiments stay in notebooks.
 - **Existing `resources/` content is the baseline — never modify or overwrite it.** New results may be added to `resources/` under new filenames; golden files live in `tests/golden/`.
+- **Every step ships a playground notebook** (`playground/stepNN_<topic>.ipynb`) demonstrating the step's new features interactively, verified to execute end-to-end.
 
 ---
 
@@ -103,6 +104,17 @@ The steering loop keeps a single surviving parent per step: the k "beams" are al
 ### Step 8: Pair selection
 
 - Notebook `15_e0_pilot.ipynb`: compute ρ over ~30 candidate pairs (prefer synsets rich in multi-token lemmas — filterable from the synsets DataFrame); pick 3 pairs at low/medium/high ρ.
+- Spread candidates across semantic regimes and record each pair's regime alongside its measured ρ (the two may dissociate — antonyms are often geometrically *similar*; if ρ and regime disagree, that is a finding, not noise):
+  - **similar** (coordinate/near-synonym: `joy`/`happiness`) — easy control, interference should be minimal
+  - **antonyms** (`joy`/`sorrow`, paper's `black`/`white`) — do NOT assume low/negative ρ
+  - **unrelated** (`dog`/`algebra`) — core F1.a interference stress test, expected max F1-vs-F2 gap
+  - **compositional** (C1+C2≈C3: `woman`+`child`≈`girl`) — ρ(mean(C1,C2), C3) is measurable before generation (RQ3 link); C3's member list gives a free success metric
+  - **hypernym/hyponym** (`dog`/`animal`) — nesting: does the specific concept dominate?
+  - **asymmetric richness** (lemma-rich vs sparse concept) — the regime where the z-score flag should visibly matter
+  - **polysemy** (two synsets sharing a surface lemma) — are frames sense-specific?
+  - **attract+repel** (one negative weight: `joy` attract, `sorrow` repel) — exercises the signed-weight path (E3 preview)
+- Also classify each pair on the orthogonal axis: word-level co-realizable vs passage-level only (the Family 3 control — distinguishes method failure from linguistic impossibility).
+- All picks must survive `min_lemmas_per_synset=11, max_token_count=3` on the Llama tokenizer's 8-language WordNet.
 
 ### Step 9: Pilot matrix
 

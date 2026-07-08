@@ -166,3 +166,7 @@ output.ipynb
 .idea
 
 /cache/
+
+/playground/outputs/*
+/playground/cufile.log
+/playground/cache/*
