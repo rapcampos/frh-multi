@@ -203,6 +203,23 @@ class FrameUnembeddingRepresentation(LinearUnembeddingRepresentation):
         )
         return last_hs_frames * concept
 
+    def _score_hidden_states(
+        self,
+        last_hs: torch.Tensor,
+        concepts: List[Concept],
+        weights: list[float],
+        scorer: Callable[[torch.Tensor, torch.Tensor], torch.Tensor],
+    ) -> torch.Tensor:
+        """Project hidden states onto every concept and aggregate via `scorer`."""
+        last_hs = last_hs.to(concepts[0].device)
+        projections = torch.stack(
+            [self._project_hidden_states(last_hs, c) for c in concepts], dim=-1
+        )
+        weights_tensor = torch.tensor(
+            weights, device=projections.device, dtype=projections.dtype
+        )
+        return scorer(projections, weights_tensor)
+
     @torch.inference_mode()
     def _generate_guided(
         self,
@@ -252,14 +269,9 @@ class FrameUnembeddingRepresentation(LinearUnembeddingRepresentation):
             #  so we choose this approach for now.
             sequences, hidden_states = self._generate_candidates(tokens, k)
 
-            last_hs = hidden_states[-1].to(concepts[0].device)
-            projections = torch.stack(
-                [self._project_hidden_states(last_hs, c) for c in concepts], dim=-1
+            scores = self._score_hidden_states(
+                hidden_states[-1], concepts, weights, scorer
             )
-            weights_tensor = torch.tensor(
-                weights, device=projections.device, dtype=projections.dtype
-            )
-            scores = scorer(projections, weights_tensor)
 
             max_probe = scores.cumsum(-2).reshape(n, k, -1).max(-2)
 
@@ -314,6 +326,143 @@ class FrameUnembeddingRepresentation(LinearUnembeddingRepresentation):
 
         n = min(p.size(-1) for p in probe)
         return text, torch.cat([p[..., :n] for p in probe])
+
+    @staticmethod
+    def _topk_beam_selection(
+        cum: torch.Tensor, candidate_tokens: torch.Tensor, k: int
+    ) -> tuple[torch.Tensor, torch.Tensor]:
+        """
+        Select the top-k beams from the candidate pool by cumulative score.
+
+        Unlike the original method (which keeps the k children of a single
+        winning parent), all pool candidates compete regardless of parent,
+        so surviving beams genuinely diverge.
+
+        Args:
+            cum (torch.Tensor): Cumulative scores per candidate, shape (n, m, T).
+            candidate_tokens (torch.Tensor): Expansions of each candidate,
+                shape (n, m, k, T'). Children are ordered by next-token
+                probability (child 0 = greedy).
+            k (int): Number of beams to keep.
+
+        Returns:
+            tuple[torch.Tensor, torch.Tensor]: The surviving beams' expansions
+            (n, min(k, m), k, T'), sorted by score (beam 0 = best), and the
+            best beam's cumulative score trajectory (n, T).
+        """
+        n = cum.size(0)
+        beam_scores = cum[..., -1]
+        top = beam_scores.topk(min(k, beam_scores.size(-1)), dim=-1).indices
+        new_tokens = candidate_tokens[torch.arange(n).unsqueeze(-1), top.cpu()]
+        best_probe = cum[torch.arange(n, device=cum.device), top[:, 0]]
+        return new_tokens, best_probe
+
+    @torch.inference_mode()
+    def _generate_with_topk_beam_guide(
+        self,
+        input_text: Union[str, List[str]],
+        concepts: List[Concept],
+        weights: list[float] | None = None,
+        k: int = 2,
+        steps: int = 16,
+        scorer: Callable[[torch.Tensor, torch.Tensor], torch.Tensor] | None = None,
+    ) -> tuple[List[str], torch.Tensor]:
+        """
+        True beam-search variant of top-k guided generation.
+
+        Differs from the original `_generate_with_topk_guide` in one structural
+        way: at each step, all pool candidates compete and the top-k sequences
+        survive (the original keeps the k children of a single winning parent,
+        so its beams only ever differ in their last token). Beams here
+        genuinely diverge, at the cost of a k^2-wide forward pass per step
+        after the first (mind memory for large k * batch_size).
+
+        No length normalization is applied: all beams share the same length by
+        construction (prompts are padded together and every beam grows one
+        token per step), so cumulative scores are directly comparable. EOS
+        handling mirrors the original: generation stops once every pool
+        candidate contains an EOS token.
+
+        Args:
+            input_text (Union[str, List[str]]): Input text for generation.
+            concepts (List[Concept]): Concepts to guide the generation.
+            weights (list[float] | None): Per-concept weights (default: all 1.0).
+            k (int): Number of beams to maintain.
+            steps (int): Number of generation steps.
+            scorer: Same swappable aggregator as `_generate_guided`.
+
+        Returns:
+            tuple[List[str], torch.Tensor]: Best beam per input and its
+            cumulative score trajectory.
+        """
+        input_text = self._prepare_input_text(input_text)
+        n = len(input_text)
+
+        weights = weights if weights is not None else [1.0] * len(concepts)
+        scorer = scorer if scorer is not None else self._weighted_sum_score
+
+        inputs = self.model.make_input(input_text, padding=True)
+        tokens = self._generate_candidates(inputs["input_ids"], k)[0].flatten(0, 1)
+        m = k  # pool size per input: k initially, k^2 after the first selection
+
+        for _ in range(steps):
+            sequences, hidden_states = self._generate_candidates(tokens, k)
+
+            scores = self._score_hidden_states(
+                hidden_states[-1], concepts, weights, scorer
+            )
+
+            cum = scores.cumsum(-2).reshape(n, m, -1)
+            candidate_tokens = sequences.reshape(n, m, k, -1)
+            new_tokens, best_probe = self._topk_beam_selection(cum, candidate_tokens, k)
+
+            tokens = new_tokens.flatten(1, 2).flatten(0, 1)
+            m = tokens.size(0) // n
+
+            if self._is_generation_complete(tokens):
+                break
+
+        best_tokens = new_tokens[:, 0, 0]
+        return self.model.decode(best_tokens), best_probe.cpu()
+
+    def generate_with_topk_beam_guide(
+        self,
+        input_text: Union[str, List[str]],
+        *args,
+        batch_size: int = 32,
+        **kwargs,
+    ) -> tuple[list[str], torch.Tensor]:
+        text, probe = [], []
+        for batch in tqdm(batchedlist(input_text, batch_size)):
+            batch_text, batch_probe = self._generate_with_topk_beam_guide(
+                batch, *args, **kwargs
+            )
+            text.extend(batch_text)
+            probe.append(batch_probe)
+
+        n = min(p.size(-1) for p in probe)
+        return text, torch.cat([p[..., :n] for p in probe])
+
+    def quick_generate_with_topk_beam_guide(
+        self,
+        sentences: list[str],
+        guides: list[tuple[str, str]],
+        min_lemmas_per_synset: int,
+        max_token_count: int,
+        *args,
+        **kwargs,
+    ) -> tuple[list[str], torch.Tensor]:
+        cargs = min_lemmas_per_synset, max_token_count
+
+        concepts = []
+        for guide in guides:
+            concept_A = self.get_concept(guide[0], *cargs)
+            concept_B = self.get_concept(guide[1], *cargs) if len(guide) > 1 else None
+            concepts.append(concept_A - concept_B if concept_B else concept_A)
+
+        return self.generate_with_topk_beam_guide(
+            sentences, *args, concepts=concepts, **kwargs
+        )
 
     def _generate_with_topk_multi_guide(
         self,
