@@ -18,7 +18,7 @@ def test_selects_best_candidates_across_parents():
     cum, cand = make_pool(1, 4, 2, 3)
     cum[0, :, -1] = torch.tensor([0.9, 0.1, 0.8, 0.2])
 
-    new_tokens, best_probe = select(cum, cand, 2)
+    new_tokens, best_probe, _ = select(cum, cand, 2)
 
     assert new_tokens.shape == (1, 2, 2, 3)
     assert torch.equal(new_tokens[0, 0], cand[0, 0])  # best beam first
@@ -31,7 +31,7 @@ def test_selection_is_independent_per_input():
     cum[0, :, -1] = torch.tensor([0.1, 0.9, 0.5])
     cum[1, :, -1] = torch.tensor([0.7, 0.2, 0.3])
 
-    new_tokens, best_probe = select(cum, cand, 2)
+    new_tokens, best_probe, _ = select(cum, cand, 2)
 
     assert torch.equal(new_tokens[0, 0], cand[0, 1])
     assert torch.equal(new_tokens[0, 1], cand[0, 2])
@@ -47,7 +47,7 @@ def test_selection_uses_final_cumulative_score_not_peak():
     cum[0, 0] = torch.tensor([0.0, 5.0, 0.1])
     cum[0, 1] = torch.tensor([0.0, 0.2, 0.9])
 
-    new_tokens, best_probe = select(cum, cand, 1)
+    new_tokens, best_probe, _ = select(cum, cand, 1)
 
     assert torch.equal(new_tokens[0, 0], cand[0, 1])
     assert torch.equal(best_probe[0], cum[0, 1])
@@ -57,7 +57,7 @@ def test_k_larger_than_pool_keeps_whole_pool():
     cum, cand = make_pool(1, 2, 3, 2)
     cum[0, :, -1] = torch.tensor([0.2, 0.5])
 
-    new_tokens, _ = select(cum, cand, 3)
+    new_tokens, _, _ = select(cum, cand, 3)
 
     assert new_tokens.shape == (1, 2, 3, 2)
     assert torch.equal(new_tokens[0, 0], cand[0, 1])
@@ -67,8 +67,33 @@ def test_k1_degenerates_to_argmax():
     cum, cand = make_pool(1, 3, 1, 2)
     cum[0, :, -1] = torch.tensor([0.3, 0.1, 0.8])
 
-    new_tokens, best_probe = select(cum, cand, 1)
+    new_tokens, best_probe, _ = select(cum, cand, 1)
 
     assert new_tokens.shape == (1, 1, 1, 2)
     assert torch.equal(new_tokens[0, 0], cand[0, 2])
     assert torch.equal(best_probe[0], cum[0, 2])
+
+
+def test_selection_scores_override_ranking_but_not_probe():
+    # blended selection prefers candidate 1 even though candidate 0 has the
+    # higher concept score; the probe still reports candidate 1's CONCEPT
+    # trajectory (fluency-aware selection semantics)
+    cum, cand = make_pool(1, 2, 2, 3)
+    cum[0, 0] = torch.tensor([0.0, 0.5, 0.9])
+    cum[0, 1] = torch.tensor([0.0, 0.1, 0.4])
+    blended = torch.tensor([[0.2, 0.7]])
+
+    new_tokens, best_probe, top = select(cum, cand, 1, selection_scores=blended)
+
+    assert torch.equal(new_tokens[0, 0], cand[0, 1])
+    assert torch.equal(best_probe[0], cum[0, 1])
+    assert top.tolist() == [[1]]
+
+
+def test_returned_indices_match_selection_order():
+    cum, cand = make_pool(1, 4, 2, 2)
+    cum[0, :, -1] = torch.tensor([0.9, 0.1, 0.8, 0.2])
+
+    _, _, top = select(cum, cand, 2)
+
+    assert top.tolist() == [[0, 2]]

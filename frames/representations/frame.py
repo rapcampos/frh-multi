@@ -297,6 +297,7 @@ class FrameUnembeddingRepresentation(LinearUnembeddingRepresentation):
         steps: int = 16,
         scorer: Callable[[torch.Tensor, torch.Tensor], torch.Tensor] | None = None,
         normalize: str | None = None,
+        fluency_weight: float = 0.0,
     ) -> tuple[List[str], torch.Tensor]:
         """
         Shared top-k guided generation loop.
@@ -305,6 +306,13 @@ class FrameUnembeddingRepresentation(LinearUnembeddingRepresentation):
         hidden states onto every concept, aggregates the per-concept projections
         into a single score via `scorer`, and keeps the k children of the beam
         with the highest cumulative score.
+
+        With `fluency_weight` = lambda > 0, selection maximizes the blended
+        objective `cumulative concept score + lambda * cumulative token
+        log-probability` instead — fluency-aware candidate selection. The
+        returned probe stays the CONCEPT trajectory of the selected beam.
+        Must stay 0.0 on the golden path (default; the selection code path is
+        then untouched).
 
         Args:
             input_text (Union[str, List[str]]): Input text for generation.
@@ -333,7 +341,11 @@ class FrameUnembeddingRepresentation(LinearUnembeddingRepresentation):
             scorer.reset(n)
 
         inputs = self.model.make_input(input_text, padding=True)
-        tokens = self._generate_candidates(inputs["input_ids"], k)[0].flatten(0, 1)
+        first_tokens, _, first_logprobs = self._generate_candidates(
+            inputs["input_ids"], k
+        )
+        tokens = first_tokens.flatten(0, 1)
+        cum_logprob = first_logprobs.flatten()
 
         for _ in range(steps):
             # notice this approach uses a single pass through the model
@@ -344,23 +356,43 @@ class FrameUnembeddingRepresentation(LinearUnembeddingRepresentation):
             if hasattr(scorer, "observe"):
                 scorer.observe(tokens, n)
 
-            sequences, hidden_states = self._generate_candidates(tokens, k)
+            sequences, hidden_states, child_logprobs = self._generate_candidates(
+                tokens, k
+            )
 
             scores = self._score_hidden_states(
                 hidden_states[-1], concepts, weights, scorer, n, normalize
             )
 
-            max_probe = scores.cumsum(-2).reshape(n, k, -1).max(-2)
+            if fluency_weight:
+                cum = scores.cumsum(-2).reshape(n, k, -1)
+                blended = cum[..., -1] + fluency_weight * cum_logprob.reshape(n, k).to(
+                    cum.device
+                )
+                col_idx = blended.argmax(-1)
+                probe = cum[torch.arange(n, device=cum.device), col_idx]
+                col_idx = col_idx.cpu()
+            else:
+                max_probe = scores.cumsum(-2).reshape(n, k, -1).max(-2)
+                col_idx = max_probe.indices[..., -1].cpu()
+                probe = max_probe.values
 
             row_idx = np.arange(n)
-            col_idx = max_probe.indices[..., -1].cpu()
             candidate_tokens = sequences.reshape(n, k, k, -1)
             tokens = candidate_tokens[row_idx, col_idx].flatten(0, 1)
+
+            if fluency_weight:
+                rows = torch.arange(n, device=cum_logprob.device) * k + col_idx.to(
+                    cum_logprob.device
+                )
+                cum_logprob = (
+                    cum_logprob[rows].unsqueeze(-1) + child_logprobs[rows]
+                ).flatten()
 
             if self._is_generation_complete(tokens):
                 break
 
-        return self.model.decode(tokens[::k]), max_probe.values.cpu()
+        return self.model.decode(tokens[::k]), probe.cpu()
 
     def _generate_with_topk_guide(
         self,
@@ -406,8 +438,11 @@ class FrameUnembeddingRepresentation(LinearUnembeddingRepresentation):
 
     @staticmethod
     def _topk_beam_selection(
-        cum: torch.Tensor, candidate_tokens: torch.Tensor, k: int
-    ) -> tuple[torch.Tensor, torch.Tensor]:
+        cum: torch.Tensor,
+        candidate_tokens: torch.Tensor,
+        k: int,
+        selection_scores: torch.Tensor | None = None,
+    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         """
         Select the top-k beams from the candidate pool by cumulative score.
 
@@ -421,18 +456,23 @@ class FrameUnembeddingRepresentation(LinearUnembeddingRepresentation):
                 shape (n, m, k, T'). Children are ordered by next-token
                 probability (child 0 = greedy).
             k (int): Number of beams to keep.
+            selection_scores: Optional (n, m) scores to rank beams by instead
+                of `cum[..., -1]` (e.g. the fluency-blended objective). The
+                probe is always reported from `cum` — the concept trajectory
+                of the selected-best beam.
 
         Returns:
-            tuple[torch.Tensor, torch.Tensor]: The surviving beams' expansions
-            (n, min(k, m), k, T'), sorted by score (beam 0 = best), and the
-            best beam's cumulative score trajectory (n, T).
+            tuple: The surviving beams' expansions (n, min(k, m), k, T'),
+            sorted by score (beam 0 = best), the best beam's cumulative score
+            trajectory (n, T), and the surviving beams' pool indices
+            (n, min(k, m)).
         """
         n = cum.size(0)
-        beam_scores = cum[..., -1]
+        beam_scores = cum[..., -1] if selection_scores is None else selection_scores
         top = beam_scores.topk(min(k, beam_scores.size(-1)), dim=-1).indices
         new_tokens = candidate_tokens[torch.arange(n).unsqueeze(-1), top.cpu()]
         best_probe = cum[torch.arange(n, device=cum.device), top[:, 0]]
-        return new_tokens, best_probe
+        return new_tokens, best_probe, top
 
     @torch.inference_mode()
     def _generate_with_topk_beam_guide(
@@ -444,6 +484,7 @@ class FrameUnembeddingRepresentation(LinearUnembeddingRepresentation):
         steps: int = 16,
         scorer: Callable[[torch.Tensor, torch.Tensor], torch.Tensor] | None = None,
         normalize: str | None = None,
+        fluency_weight: float = 0.0,
     ) -> tuple[List[str], torch.Tensor]:
         """
         True beam-search variant of top-k guided generation.
@@ -468,6 +509,9 @@ class FrameUnembeddingRepresentation(LinearUnembeddingRepresentation):
             k (int): Number of beams to maintain.
             steps (int): Number of generation steps.
             scorer: Same swappable aggregator as `_generate_guided`.
+            fluency_weight: Same fluency-blended selection as
+                `_generate_guided` (lambda on the cumulative token
+                log-probability; 0.0 = pure concept score).
 
         Returns:
             tuple[List[str], torch.Tensor]: Best beam per input and its
@@ -482,14 +526,20 @@ class FrameUnembeddingRepresentation(LinearUnembeddingRepresentation):
             scorer.reset(n)
 
         inputs = self.model.make_input(input_text, padding=True)
-        tokens = self._generate_candidates(inputs["input_ids"], k)[0].flatten(0, 1)
+        first_tokens, _, first_logprobs = self._generate_candidates(
+            inputs["input_ids"], k
+        )
+        tokens = first_tokens.flatten(0, 1)
+        cum_logprob = first_logprobs.flatten()
         m = k  # pool size per input: k initially, k^2 after the first selection
 
         for _ in range(steps):
             if hasattr(scorer, "observe"):
                 scorer.observe(tokens, n)
 
-            sequences, hidden_states = self._generate_candidates(tokens, k)
+            sequences, hidden_states, child_logprobs = self._generate_candidates(
+                tokens, k
+            )
 
             scores = self._score_hidden_states(
                 hidden_states[-1], concepts, weights, scorer, n, normalize
@@ -497,9 +547,25 @@ class FrameUnembeddingRepresentation(LinearUnembeddingRepresentation):
 
             cum = scores.cumsum(-2).reshape(n, m, -1)
             candidate_tokens = sequences.reshape(n, m, k, -1)
-            new_tokens, best_probe = self._topk_beam_selection(cum, candidate_tokens, k)
+            selection = (
+                cum[..., -1] + fluency_weight * cum_logprob.reshape(n, m).to(cum.device)
+                if fluency_weight
+                else None
+            )
+            new_tokens, best_probe, top = self._topk_beam_selection(
+                cum, candidate_tokens, k, selection_scores=selection
+            )
 
             tokens = new_tokens.flatten(1, 2).flatten(0, 1)
+
+            if fluency_weight:
+                rows = torch.arange(n, device=cum_logprob.device).unsqueeze(
+                    -1
+                ) * m + top.to(cum_logprob.device)
+                cum_logprob = (
+                    cum_logprob[rows].unsqueeze(-1) + child_logprobs[rows]
+                ).flatten()
+
             m = tokens.size(0) // n
 
             if self._is_generation_complete(tokens):
@@ -656,16 +722,23 @@ class FrameUnembeddingRepresentation(LinearUnembeddingRepresentation):
         return [input_text] if isinstance(input_text, str) else input_text
 
     def _generate_candidates(self, tokens: torch.IntTensor, k: int) -> torch.Tensor:
-        """Generate candidate texts."""
+        """Generate candidate texts.
+
+        Returns (candidates, hidden_states, logprobs) where logprobs holds the
+        log-probability of each row's k candidate next tokens, shape (rows, k).
+        The top-k is taken on softmax probabilities exactly as before (their
+        log is monotone, so candidate identity and order are unchanged).
+        """
         inputs = self.model.make_input(self.model.decode(tokens), padding=True)
         outputs = self.model(**inputs, output_hidden_states=True, use_cache=False)
         logits, hs = outputs["logits"], outputs["hidden_states"]
 
-        generated = logits.softmax(-1)[..., -1, :].topk(k).indices.unsqueeze_(-1)
+        top = logits.softmax(-1)[..., -1, :].topk(k)
+        generated = top.indices.unsqueeze(-1)
         tokens = tokens.unsqueeze(-2).expand(-1, k, -1)
         candidates = torch.cat([tokens, generated], dim=-1)
 
-        return candidates, hs
+        return candidates, hs, top.values.log()
 
     def _is_generation_complete(self, gen_text: torch.Tensor) -> bool:
         """Check if the generation is complete."""

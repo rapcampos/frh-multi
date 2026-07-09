@@ -1,7 +1,7 @@
 # Multi-Concept CGD — Findings Summary
 
-Condensed from `multiconcept-cgd-findings.md` (per-step log). State as of Step 12
-(E1 family sweep, 2026-07). Model: `Meta-Llama-3.1-8B-Instruct-AWQ-INT4`.
+Condensed from `multiconcept-cgd-findings.md` (per-step log). State as of Step 13
+(E1b fluency dial, 2026-07). Model: `Meta-Llama-3.1-8B-Instruct-AWQ-INT4`.
 
 ## What was built
 
@@ -100,6 +100,18 @@ continuous expression metric, JSONL logging, per-step score traces), and
    **beam-F1.a** — beam search over the extrinsic mean frame (k=4 beam needs
    batch_size=4 on 24 GB).
 
+10. **The fluency dial closes the fluency problem (E1b).** Selection can blend
+    the model's own cumulative token log-probability:
+    `score = concept + λ·logprob` (`fluency_weight` on both loops; λ=0 is the
+    untouched golden path; λ→∞ recovers unsteered greedy). λ≈0.4 brings PPL
+    to guardrail level (2.4–3.1×) keeping ~85% of beam's expression; λ≈1 gives
+    near-native fluency (1.3–1.6×, ~0 flags) keeping ~50%. Mild λ (0.1–0.2) is
+    a free win — joint-z often *rises* while PPL falls, because the log-prob
+    term vetoes degenerate high-projection tokens (fluency as a regularizer).
+    Also settled: the aligned mean does NOT stack with beam search (its low-ρ
+    advantage is a greedy-decoder rescue). **Final recipe: beam search +
+    extrinsic mean + λ ≈ 0.4, one method for all ρ.**
+
 ## Measurement lessons
 
 - **Presence-success floors at 0** even when steering visibly works (topic shifts
@@ -118,17 +130,19 @@ continuous expression metric, JSONL logging, per-step score traces), and
 
 ## Open questions / next steps
 
-1. **Fluency-aware candidate selection** — the single highest-leverage item:
-   every method still runs ≥6× PPL with ≥75% flagged; beam softens but doesn't
-   fix it. Also calibrate the 2.5× guardrail.
-2. **beam + aligned mean at low ρ** — untested combination; greedy-tier logic
-   says it should stack on beam-F1.a's low-ρ lead. Cheap micro-experiment.
-3. **E3:** negative/mixed steering — score-space w=[1,−1] and frame-space
+1. **E3:** negative/mixed steering — score-space w=[1,−1] and frame-space
    differential produce visibly different texts, so the comparison is non-trivial.
    Note: intrinsic means reject negative weights (Fréchet functionals) — negative
    steering stays extrinsic/differential.
-4. F2.c constrained needs per-step (non-cumulative) constraint handling or
+2. **Thesis consolidation** — the experimental arc is complete (families →
+   gauge/metric → crossover → beam dominance → fluency dial); write it up while
+   fresh. The final recipe (beam + extrinsic mean + λ≈0.4) is the headline
+   method contribution alongside the RQ3 geometry results.
+3. F2.c constrained needs per-step (non-cumulative) constraint handling or
    calibrated thresholds before it's a fair contender; currently uniformly worst.
+4. Optional scale-ups: E1b's λ knee on more pairs/prompts; larger k under λ
+   (fluency pressure may tolerate wider pools); a second model family for
+   generality.
 
 ## Artifact map
 
@@ -142,4 +156,5 @@ continuous expression metric, JSONL logging, per-step score traces), and
 | E2 Riemannian | `18_e2_riemannian.ipynb`, `resources/18_e2_*` |
 | E2b crossover | `19_e2b_rho_crossover.ipynb`, `resources/19_e2b_*` |
 | E1 family sweep | `20_e1_family_sweep.ipynb`, `resources/20_e1_*` |
+| E1b fluency dial | `21_e1b_fluency_pareto.ipynb`, `resources/21_e1b_*` |
 | Demos | `playground/stepNN_*.ipynb` |

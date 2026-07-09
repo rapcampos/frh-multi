@@ -19,6 +19,7 @@ built, what its gates showed, and what we learned. Updated as steps complete.
 | 10 | E2: Riemannian aggregation (RQ3) | ✅ frechet ≈ extrinsic (43/60 identical texts); aligned mean wins at low ρ |
 | 11 | E2b: ρ-adaptive crossover sweep (11 pairs) | ✅ crossover confirmed at ρ ≈ 0.29–0.34; sign-consistent 5/5 below, 6/6 above |
 | 12 | E1: family sweep, 9 methods × 3 strata, Pareto | ✅ beam search Pareto-dominates all greedy methods in every stratum |
+| 13 | E1b: fluency dial (λ) + beam × aligned mean | ✅ λ≈0.4 hits the guardrail keeping ~85% of expression; mild λ is a free win; aligned does NOT stack with beam |
 
 ---
 
@@ -460,6 +461,53 @@ success × fluency Pareto frontier per stratum. Artifacts:
 - Fluency remains unsolved for every method (≥6× PPL, ≥75% flagged) — beam
   softens it, nothing fixes it. Fluency-aware candidate selection is now the
   single highest-leverage open item.
+
+## Step 13 — E1b: fluency-aware selection (λ dial) + beam × aligned mean
+
+**Built:** `fluency_weight` (λ) on both guided loops — selection maximizes
+`cumulative concept score + λ · cumulative token log-probability`. The candidate
+log-probs were already computed inside `_generate_candidates` (the top-k is taken
+on them) and merely discarded, so the blend is free; candidate identity/order are
+unchanged (log is monotone). `_topk_beam_selection` gained an optional
+`selection_scores` override (probe always reports the CONCEPT trajectory of the
+selected beam) and returns the surviving pool indices. λ=0 is the untouched
+default — verified byte-identical on-model in both loops + golden re-passed;
+the paper wrapper keeps its fixed signature (greedy λ goes through the
+multi-guide wrapper). 96 CPU tests. `playground/step11_fluency_blend.ipynb`
+(the λ dial on one prompt; λ→∞ recovers unsteered greedy exactly).
+`21_e1b_fluency_pareto.ipynb`: 2 means × λ∈{0,.1,.2,.4,1,2} × 3 strata, beam
+k=4/steps=24, 720 records. Artifacts: `resources/21_e1b_fluency.jsonl`,
+`21_e1b_summary.csv`, `21_e1b_lambda_dial.png`.
+
+**Findings:**
+- **The dial solves the fluency elephant.** Extrinsic beam, by λ: at λ=0.4 the
+  PPL ratio falls to 2.4–3.1× (from 6.3–7.1×) and flag share to 0.4–0.6 (from
+  0.8–0.85) while raw expression deltas retain ~85% of their λ=0 value (e.g.
+  medium: 1.30/1.30 vs 1.43/1.55). At λ=1, PPL is 1.3–1.6× with ~0 flags and
+  ~50% of expression retained. λ=2 approaches unsteered. **Recipe: λ≈0.4 for
+  guardrail-level fluency, λ≈1 for near-native fluency.** For scale: the λ=0.4
+  point beats E1's best greedy method on BOTH axes simultaneously (medium:
+  deltas 1.30/1.30 at 2.4× vs greedy extrinsic 0.51/0.62 at 6.4×).
+- **Mild fluency pressure is a free win, not a trade.** At λ=0.1–0.2 the joint-z
+  often RISES while PPL falls (low extrinsic: +0.14 at 5.0× vs −0.13 at 6.3×;
+  λ=0 is Pareto-dominated by λ=0.1 in 4 of 6 mean×stratum cells). Mechanism:
+  the log-prob term vetoes degenerate high-projection tokens the frame
+  correlation loves ("flitter-ed and flutter-flutter-ed" at λ=0 becomes a
+  "delicate key forgotten in an antique music box" at λ=0.2) — fluency acts as
+  a regularizer on the projection objective before it starts costing steering.
+- **The aligned mean does NOT stack with beam search.** Paired per-prompt gaps
+  at λ=0: low +0.019 ± 0.081 (vs +0.22 under greedy in E2/E2b); across all λ
+  the gap hovers around 0 with no consistent sign. Confirms E1's reading —
+  strong search washes out composition-gauge effects; the aligned mean is
+  specifically a rescue for greedy decoding. Final recipe stays
+  **beam + extrinsic mean + λ**, one method for all ρ.
+- Replication check across notebooks: λ=0 extrinsic beam reproduces E1's
+  beam-F1.a raw deltas exactly (1.43/1.55 at medium) — the harness and
+  z-populations differ per notebook, raw deltas are the cross-notebook
+  currency.
+- The λ=0 low-stratum beam example is the same degenerate one E1 flagged; at
+  λ≥0.1 it disappears — the earlier "beam can find degenerate solutions"
+  caveat is closed by any nonzero λ.
 
 ---
 
