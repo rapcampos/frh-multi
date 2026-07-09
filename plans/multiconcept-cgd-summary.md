@@ -1,7 +1,7 @@
 # Multi-Concept CGD — Findings Summary
 
-Condensed from `multiconcept-cgd-findings.md` (per-step log). State as of Step 11
-(E2b crossover sweep, 2026-07). Model: `Meta-Llama-3.1-8B-Instruct-AWQ-INT4`.
+Condensed from `multiconcept-cgd-findings.md` (per-step log). State as of Step 12
+(E1 family sweep, 2026-07). Model: `Meta-Llama-3.1-8B-Instruct-AWQ-INT4`.
 
 ## What was built
 
@@ -88,6 +88,18 @@ continuous expression metric, JSONL logging, per-step score traces), and
    expresses neither) — the rule picks the better mean, it doesn't make distant
    composition good.
 
+9. **True beam search Pareto-dominates every greedy method in every stratum
+   (E1).** joint-z 0.26–0.45 vs the best greedy −0.11, per-concept expression
+   2–3×, at *lower* PPL and flag rates (repetition-gaming ruled out). Under
+   beam search the family differences shrink to near-ties — composition choice
+   matters most when the search is weak, which reframes the E2/E2b gauge
+   results as "how to compose for a greedy decoder". Within greedy: softmin
+   (F2.b) beats weighted-sum (F2.a) in all strata and takes high ρ outright;
+   constrained (F2.c) is uniformly worst (cumulative finite penalty poisons
+   trajectories); F3 schedulers redeem on neither axis. Default recipe:
+   **beam-F1.a** — beam search over the extrinsic mean frame (k=4 beam needs
+   batch_size=4 on 24 GB).
+
 ## Measurement lessons
 
 - **Presence-success floors at 0** even when steering visibly works (topic shifts
@@ -106,15 +118,17 @@ continuous expression metric, JSONL logging, per-step score traces), and
 
 ## Open questions / next steps
 
-1. **E1 family sweep** at k=4 with Pareto reporting, including the beam variant
-   and the ρ-adaptive F1.a rule (aligned below ρ ≈ 0.30, extrinsic above).
-2. **F2.b/F2.c check:** softmin and constrained were never run at E0 settings;
-   cheap sanity before concluding score space loses outright.
-3. Fluency-aware candidate selection; PPL guardrail calibration.
-4. **E3:** negative/mixed steering — score-space w=[1,−1] and frame-space
+1. **Fluency-aware candidate selection** — the single highest-leverage item:
+   every method still runs ≥6× PPL with ≥75% flagged; beam softens but doesn't
+   fix it. Also calibrate the 2.5× guardrail.
+2. **beam + aligned mean at low ρ** — untested combination; greedy-tier logic
+   says it should stack on beam-F1.a's low-ρ lead. Cheap micro-experiment.
+3. **E3:** negative/mixed steering — score-space w=[1,−1] and frame-space
    differential produce visibly different texts, so the comparison is non-trivial.
    Note: intrinsic means reject negative weights (Fréchet functionals) — negative
    steering stays extrinsic/differential.
+4. F2.c constrained needs per-step (non-cumulative) constraint handling or
+   calibrated thresholds before it's a fair contender; currently uniformly worst.
 
 ## Artifact map
 
@@ -127,4 +141,5 @@ continuous expression metric, JSONL logging, per-step score traces), and
 | E0 pilot v1 / v2 | `16_e0_pilot.ipynb` / `17_e0_pilot_v2.ipynb`, `resources/1{6,7}_e0_*` |
 | E2 Riemannian | `18_e2_riemannian.ipynb`, `resources/18_e2_*` |
 | E2b crossover | `19_e2b_rho_crossover.ipynb`, `resources/19_e2b_*` |
+| E1 family sweep | `20_e1_family_sweep.ipynb`, `resources/20_e1_*` |
 | Demos | `playground/stepNN_*.ipynb` |

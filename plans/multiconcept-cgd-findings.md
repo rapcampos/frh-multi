@@ -18,6 +18,7 @@ built, what its gates showed, and what we learned. Updated as steps complete.
 | 9b | E0 pilot v2 (expression metric, k∈{3,4}) | ✅ signal obtained; interference hypothesis contradicted — F1.a wins at low/medium ρ |
 | 10 | E2: Riemannian aggregation (RQ3) | ✅ frechet ≈ extrinsic (43/60 identical texts); aligned mean wins at low ρ |
 | 11 | E2b: ρ-adaptive crossover sweep (11 pairs) | ✅ crossover confirmed at ρ ≈ 0.29–0.34; sign-consistent 5/5 below, 6/6 above |
+| 12 | E1: family sweep, 9 methods × 3 strata, Pareto | ✅ beam search Pareto-dominates all greedy methods in every stratum |
 
 ---
 
@@ -404,6 +405,61 @@ gets a **paired** per-prompt joint-z gap ± SEM. Artifacts:
   frames can land in a semantically incoherent region, and alignment only makes
   it less bad. The crossover rule says which mean composes better; it does not
   promise that composing distant concepts works well at all.
+
+## Step 12 — E1: family sweep with Pareto reporting
+
+**Built:** `20_e1_family_sweep.ipynb` — 9 methods × 3 ρ strata × 20 prompts at
+k=4/steps=24 (540 records): F1.a extrinsic + aligned, F2.a z-scored sum, F2.b
+softmin (τ=0.5, z-scored), F2.c constrained (threshold 0 on the z-scored
+secondary), F3.a round-robin, F3.c sentence-boundary, and true beam search on
+both families (beam-F1.a extrinsic mean, beam-F2.a z-scored sum). Deliverable:
+success × fluency Pareto frontier per stratum. Artifacts:
+`resources/20_e1_family_sweep.jsonl`, `20_e1_summary.csv`, `20_e1_pareto.png`.
+
+**Findings:**
+- **True beam search Pareto-dominates every greedy method in every stratum, on
+  both axes.** joint-z 0.26–0.45 (vs best greedy −0.11); raw per-concept deltas
+  2–3× (e.g. high: 1.93/1.56 vs 0.86/0.78); at LOWER fluency cost (PPL 6.3–7.5×
+  and 75–85% flagged, vs 5.9–11.6× and 85–95%). The low and high frontiers are
+  beam-only. Artifact checks: bigram repetition ≈ 0 for all methods (beam is not
+  gaming PPL with loops), and PPL is independent of the beam's objective. The
+  greedy loop's single-parent structure — the same one that made cascade
+  toothless (Step 2) — is what beams escape: greedy can only take a
+  concept-aligned token if it surfaces in the current top-k; diverse prefixes
+  let beam navigate toward concept-rich continuations. Ops note: k=4 beam is a
+  k²=16-wide forward per step — needs `batch_size=4` on a 24 GB card (OOM at 20
+  prompts/batch).
+- **Under beam search, composition-family differences shrink to near-ties:**
+  beam-F1.a vs beam-F2.a = 0.35 vs 0.26 (low), 0.41 vs 0.45 (medium), 0.43 vs
+  0.44 (high). Search strength washes out composition choice; composition
+  matters most under weak (greedy) search — which reframes E2/E2b as "how to
+  compose when you can't afford beams" and strengthens the case that E2's
+  gauge findings are about rescuing a weak optimizer.
+- **Greedy-tier results replicate:** aligned wins at low ρ (−0.11 vs −0.31 —
+  third independent replication of the E2/E2b low-ρ result), extrinsic best at
+  medium; the ρ-adaptive F1.a rule is the best greedy frame-space configuration
+  in each stratum.
+- **F2.b softmin beats F2.a weighted-sum in all three strata** (−0.44/−0.21/−0.12
+  vs −0.48/−0.27/−0.30) and is the best greedy method outright at high ρ. AND
+  semantics does help score space at k=4 (Step 4's saturation concern was a
+  k=3 artifact) — score space is not dead, it just never beats frame space
+  except by a nose at high ρ.
+- **F2.c constrained is uniformly the worst method** (joint-z −0.62…−0.65, PPL
+  9.5–11.6×), with the PRIMARY concept's delta going negative — the finite
+  penalty accumulating through the cumulative sum appears to poison whole
+  trajectories once the secondary constraint fails early. Lexicographic scoring
+  needs per-step (not cumulative) constraint handling or calibrated thresholds
+  before it's a fair contender.
+- **F3 schedulers don't redeem on fluency:** mid-to-bottom joint-z AND 6.8–10.3×
+  PPL with 95% flagged. Step 6's qualitative impression that sentence-boundary
+  scheduling reads most fluent does not survive quantitative comparison
+  (F3.c ≈ extrinsic at medium, worse elsewhere).
+- **Recipe going forward: beam-F1.a** (extrinsic mean). Untested combination:
+  beam + aligned mean at low ρ — greedy-tier logic says it should add on top of
+  beam-F1.a's low-ρ lead; cheap micro-experiment.
+- Fluency remains unsolved for every method (≥6× PPL, ≥75% flagged) — beam
+  softens it, nothing fixes it. Fluency-aware candidate selection is now the
+  single highest-leverage open item.
 
 ---
 
