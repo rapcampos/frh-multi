@@ -17,6 +17,7 @@ built, what its gates showed, and what we learned. Updated as steps complete.
 | 9 | E0 pilot matrix (v1) | ⚠️ presence metric floored at 0 — prompted metric v2 |
 | 9b | E0 pilot v2 (expression metric, k∈{3,4}) | ✅ signal obtained; interference hypothesis contradicted — F1.a wins at low/medium ρ |
 | 10 | E2: Riemannian aggregation (RQ3) | ✅ frechet ≈ extrinsic (43/60 identical texts); aligned mean wins at low ρ |
+| 11 | E2b: ρ-adaptive crossover sweep (11 pairs) | ✅ crossover confirmed at ρ ≈ 0.29–0.34; sign-consistent 5/5 below, 6/6 above |
 
 ---
 
@@ -364,6 +365,45 @@ E0 v2 recommended operating point). Artifacts: `resources/18_e2_riemannian.jsonl
   time.
 - Practical: both intrinsic means converge in <1 s on real concept pairs
   (d=4096, k=3) — cost is not a factor in choosing between them.
+
+## Step 11 — E2b: the ρ-adaptive crossover sweep
+
+**Built:** `19_e2b_rho_crossover.ipynb` — 11 pairs from the Step-8 table spanning
+ρ 0.187–0.566 (dense in the (0.19, 0.32) window; hub pairs excluded; pre-flight
+excludes rank-incompatible pairs loudly — none were), extrinsic vs aligned only
+(E2: frechet ≈ extrinsic), k=4, steps=24, shared prompts/baselines so each pair
+gets a **paired** per-prompt joint-z gap ± SEM. Artifacts:
+`resources/19_e2b_crossover.jsonl` (440 records), `19_e2b_summary.csv`,
+`19_e2b_gap_vs_rho.png`.
+
+**Findings:**
+- **The crossover is real and sits at ρ ≈ 0.29–0.34.** Paired gap
+  (aligned − extrinsic) is positive for all 5 pairs with ρ < 0.29 (+0.22, +0.27,
+  +0.20, +0.03, +0.06) and negative/zero for all 6 pairs with ρ ≥ 0.31 (−0.20,
+  −0.14, −0.20, −0.06, −0.00, −0.06). Individual pairs are ~2 SEM at best, but
+  the 11/11 sign consistency across independent pairs is the strong evidence.
+  Weighted linear fit crosses zero at ρ = 0.338; the raw sign flip is between
+  0.284 and 0.306. **Rule of thumb: aligned mean for ρ ≲ 0.30, extrinsic above.**
+- **The gap is not monotone — it collapses to ~0 at high ρ** (−0.001 at 0.394,
+  −0.060 at 0.566): related concepts' frames are already gauge-compatible, so
+  alignment rotates almost nothing and the two means coincide (high-ρ generations
+  are near-identical). The penalty zone for aligned is the mid band ρ ≈ 0.30–0.36;
+  the choice only truly matters below ~0.30.
+- **At low ρ, aligned also wins on fluency:** PPL ratio 7.5 vs 8.7 (ρ=0.187) and
+  5.5 vs 7.8 (ρ=0.230); overall means 7.19 vs 7.61. Below the crossover, aligned
+  dominates on BOTH axes — no Pareto trade-off to argue about.
+- **Caveat — ρ and regime are confounded at the low end:** every ρ < 0.29 pair is
+  "unrelated" (that is what low ρ means empirically, per Step 3/8), so
+  "aligned helps unrelated pairs" and "aligned helps low-ρ pairs" cannot be
+  separated at this scale. The antonym pairs (0.306, 0.355) both sit on the
+  negative side, consistent with the ρ story rather than a semantic-opposition
+  story.
+- **Absolute steering quality varies wildly across low-ρ pairs:** for
+  dog+mathematics both methods produce text expressing *neither* concept
+  (deltas −1.9/−1.8 extrinsic, −1.1/−0.9 aligned) — the mean of very distant
+  frames can land in a semantically incoherent region, and alignment only makes
+  it less bad. The crossover rule says which mean composes better; it does not
+  promise that composing distant concepts works well at all.
 
 ---
 

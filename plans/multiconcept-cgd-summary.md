@@ -1,7 +1,7 @@
 # Multi-Concept CGD — Findings Summary
 
-Condensed from `multiconcept-cgd-findings.md` (per-step log). State as of Step 10
-(E2 Riemannian aggregation, 2026-07). Model: `Meta-Llama-3.1-8B-Instruct-AWQ-INT4`.
+Condensed from `multiconcept-cgd-findings.md` (per-step log). State as of Step 11
+(E2b crossover sweep, 2026-07). Model: `Meta-Llama-3.1-8B-Instruct-AWQ-INT4`.
 
 ## What was built
 
@@ -78,6 +78,16 @@ continuous expression metric, JSONL logging, per-step score traces), and
    predict steering efficacy (the aligned mean has the lowest static ρ yet the
    best low-ρ steering).
 
+8. **The ρ-adaptive rule is confirmed (E2b, 11 pairs):** the paired
+   aligned-vs-extrinsic joint-z gap is positive for all 5 pairs with ρ < 0.29
+   and negative/zero for all 6 with ρ ≥ 0.31 — crossover at ρ ≈ 0.29–0.34.
+   Below it, aligned also costs *less* fluency (dominates on both axes); above
+   ~0.39 the two means converge and the choice stops mattering. Caveats: low ρ
+   and the "unrelated" regime are inherently confounded, and composing very
+   distant concepts can fail absolutely under either mean (dog+mathematics
+   expresses neither) — the rule picks the better mean, it doesn't make distant
+   composition good.
+
 ## Measurement lessons
 
 - **Presence-success floors at 0** even when steering visibly works (topic shifts
@@ -96,15 +106,12 @@ continuous expression metric, JSONL logging, per-step score traces), and
 
 ## Open questions / next steps
 
-1. **ρ-adaptive composition:** E2 suggests a selection rule — aligned mean below
-   a ρ threshold, extrinsic above. Verify the crossover on more pairs (the
-   Step 8 table has 30) before hardcoding anything.
+1. **E1 family sweep** at k=4 with Pareto reporting, including the beam variant
+   and the ρ-adaptive F1.a rule (aligned below ρ ≈ 0.30, extrinsic above).
 2. **F2.b/F2.c check:** softmin and constrained were never run at E0 settings;
    cheap sanity before concluding score space loses outright.
-3. **E1 family sweep** at k=4 with Pareto reporting, including the beam variant
-   and the aligned mean as F1.a's low-ρ configuration.
-4. Fluency-aware candidate selection; PPL guardrail calibration.
-5. **E3:** negative/mixed steering — score-space w=[1,−1] and frame-space
+3. Fluency-aware candidate selection; PPL guardrail calibration.
+4. **E3:** negative/mixed steering — score-space w=[1,−1] and frame-space
    differential produce visibly different texts, so the comparison is non-trivial.
    Note: intrinsic means reject negative weights (Fréchet functionals) — negative
    steering stays extrinsic/differential.
@@ -119,4 +126,5 @@ continuous expression metric, JSONL logging, per-step score traces), and
 | Pair selection | `15_e0_pair_selection.ipynb`, `resources/15_e0_selected_pairs.json` |
 | E0 pilot v1 / v2 | `16_e0_pilot.ipynb` / `17_e0_pilot_v2.ipynb`, `resources/1{6,7}_e0_*` |
 | E2 Riemannian | `18_e2_riemannian.ipynb`, `resources/18_e2_*` |
+| E2b crossover | `19_e2b_rho_crossover.ipynb`, `resources/19_e2b_*` |
 | Demos | `playground/stepNN_*.ipynb` |
