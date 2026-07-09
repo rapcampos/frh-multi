@@ -16,6 +16,7 @@ built, what its gates showed, and what we learned. Updated as steps complete.
 | 8 | E0 pair selection | ✅ 3 strata selected, dissociation confirmed |
 | 9 | E0 pilot matrix (v1) | ⚠️ presence metric floored at 0 — prompted metric v2 |
 | 9b | E0 pilot v2 (expression metric, k∈{3,4}) | ✅ signal obtained; interference hypothesis contradicted — F1.a wins at low/medium ρ |
+| 10 | E2: Riemannian aggregation (RQ3) | ✅ frechet ≈ extrinsic (43/60 identical texts); aligned mean wins at low ρ |
 
 ---
 
@@ -304,6 +305,65 @@ deltas z-scored across records, joint = min(z_a, z_b).
   or Pareto reporting (success × fluency), as the plan's E1 section already prescribes.
 - Per-concept asymmetries are large at low ρ (sadness gains ≫ music gains under F1.a) —
   the mean frame does not distribute its effect evenly across constituents.
+
+## Step 10 — E2: Riemannian aggregation (RQ3)
+
+**Built:** `frames/linalg/stiefel.py` — canonical-metric Stiefel geometry:
+`stiefel_exp` (Edelman/Arias/Smith closed form), `stiefel_log` (Zimmermann 2017
+shooting algorithm; cheap because it works on 2k×2k matrices regardless of d),
+`frechet_mean` (Karcher mean via exp/log fixed-point iteration, initialized at the
+extrinsic mean), `aligned_mean` (generalized-Procrustes: rotate each frame within
+its span to match the mean before chordal averaging). Exposed as
+`Concept.average(..., method="extrinsic"|"aligned"|"frechet")` (default byte-identical
+to the E0 baseline; verified by test + golden) and `average_method=` on the F1.a quick
+wrapper. 26 CPU tests; `playground/step10_riemannian_mean.ipynb`;
+`18_e2_riemannian.ipynb` (3 strata × 3 methods × 20 prompts, k=4, steps=24 — the
+E0 v2 recommended operating point). Artifacts: `resources/18_e2_riemannian.jsonl`
+(180 records), `18_e2_summary.csv`, `18_e2_method_gap_vs_rho.png`.
+
+**Findings:**
+- **A silent-garbage failure mode in the Stiefel log, caught before it touched any
+  result:** the orthogonal completion inside Zimmermann's algorithm can come out
+  with det = −1, which has no real principal logarithm — the log then "converged"
+  to a wrong tangent (reconstruction error ~1.6 on unit-scale frames) with no error
+  raised. Fixed by flipping one free completion column to force det = +1;
+  regression-pinned (d=16, seeds (0,1)). Anything using a Stiefel log downstream
+  (e.g. future geodesic interpolation experiments) inherits the fix.
+- **Metric barely matters: the geodesic Fréchet mean ≈ the extrinsic mean at real
+  concept distances.** ρ to constituents differs by <0.002 on all three E0 pairs,
+  and 43/60 generations are byte-identical under greedy k-lookahead. Joint-z
+  differences are ≤0.04 everywhere (e.g. high: −0.121 vs −0.125). RQ3 answer,
+  part 1: the paper's cheap chordal mean is a near-optimal proxy for the true
+  Karcher mean in this regime (geodesic distances 1.68–2.40) — a positive
+  justification of existing practice, not a null result.
+- **Gauge matters more than metric: the aligned (GPA) mean wins exactly in the
+  low-ρ interference regime.** At ρ=0.187: joint_z −0.106 vs extrinsic −0.333,
+  per-concept deltas roughly double (0.87/0.60 vs 0.61/0.29), at LOWER fluency
+  cost (7.5× vs 8.8×). At medium/high ρ it loses moderately (−0.231 vs −0.085
+  at medium). Interpretation: unrelated concepts' frames are rotation-mismatched
+  in token gauge, so the plain weighted sum partially cancels; aligning first
+  preserves each constituent's signal. Related concepts are already
+  gauge-compatible, and re-gauging only distorts them. This *revives* E0's
+  interference-escape hypothesis in frame space after its score-space version
+  died in Step 9b: the escape exists, but via rotation alignment, not per-step
+  normalization.
+- **Static geometry does not predict steering efficacy:** the aligned mean has
+  the LOWEST ρ to its constituents (0.741 vs 0.803 at medium) yet steers best at
+  low ρ — mean-to-constituent ρ is not a proxy for downstream expression. E1
+  metrics must stay generation-based.
+- **Composition probes (RQ3 preview):** frechet edges out extrinsic on both
+  (`woman+child→girl`: 0.4893 vs 0.4883; `woman+king→queen`: 0.5156 vs 0.5150);
+  aligned is lowest on both. None of the means beats `king` alone for `queen`
+  (0.531) — the Step-8 pair-dependence stands.
+- **GPA gauge subtlety (thesis-worthy):** the aligned-mean fixed points form
+  right-O(k) orbits — rotating any input leaves the aligned frames unchanged,
+  and any rotation of a solution is also a solution. Since FRH's trace scoring
+  is gauge-sensitive, the returned representative matters; `aligned_mean`
+  anchors it via extrinsic-mean initialization (the gauge that won E0). Same
+  geometry lesson as Step 5's subspace failure, resolved by construction this
+  time.
+- Practical: both intrinsic means converge in <1 s on real concept pairs
+  (d=4096, k=3) — cost is not a factor in choosing between them.
 
 ---
 

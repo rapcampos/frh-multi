@@ -1,7 +1,7 @@
 # Multi-Concept CGD — Findings Summary
 
-Condensed from `multiconcept-cgd-findings.md` (per-step log). State as of Step 9b
-(E0 pilot v2, 2026-07). Model: `Meta-Llama-3.1-8B-Instruct-AWQ-INT4`.
+Condensed from `multiconcept-cgd-findings.md` (per-step log). State as of Step 10
+(E2 Riemannian aggregation, 2026-07). Model: `Meta-Llama-3.1-8B-Instruct-AWQ-INT4`.
 
 ## What was built
 
@@ -18,10 +18,13 @@ bit-exact under a golden-file regression test):
   via a stateful-scorer protocol (`reset`/`observe`), per-input state.
 
 Plus: a true beam-search variant (fixes the single-parent myopia of the original
-loop), `Frame.rho` similarity, disk-cached concept construction, and an
+loop), `Frame.rho` similarity, disk-cached concept construction, an
 evaluation harness (presence success, continuation-PPL fluency guardrail,
-continuous expression metric, JSONL logging, per-step score traces).
-68 CPU tests + GPU golden test; every step has a `playground/` demo notebook.
+continuous expression metric, JSONL logging, per-step score traces), and
+`frames/linalg/stiefel.py` — canonical-metric Stiefel geometry (`stiefel_exp`,
+`stiefel_log`, Karcher `frechet_mean`, GPA `aligned_mean`) exposed as
+`Concept.average(method=)`. 94 CPU tests + GPU golden test; every step has a
+`playground/` demo notebook.
 
 ## Key scientific findings
 
@@ -60,6 +63,21 @@ continuous expression metric, JSONL logging, per-step score traces).
    surviving parent per step, so "beams" differ only in their last token; a final
    rerank could only ever choose one token. Removed; true beam search added.
 
+7. **RQ3 answered at pilot scale (E2): metric barely matters, gauge does.**
+   The geodesic Fréchet (Karcher) mean is nearly indistinguishable from the
+   extrinsic chordal mean at real concept distances — ρ to constituents within
+   0.002, 43/60 byte-identical generations, joint-z within 0.04 — so the paper's
+   cheap chordal mean is a near-optimal proxy for the true intrinsic mean. But
+   the rotation-**aligned** (generalized-Procrustes) mean wins decisively in the
+   low-ρ interference regime (joint-z −0.106 vs −0.333, per-concept expression
+   roughly doubled, at lower PPL cost) while losing moderately at medium/high ρ.
+   This revives E0's interference-escape hypothesis in frame space: unrelated
+   concepts' frames are rotation-mismatched, the plain weighted sum partially
+   cancels, and aligning gauges first escapes the interference — per-step score
+   normalization (F2.a) never could. Corollary: mean-to-constituent ρ does not
+   predict steering efficacy (the aligned mean has the lowest static ρ yet the
+   best low-ρ steering).
+
 ## Measurement lessons
 
 - **Presence-success floors at 0** even when steering visibly works (topic shifts
@@ -78,14 +96,18 @@ continuous expression metric, JSONL logging, per-step score traces).
 
 ## Open questions / next steps
 
-1. **E2 (RQ3):** Riemannian (geodesic Fréchet) mean as a drop-in for
-   `Concept.average` — elevated priority by finding 4.
+1. **ρ-adaptive composition:** E2 suggests a selection rule — aligned mean below
+   a ρ threshold, extrinsic above. Verify the crossover on more pairs (the
+   Step 8 table has 30) before hardcoding anything.
 2. **F2.b/F2.c check:** softmin and constrained were never run at E0 settings;
    cheap sanity before concluding score space loses outright.
-3. **E1 family sweep** at k=4 with Pareto reporting, including the beam variant.
+3. **E1 family sweep** at k=4 with Pareto reporting, including the beam variant
+   and the aligned mean as F1.a's low-ρ configuration.
 4. Fluency-aware candidate selection; PPL guardrail calibration.
 5. **E3:** negative/mixed steering — score-space w=[1,−1] and frame-space
    differential produce visibly different texts, so the comparison is non-trivial.
+   Note: intrinsic means reject negative weights (Fréchet functionals) — negative
+   steering stays extrinsic/differential.
 
 ## Artifact map
 
@@ -96,4 +118,5 @@ continuous expression metric, JSONL logging, per-step score traces).
 | Golden reference | `tests/golden/single_concept.json`, `14_golden_reference.ipynb` |
 | Pair selection | `15_e0_pair_selection.ipynb`, `resources/15_e0_selected_pairs.json` |
 | E0 pilot v1 / v2 | `16_e0_pilot.ipynb` / `17_e0_pilot_v2.ipynb`, `resources/1{6,7}_e0_*` |
+| E2 Riemannian | `18_e2_riemannian.ipynb`, `resources/18_e2_*` |
 | Demos | `playground/stepNN_*.ipynb` |

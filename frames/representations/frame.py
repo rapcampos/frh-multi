@@ -613,10 +613,13 @@ class FrameUnembeddingRepresentation(LinearUnembeddingRepresentation):
         max_token_count: int,
         *args,
         guide_weights: list[float] | None = None,
+        average_method: str = "extrinsic",
         **kwargs,
     ) -> tuple[list[str], torch.Tensor]:
         """F1.a — average the guide concepts into one frame (weighted
-        chordal/Procrustes mean), then run vanilla single-concept guidance.
+        chordal/Procrustes mean by default; `average_method` selects the
+        intrinsic alternatives "aligned"/"frechet", see Concept.average),
+        then run vanilla single-concept guidance.
 
         Formerly (mis)named quick_generate_with_topk_subspace_guide; that name
         now performs true joint-subspace composition (F1.b).
@@ -624,7 +627,9 @@ class FrameUnembeddingRepresentation(LinearUnembeddingRepresentation):
         guide_concepts = self._build_guide_concepts(
             guides, min_lemmas_per_synset, max_token_count
         )
-        averaged = Concept.average(guide_concepts, weights=guide_weights)
+        averaged = Concept.average(
+            guide_concepts, weights=guide_weights, method=average_method
+        )
         return self.generate_with_topk_guide(sentences, *args, guide=averaged, **kwargs)
 
     def quick_generate_with_topk_subspace_guide(
