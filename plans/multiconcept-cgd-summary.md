@@ -1,7 +1,8 @@
 # Multi-Concept CGD — Findings Summary
 
-Condensed from `multiconcept-cgd-findings.md` (per-step log). State as of Step 13
-(E1b fluency dial, 2026-07). Model: `Meta-Llama-3.1-8B-Instruct-AWQ-INT4`.
+Condensed from `multiconcept-cgd-findings.md` (per-step log). State as of Step 15
+(E3b negative steering under beam + λ, 2026-07). Model:
+`Meta-Llama-3.1-8B-Instruct-AWQ-INT4`.
 
 ## What was built
 
@@ -112,6 +113,19 @@ continuous expression metric, JSONL logging, per-step score traces), and
     advantage is a greedy-decoder rescue). **Final recipe: beam search +
     extrinsic mean + λ ≈ 0.4, one method for all ρ.**
 
+11. **Negative steering: suppression is easy, two-sided steering needs the
+    full recipe (E3/E3b).** At greedy tier both negative spaces suppress the
+    repelled concept far beyond the attract-only control, but the repulsion
+    bleeds — Δattract goes negative in most cells. Under beam + λ=0.4 with the
+    frame-space differential (the paper's `A − B`), steering is two-sided
+    (attract up, repel below baseline) in ALL six direction cells at 1.8–4.0×
+    PPL. Frame-diff beats score-space signed weights at every tier. Remaining
+    limit: geometric twins (sorrow/sadness, ρ=0.57) still trade suppression
+    against attraction — no operating point separates them, even under the
+    stronger optimizer. Also: the attract-only control shows why repulsion is
+    needed — steering toward one concept *lifts* correlated concepts by
+    default.
+
 ## Measurement lessons
 
 - **Presence-success floors at 0** even when steering visibly works (topic shifts
@@ -130,19 +144,19 @@ continuous expression metric, JSONL logging, per-step score traces), and
 
 ## Open questions / next steps
 
-1. **E3:** negative/mixed steering — score-space w=[1,−1] and frame-space
-   differential produce visibly different texts, so the comparison is non-trivial.
-   Note: intrinsic means reject negative weights (Fréchet functionals) — negative
-   steering stays extrinsic/differential.
-2. **Thesis consolidation** — the experimental arc is complete (families →
-   gauge/metric → crossover → beam dominance → fluency dial); write it up while
-   fresh. The final recipe (beam + extrinsic mean + λ≈0.4) is the headline
-   method contribution alongside the RQ3 geometry results.
+1. **Thesis consolidation** — the experimental arc is complete (families →
+   gauge/metric → crossover → beam dominance → fluency dial → negative
+   steering); write it up while fresh. The final recipe (beam + extrinsic mean
+   + λ≈0.4, frame-diff for repulsion) is the headline method contribution
+   alongside the RQ3 geometry results. `plans/multiconcept-cgd-report.md` +
+   notebook 22 are the consolidation vehicle.
+2. Weight sweep for negative steering (|w_repel| < 1) — the greedy-tier
+   attraction collapse suggested it; beam+λ mostly cured it, but a milder
+   repel weight may push the twin case further.
 3. F2.c constrained needs per-step (non-cumulative) constraint handling or
    calibrated thresholds before it's a fair contender; currently uniformly worst.
-4. Optional scale-ups: E1b's λ knee on more pairs/prompts; larger k under λ
-   (fluency pressure may tolerate wider pools); a second model family for
-   generality.
+4. Optional scale-ups: E1b's λ knee on more pairs/prompts; larger k under λ;
+   a second model family (Gemma 2 9B) for generality.
 
 ## Artifact map
 
@@ -157,4 +171,7 @@ continuous expression metric, JSONL logging, per-step score traces), and
 | E2b crossover | `19_e2b_rho_crossover.ipynb`, `resources/19_e2b_*` |
 | E1 family sweep | `20_e1_family_sweep.ipynb`, `resources/20_e1_*` |
 | E1b fluency dial | `21_e1b_fluency_pareto.ipynb`, `resources/21_e1b_*` |
+| E3 greedy tier | `22_e3_negative_steering.ipynb`, `resources/22_e3_*` |
+| E3b beam + λ | `23_e3_beam_negative.ipynb`, `resources/23_e3_*` |
+| Results report | `plans/multiconcept-cgd-report.md`, `22_results_report.ipynb` |
 | Demos | `playground/stepNN_*.ipynb` |

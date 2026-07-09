@@ -20,6 +20,8 @@ built, what its gates showed, and what we learned. Updated as steps complete.
 | 11 | E2b: ρ-adaptive crossover sweep (11 pairs) | ✅ crossover confirmed at ρ ≈ 0.29–0.34; sign-consistent 5/5 below, 6/6 above |
 | 12 | E1: family sweep, 9 methods × 3 strata, Pareto | ✅ beam search Pareto-dominates all greedy methods in every stratum |
 | 13 | E1b: fluency dial (λ) + beam × aligned mean | ✅ λ≈0.4 hits the guardrail keeping ~85% of expression; mild λ is a free win; aligned does NOT stack with beam |
+| 14 | E3: negative steering, greedy tier | ✅ suppression works but bleeds into the attracted concept; strong direction asymmetry; high-ρ twin problem confirmed |
+| 15 | E3b: negative steering under beam + λ | ✅ recipe generalizes — two-sided steering in all 6 directions (frame-diff, λ=0.4) at 1.8–4.0× PPL; twin problem softened, not solved |
 
 ---
 
@@ -508,6 +510,76 @@ k=4/steps=24, 720 records. Artifacts: `resources/21_e1b_fluency.jsonl`,
 - The λ=0 low-stratum beam example is the same degenerate one E1 flagged; at
   λ≥0.1 it disappears — the earlier "beam can find degenerate solutions"
   caveat is closed by any nonzero λ.
+
+## Step 14 — E3: negative / mixed steering (greedy tier)
+
+**Built:** `22_e3_negative_steering.ipynb` — one attracted + one repelled concept,
+3 strata × both directions × {attract-only control, frame-diff (paper
+differential = `average(weights=[1,−1])`), score-neg (z-scored `[1,−1]`)},
+greedy k=4/steps=24, 360 records. Unnormalized score-space `[1,−1]` is not run —
+provably identical to frame-diff (Step 4 linearity). Success is two-sided:
+Δattract > 0 AND Δrepel < 0 ("clean"). Artifacts: `resources/22_e3_negative.jsonl`,
+`22_e3_summary.csv`, `22_e3_quadrants.png`.
+
+**Findings:**
+- **Suppression works — beyond incidental.** Both negative methods push the
+  repelled concept far below the attract-only control (Δrepel −0.8…−1.5 vs the
+  control's −0.3…+0.6). Repulsion as such is real in both spaces.
+- **But it bleeds: collateral suppression of the attracted concept.** In 7 of
+  12 negative-method cells Δattract goes NEGATIVE (e.g. +music−sadness
+  frame-diff: attract −0.20 vs +0.51 for attract-only). Clean rates are only
+  0.05–0.60. The differential direction removes shared components that the
+  attract concept needs — negative steering at greedy tier is a blunt
+  instrument that suppresses a whole region, not one concept.
+- **Direction asymmetry is large:** +sadness−music is the best cell (frame-diff:
+  attract +0.25, repel −1.24, clean 0.60) while its mirror +music−sadness fails
+  on attract (−0.20). Which concept is attracted matters as much as the pair.
+- **The high-ρ twin problem is confirmed both ways:** +sadness−sorrow gets
+  strong suppression (−1.46) but drags the attracted twin down too (−0.37);
+  +sorrow−sadness preserves attract (+0.61) but then fails to suppress
+  (+0.015). At ρ=0.57 you can have suppression or attraction, not both —
+  geometric twins cannot be separated by a linear differential.
+- **Frame-diff vs score-neg: no decisive winner.** Frame-diff has the better
+  net in 5 of 6 directions; score-neg is cheaper on PPL in 4 of 6. Both far
+  outside the guardrail (6.0–9.6×, ~90% flagged) — greedy tier, pre-λ.
+- Open at this point: does the final recipe (beam + λ) fix collateral
+  suppression? → Step 15 (`23_e3_beam_negative.ipynb`).
+
+## Step 15 — E3b: negative steering under the final recipe (beam + λ)
+
+**Built:** `23_e3_beam_negative.ipynb` — same design as Step 14 under true beam
+search: {attract-only, frame-diff, score-neg} × λ∈{0, 0.4} × both directions ×
+3 strata, k=4/steps=24, 720 records; quadrant plot overlays the greedy-tier
+points. Artifacts: `resources/23_e3_beam_negative.jsonl`, `23_e3_beam_summary.csv`,
+`23_e3_beam_quadrants.png`.
+
+**Findings:**
+- **The final recipe generalizes to negative steering.** With frame-diff at
+  λ=0.4, the cell-mean is two-sided (Δattract > 0 AND Δrepel < 0) in **all six
+  direction cells**, at 1.8–4.0× PPL (vs 7–9.6× greedy) and flag shares
+  0.1–0.6. The greedy tier's collateral collapse (Δattract < 0 in 4/6
+  frame-diff cells) is cured: beam alone reduces it to 2/6, λ=0.4 to 0/6.
+  Examples: +king−woman goes from −0.69 attract (greedy) to +0.16 at 2.0×;
+  +sadness−sorrow from −0.37 to +0.13 while still suppressing −1.12.
+- **λ is again a regularizer, not just a discount:** per-prompt clean rates
+  rise or tie in 5 of 6 frame-diff directions when λ goes 0 → 0.4 (best:
+  +sadness−music 0.65 → 0.80). Suppression magnitude shrinks (−1.30 → −0.84
+  there) but the two-sided property strengthens.
+- **The high-ρ twin problem is softened, not solved.** At sorrow/sadness the
+  two directions still trade: +sadness−sorrow achieves suppression (−1.12)
+  with only weak attraction (+0.13); +sorrow−sadness keeps attraction (+0.65)
+  with near-zero suppression (−0.08). No operating point separates geometric
+  twins cleanly — consistent with a linear-differential limit, now shown to
+  survive a stronger optimizer. Thesis-worthy negative result.
+- **Frame-diff beats score-neg under beam:** higher net in 5/6 directions at
+  λ=0.4, and score-neg keeps one attract-negative cell (+woman−king −0.09).
+  Combined with Step 14, frame-space differential is the negative-steering
+  method of record at every tier.
+- **The attract-only control exposes why suppression is needed at all:** under
+  beam λ=0, steering toward one concept lifts the *other* concept's expression
+  too (Δrepel +0.40…+1.46 in 5/6 control cells — all pairs are positively
+  correlated, Step 3). The negative methods genuinely reverse that sign, not
+  merely reduce it.
 
 ---
 
