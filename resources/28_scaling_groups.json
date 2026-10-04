@@ -1,0 +1,332 @@
+{
+ "config": {
+  "pool": "resources/27_concept_pool.json",
+  "n_base_pairs": 10,
+  "max_uses_per_concept": 2,
+  "strategy": "pairs evenly spaced in pool rho (usage-capped), each extended with a third at distant/mid/close entanglement (max rho to the pair)"
+ },
+ "pairs": [
+  {
+   "a": "mathematics.n.01",
+   "b": "frisson.n.01",
+   "pair_rho": 0.2355143278837204
+  },
+  {
+   "a": "subject.n.01",
+   "b": "blunder.n.01",
+   "pair_rho": 0.328125
+  },
+  {
+   "a": "while.n.01",
+   "b": "jail.n.01",
+   "pair_rho": 0.3444010317325592
+  },
+  {
+   "a": "mud.n.01",
+   "b": "resentment.n.01",
+   "pair_rho": 0.3577474057674408
+  },
+  {
+   "a": "atom.n.02",
+   "b": "universe.n.01",
+   "pair_rho": 0.3697916567325592
+  },
+  {
+   "a": "education.n.01",
+   "b": "chap.n.01",
+   "pair_rho": 0.3802083432674408
+  },
+  {
+   "a": "fuss.n.02",
+   "b": "peace.n.03",
+   "pair_rho": 0.39453125
+  },
+  {
+   "a": "subject.n.01",
+   "b": "fib.n.01",
+   "pair_rho": 0.4085286557674408
+  },
+  {
+   "a": "mud.n.01",
+   "b": "backbone.n.02",
+   "pair_rho": 0.4322916567325592
+  },
+  {
+   "a": "while.n.01",
+   "b": "blink_of_an_eye.n.01",
+   "pair_rho": 0.5654296875
+  }
+ ],
+ "triples": [
+  {
+   "a": "mathematics.n.01",
+   "b": "frisson.n.01",
+   "c": "while.n.01",
+   "add_regime": "distant",
+   "add_rho": 0.2841796875,
+   "mean_rho": 0.2673611094554265,
+   "pair_rho": 0.2355143278837204
+  },
+  {
+   "a": "mathematics.n.01",
+   "b": "frisson.n.01",
+   "c": "eden.n.01",
+   "add_regime": "mid",
+   "add_rho": 0.3505859375,
+   "mean_rho": 0.2881944427887599,
+   "pair_rho": 0.2355143278837204
+  },
+  {
+   "a": "mathematics.n.01",
+   "b": "frisson.n.01",
+   "c": "blunder.n.01",
+   "add_regime": "close",
+   "add_rho": 0.4046224057674408,
+   "mean_rho": 0.3003472238779068,
+   "pair_rho": 0.2355143278837204
+  },
+  {
+   "a": "subject.n.01",
+   "b": "blunder.n.01",
+   "c": "mathematics.n.01",
+   "add_regime": "distant",
+   "add_rho": 0.3447265625,
+   "mean_rho": 0.3112521668275197,
+   "pair_rho": 0.328125
+  },
+  {
+   "a": "subject.n.01",
+   "b": "blunder.n.01",
+   "c": "lack.n.01",
+   "add_regime": "mid",
+   "add_rho": 0.4143880307674408,
+   "mean_rho": 0.3646918435891469,
+   "pair_rho": 0.328125
+  },
+  {
+   "a": "subject.n.01",
+   "b": "blunder.n.01",
+   "c": "chap.n.01",
+   "add_regime": "close",
+   "add_rho": 0.5309244990348816,
+   "mean_rho": 0.4118923644224803,
+   "pair_rho": 0.328125
+  },
+  {
+   "a": "while.n.01",
+   "b": "jail.n.01",
+   "c": "mathematics.n.01",
+   "add_regime": "distant",
+   "add_rho": 0.2841796875,
+   "mean_rho": 0.3001844584941864,
+   "pair_rho": 0.3444010317325592
+  },
+  {
+   "a": "while.n.01",
+   "b": "jail.n.01",
+   "c": "peace.n.03",
+   "add_regime": "mid",
+   "add_rho": 0.4049479067325592,
+   "mean_rho": 0.3707682192325592,
+   "pair_rho": 0.3444010317325592
+  },
+  {
+   "a": "while.n.01",
+   "b": "jail.n.01",
+   "c": "blink_of_an_eye.n.01",
+   "add_regime": "close",
+   "add_rho": 0.5654296875,
+   "mean_rho": 0.4338107605775197,
+   "pair_rho": 0.3444010317325592
+  },
+  {
+   "a": "mud.n.01",
+   "b": "resentment.n.01",
+   "c": "mathematics.n.01",
+   "add_regime": "distant",
+   "add_rho": 0.2635091245174408,
+   "mean_rho": 0.2863498330116272,
+   "pair_rho": 0.3577474057674408
+  },
+  {
+   "a": "mud.n.01",
+   "b": "resentment.n.01",
+   "c": "dawn.n.01",
+   "add_regime": "mid",
+   "add_rho": 0.4339192807674408,
+   "mean_rho": 0.3771701455116272,
+   "pair_rho": 0.3577474057674408
+  },
+  {
+   "a": "mud.n.01",
+   "b": "resentment.n.01",
+   "c": "chap.n.01",
+   "add_regime": "close",
+   "add_rho": 0.5423176884651184,
+   "mean_rho": 0.4186197916666667,
+   "pair_rho": 0.3577474057674408
+  },
+  {
+   "a": "atom.n.02",
+   "b": "universe.n.01",
+   "c": "mathematics.n.01",
+   "add_regime": "distant",
+   "add_rho": 0.2957356870174408,
+   "mean_rho": 0.3127170105775197,
+   "pair_rho": 0.3697916567325592
+  },
+  {
+   "a": "atom.n.02",
+   "b": "universe.n.01",
+   "c": "respite.n.04",
+   "add_regime": "mid",
+   "add_rho": 0.4013671875,
+   "mean_rho": 0.369140625,
+   "pair_rho": 0.3697916567325592
+  },
+  {
+   "a": "atom.n.02",
+   "b": "universe.n.01",
+   "c": "mud.n.01",
+   "add_regime": "close",
+   "add_rho": 0.4830729067325592,
+   "mean_rho": 0.4231770733992259,
+   "pair_rho": 0.3697916567325592
+  },
+  {
+   "a": "education.n.01",
+   "b": "chap.n.01",
+   "c": "mathematics.n.01",
+   "add_regime": "distant",
+   "add_rho": 0.3212890625,
+   "mean_rho": 0.3232421875,
+   "pair_rho": 0.3802083432674408
+  },
+  {
+   "a": "education.n.01",
+   "b": "chap.n.01",
+   "c": "dawn.n.01",
+   "add_regime": "mid",
+   "add_rho": 0.416015625,
+   "mean_rho": 0.3908420205116272,
+   "pair_rho": 0.3802083432674408
+  },
+  {
+   "a": "education.n.01",
+   "b": "chap.n.01",
+   "c": "mud.n.01",
+   "add_regime": "close",
+   "add_rho": 0.5423176884651184,
+   "mean_rho": 0.4264322916666667,
+   "pair_rho": 0.3802083432674408
+  },
+  {
+   "a": "fuss.n.02",
+   "b": "peace.n.03",
+   "c": "mathematics.n.01",
+   "add_regime": "distant",
+   "add_rho": 0.2722981870174408,
+   "mean_rho": 0.3112521767616272,
+   "pair_rho": 0.39453125
+  },
+  {
+   "a": "fuss.n.02",
+   "b": "peace.n.03",
+   "c": "ascent.n.01",
+   "add_regime": "mid",
+   "add_rho": 0.4147135317325592,
+   "mean_rho": 0.3927951355775197,
+   "pair_rho": 0.39453125
+  },
+  {
+   "a": "fuss.n.02",
+   "b": "peace.n.03",
+   "c": "respite.n.04",
+   "add_regime": "close",
+   "add_rho": 0.5074869990348816,
+   "mean_rho": 0.4371744891007741,
+   "pair_rho": 0.39453125
+  },
+  {
+   "a": "subject.n.01",
+   "b": "fib.n.01",
+   "c": "education.n.01",
+   "add_regime": "distant",
+   "add_rho": 0.31689453125,
+   "mean_rho": 0.3473307291666667,
+   "pair_rho": 0.4085286557674408
+  },
+  {
+   "a": "subject.n.01",
+   "b": "fib.n.01",
+   "c": "peace.n.03",
+   "add_regime": "mid",
+   "add_rho": 0.3932291567325592,
+   "mean_rho": 0.3828125,
+   "pair_rho": 0.4085286557674408
+  },
+  {
+   "a": "subject.n.01",
+   "b": "fib.n.01",
+   "c": "report.n.03",
+   "add_regime": "close",
+   "add_rho": 0.5319010615348816,
+   "mean_rho": 0.4344618121782939,
+   "pair_rho": 0.4085286557674408
+  },
+  {
+   "a": "mud.n.01",
+   "b": "backbone.n.02",
+   "c": "mathematics.n.01",
+   "add_regime": "distant",
+   "add_rho": 0.2906900942325592,
+   "mean_rho": 0.3288302918275197,
+   "pair_rho": 0.4322916567325592
+  },
+  {
+   "a": "mud.n.01",
+   "b": "backbone.n.02",
+   "c": "dawn.n.01",
+   "add_regime": "mid",
+   "add_rho": 0.4339192807674408,
+   "mean_rho": 0.4152560730775197,
+   "pair_rho": 0.4322916567325592
+  },
+  {
+   "a": "mud.n.01",
+   "b": "backbone.n.02",
+   "c": "chap.n.01",
+   "add_regime": "close",
+   "add_rho": 0.5423176884651184,
+   "mean_rho": 0.4675564169883728,
+   "pair_rho": 0.4322916567325592
+  },
+  {
+   "a": "while.n.01",
+   "b": "blink_of_an_eye.n.01",
+   "c": "mathematics.n.01",
+   "add_regime": "distant",
+   "add_rho": 0.2841796875,
+   "mean_rho": 0.3766276041666667,
+   "pair_rho": 0.5654296875
+  },
+  {
+   "a": "while.n.01",
+   "b": "blink_of_an_eye.n.01",
+   "c": "blunder.n.01",
+   "add_regime": "mid",
+   "add_rho": 0.3678385317325592,
+   "mean_rho": 0.4286024272441864,
+   "pair_rho": 0.5654296875
+  },
+  {
+   "a": "while.n.01",
+   "b": "blink_of_an_eye.n.01",
+   "c": "fuss.n.02",
+   "add_regime": "close",
+   "add_rho": 0.44140625,
+   "mean_rho": 0.4676649272441864,
+   "pair_rho": 0.5654296875
+  }
+ ]
+}

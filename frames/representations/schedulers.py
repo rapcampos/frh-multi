@@ -9,8 +9,10 @@ protocol that the generation loops honor:
 - `observe(tokens, n)` — called each step with the current candidate token
   ids, BEFORE scoring; lets a scheduler react to the generated text
 - `__call__(projections, weights)` — selects the active concept and returns
-  its projections; the loop's `weights` tensor is IGNORED (Family 3 semantics:
-  one concept at a time; Stochastic takes probabilities at construction)
+  its projections; the loop's `weights` tensor is normally ignored (Family 3
+  semantics: one concept at a time; Stochastic takes probabilities at
+  construction). `SignedRoundRobin` is the explicit exception: it applies a
+  fixed +/- orientation to the active concept for differential schedules.
 
 Use a fresh scheduler instance per experiment, or rely on `reset` (invoked by
 the loop) to clear state between generation calls.
@@ -49,6 +51,44 @@ class RoundRobin(ConceptScheduler):
         index = self.step % projections.size(-1)
         self.step += 1
         return self._select(projections, index)
+
+
+class SignedRoundRobin(ConceptScheduler):
+    """F3.a signed variant — cycle through attraction and repulsion turns.
+
+    ``signs`` must contain exactly one ``+1`` or ``-1`` per concept. At an
+    attractive turn the active projection is returned unchanged; at a
+    repulsive turn it is negated. Magnitudes are deliberately fixed at one so
+    the active score stays on the same scale as ordinary :class:`RoundRobin`,
+    which matters when the score is combined with a fluency term.
+
+    Signs are constructor state rather than generation ``weights`` because
+    Family 3 does not otherwise use simultaneous concept weights.
+    """
+
+    def __init__(self, signs: list[float]):
+        if not signs or any(isinstance(sign, bool) for sign in signs):
+            raise ValueError("signs must be a non-empty list of +1/-1 values")
+        parsed = tuple(float(sign) for sign in signs)
+        if any(sign not in (-1.0, 1.0) for sign in parsed):
+            raise ValueError("signs must contain only +1 or -1")
+        self.signs = parsed
+        self.step = 0
+
+    def reset(self, n: int) -> None:
+        self.step = 0
+
+    def __call__(
+        self, projections: torch.Tensor, weights: torch.Tensor
+    ) -> torch.Tensor:
+        if projections.size(-1) != len(self.signs):
+            raise ValueError(
+                f"expected {len(self.signs)} concept channels, "
+                f"got {projections.size(-1)}"
+            )
+        index = self.step % projections.size(-1)
+        self.step += 1
+        return self._select(projections, index) * self.signs[index]
 
 
 class Stochastic(ConceptScheduler):

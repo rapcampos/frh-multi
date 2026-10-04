@@ -1,8 +1,10 @@
 """CPU unit tests for the evaluation harness (fake model, no GPU)."""
 
 import json
+import math
 
 import pandas as pd
+import pytest
 import torch
 
 from frames.evaluation.harness import EvaluationHarness, RecordingScorer
@@ -186,6 +188,67 @@ class TestEvaluate:
             harness.evaluate(["p"], ["p x"], [], config={})
         lines = (tmp_path / "log.jsonl").read_text().strip().split("\n")
         assert len(lines) == 2
+
+    def test_optional_metadata_roundtrip_and_length_check(self, tmp_path):
+        harness = make_harness(tmp_path)
+        records = harness.evaluate(
+            ["p"],
+            ["p x"],
+            [],
+            config={},
+            metadata=[{"continuation_tokens": 1, "termination": "step_cap"}],
+        )
+        assert records[0]["metadata"] == {
+            "continuation_tokens": 1,
+            "termination": "step_cap",
+        }
+
+        with pytest.raises(ValueError, match="one mapping per prompt"):
+            harness.evaluate(["p"], ["p x"], [], config={}, metadata=[])
+
+
+class TestContinuationTokenNll:
+    def test_losses_align_with_tokens_after_bos(self, tmp_path):
+        class Tokenizer:
+            bos_token_id = 0
+
+        class Model:
+            tokenizer = Tokenizer()
+
+            @staticmethod
+            def tokenize(text):
+                assert text == "abc"
+                return torch.tensor([[0, 1, 2, 3]])
+
+            @staticmethod
+            def __call__(tokens, use_cache):
+                assert use_cache is False
+                return type("Output", (), {"logits": torch.zeros(1, 4, 4)})()
+
+        fur = type("Fur", (), {"model": Model()})()
+        harness = EvaluationHarness(fur, tmp_path / "log.jsonl", 1, 3)
+
+        token_ids, token_nll = harness.continuation_token_nll("abc")
+
+        assert token_ids == [1, 2, 3]
+        assert token_nll.tolist() == pytest.approx([math.log(4)] * 3)
+
+    def test_rejects_tokenizer_without_bos(self, tmp_path):
+        class Tokenizer:
+            bos_token_id = 0
+
+        class Model:
+            tokenizer = Tokenizer()
+
+            @staticmethod
+            def tokenize(text):
+                return torch.tensor([[1, 2]])
+
+        fur = type("Fur", (), {"model": Model()})()
+        harness = EvaluationHarness(fur, tmp_path / "log.jsonl", 1, 3)
+
+        with pytest.raises(ValueError, match="prepend exactly one BOS"):
+            harness.continuation_token_nll("abc")
 
 
 class TestConceptExpression:

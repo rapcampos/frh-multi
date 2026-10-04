@@ -1,0 +1,63 @@
+{
+  "identity": "128038f3b05293f41e6eaeb37274d38834b1595cbaae57e04955ea3ff77d6dd2",
+  "prompts": [
+    {
+      "id": "p01",
+      "user": "Tell me a short story.",
+      "prefix": "Once",
+      "text": "<|start_header_id|>user<|end_header_id|>Tell me a short story.<|eot_id|><|start_header_id|>assistant<|end_header_id|>Once"
+    },
+    {
+      "id": "p02",
+      "user": "Describe your favorite place.",
+      "prefix": "My favorite place is",
+      "text": "<|start_header_id|>user<|end_header_id|>Describe your favorite place.<|eot_id|><|start_header_id|>assistant<|end_header_id|>My favorite place is"
+    },
+    {
+      "id": "p03",
+      "user": "What do you like to do on weekends?",
+      "prefix": "I like",
+      "text": "<|start_header_id|>user<|end_header_id|>What do you like to do on weekends?<|eot_id|><|start_header_id|>assistant<|end_header_id|>I like"
+    },
+    {
+      "id": "p04",
+      "user": "Describe the weather today.",
+      "prefix": "Today the weather is",
+      "text": "<|start_header_id|>user<|end_header_id|>Describe the weather today.<|eot_id|><|start_header_id|>assistant<|end_header_id|>Today the weather is"
+    },
+    {
+      "id": "p05",
+      "user": "What should I cook for dinner?",
+      "prefix": "You should",
+      "text": "<|start_header_id|>user<|end_header_id|>What should I cook for dinner?<|eot_id|><|start_header_id|>assistant<|end_header_id|>You should"
+    },
+    {
+      "id": "p06",
+      "user": "Write a paragraph about the city.",
+      "prefix": "The city",
+      "text": "<|start_header_id|>user<|end_header_id|>Write a paragraph about the city.<|eot_id|><|start_header_id|>assistant<|end_header_id|>The city"
+    },
+    {
+      "id": "p07",
+      "user": "Continue this thought.",
+      "prefix": "Here is what happened next:",
+      "text": "<|start_header_id|>user<|end_header_id|>Continue this thought.<|eot_id|><|start_header_id|>assistant<|end_header_id|>Here is what happened next:"
+    },
+    {
+      "id": "p08",
+      "user": "Describe a person you met.",
+      "prefix": "The person I met was",
+      "text": "<|start_header_id|>user<|end_header_id|>Describe a person you met.<|eot_id|><|start_header_id|>assistant<|end_header_id|>The person I met was"
+    }
+  ],
+  "continuations": [
+    "upon a time, in a small village nestled in the rolling hills of Tuscany, there was a tiny shop called \"",
+    "a virtual concept, as I don't have personal experiences or emotions. However, I can describe a hypothetical place that many people",
+    "to help users like you with information and tasks. I don't have personal preferences or experiences, but I can suggest some popular",
+    "not specified. I'm a large language model, I don't have real-time access to current weather conditions. However, I",
+    "cook something delicious and satisfying for dinner. Here are some ideas to get you started:\n\n**Quick and Easy Options**\n\n1.",
+    "was a vibrant and bustling metropolis, full of life and energy. Towering skyscrapers made of glass and steel pierced",
+    "",
+    "a computer program. I don't have the ability to meet people in the physical world."
+  ]
+}

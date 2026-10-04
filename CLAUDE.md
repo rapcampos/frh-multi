@@ -24,7 +24,9 @@ Run a single notebook headlessly via papermill:
 make run_notebook N=02_tokenization_frames.ipynb
 ```
 
-Output goes to `<notebook_dir>/outputs/<notebook_name>`. The notebooks are numbered and correspond to paper experiments starting from `02`.
+Output goes to `<notebook_dir>/outputs/<notebook_name>`. The notebooks are numbered and correspond to experiments (paper experiments start from `02`, the multi-concept program from `15`). See `NOTEBOOKS.md` for the full index; retired notebooks live in `archive/` (see `archive/README.md`).
+
+Notebooks 17–23 are papermill-parameterized over quantization: `make run_notebook N=20_e1_family_sweep.ipynb P=bf16` runs the unquantized variant (executed copy and `resources/` outputs get the `_unquantized` suffix); omitting `P` runs the historical AWQ default. `OUT=name.ipynb` overrides the executed-copy name.
 
 `01_START_HERE.ipynb` downloads all models configured in `models.yaml`.
 
@@ -105,7 +107,7 @@ All domain objects inherit from `frames/abstract/base_model.py::BaseModel`, whic
 
 ### Notebook structure
 
-Each numbered notebook corresponds to a paper experiment. Results (plots, pickled data) are saved to `resources/`. The `cache/` directory stores HuggingFace datasets and tokenized representations used across notebooks. `results.shelf.db` is a `shelve` database used by some notebooks to persist intermediate results across runs.
+Each numbered notebook corresponds to an experiment; `NOTEBOOKS.md` indexes them all. Numbering is frozen — `resources/` artifact names embed the producing notebook's number, so notebooks are never renumbered; superseded or parked notebooks move to `archive/` instead. Results (plots, pickled data) are saved to `resources/`. The `cache/` directory stores HuggingFace datasets and tokenized representations used across notebooks. `results.shelf.db` is a `shelve` database used by some notebooks to persist intermediate results across runs.
 
 ### Key dependencies
 
@@ -114,3 +116,13 @@ Each numbered notebook corresponds to a paper experiment. Results (plots, pickle
 - `nltk` with `wordnet2021` + OMW (`add_exomw()`): WordNet corpus.
 - `papermill`: headless notebook execution.
 - `methodtools`: provides `lru_cache` that works on instance methods (unlike `functools.lru_cache`).
+
+## Agent skills
+
+### Issue tracker
+
+Issues and specs live as local markdown files under `.scratch/<feature-slug>/`. See `docs/agents/issue-tracker.md`.
+
+### Domain docs
+
+Single-context: `CONTEXT.md` and `docs/adr/` at the repo root. See `docs/agents/domain.md`.

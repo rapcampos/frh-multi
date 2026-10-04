@@ -2,7 +2,12 @@
 
 import torch
 
-from frames.representations.schedulers import RoundRobin, SentenceBoundary, Stochastic
+from frames.representations.schedulers import (
+    RoundRobin,
+    SentenceBoundary,
+    SignedRoundRobin,
+    Stochastic,
+)
 
 
 def channel_projections(
@@ -39,6 +44,41 @@ class TestRoundRobin:
         proj = torch.randn(2, 4, 1, 3)
         out = scheduler(proj, WEIGHTS)
         assert torch.equal(out, proj[..., 0])
+
+
+class TestSignedRoundRobin:
+    def test_cycles_through_attraction_and_repulsion(self):
+        scheduler = SignedRoundRobin([1, -1, 1])
+        scheduler.reset(n=2)
+        proj = channel_projections()
+        seen = [scheduler(proj, WEIGHTS)[0, 0, 0].item() for _ in range(7)]
+        assert seen == [1.0, -2.0, 3.0, 1.0, -2.0, 3.0, 1.0]
+
+    def test_reset_restarts_signed_cycle(self):
+        scheduler = SignedRoundRobin([1, -1, 1])
+        proj = channel_projections()
+        scheduler(proj, WEIGHTS)
+        scheduler(proj, WEIGHTS)
+        scheduler.reset(n=1)
+        assert scheduler(proj, WEIGHTS)[0, 0, 0].item() == 1.0
+
+    def test_rejects_invalid_signs(self):
+        for signs in ([], [1, 0], [1, 0.5], [True, -1]):
+            try:
+                SignedRoundRobin(signs)
+            except ValueError:
+                continue
+            raise AssertionError(f"accepted invalid signs: {signs}")
+
+    def test_channel_count_must_match(self):
+        scheduler = SignedRoundRobin([1, -1])
+        proj = channel_projections(n_concepts=3)
+        try:
+            scheduler(proj, WEIGHTS)
+        except ValueError as error:
+            assert "expected 2 concept channels" in str(error)
+        else:
+            raise AssertionError("accepted the wrong number of concept channels")
 
 
 class TestStochastic:

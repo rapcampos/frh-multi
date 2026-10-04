@@ -1,0 +1,333 @@
+{
+ "config": {
+  "pool": "resources/32_concept_pool_bf16.json",
+  "n_base_pairs": 10,
+  "max_uses_per_concept": 2,
+  "common_threshold": 1.05,
+  "soft_beta": 8.0
+ },
+ "pairs": [
+  {
+   "a": "passing.n.02",
+   "b": "frisson.n.01",
+   "pair_rho": 0.2213541716337204
+  },
+  {
+   "a": "education.n.01",
+   "b": "electric_potential.n.01",
+   "pair_rho": 0.3268229067325592
+  },
+  {
+   "a": "benefit.n.02",
+   "b": "electric_potential.n.01",
+   "pair_rho": 0.3463541567325592
+  },
+  {
+   "a": "benefit.n.02",
+   "b": "education.n.01",
+   "pair_rho": 0.359375
+  },
+  {
+   "a": "end.n.02",
+   "b": "jail.n.01",
+   "pair_rho": 0.3697916567325592
+  },
+  {
+   "a": "blunder.n.01",
+   "b": "moment.n.01",
+   "pair_rho": 0.3802083432674408
+  },
+  {
+   "a": "fuss.n.02",
+   "b": "beam.n.04",
+   "pair_rho": 0.390625
+  },
+  {
+   "a": "blunder.n.01",
+   "b": "frisson.n.01",
+   "pair_rho": 0.4036458432674408
+  },
+  {
+   "a": "jail.n.01",
+   "b": "ace.n.03",
+   "pair_rho": 0.4244791567325592
+  },
+  {
+   "a": "universe.n.01",
+   "b": "initiation.n.02",
+   "pair_rho": 0.5182291865348816
+  }
+ ],
+ "triples": [
+  {
+   "a": "passing.n.02",
+   "b": "frisson.n.01",
+   "c": "country.n.02",
+   "add_regime": "distant",
+   "add_rho": 0.2760416567325592,
+   "mean_rho": 0.2556423594554265,
+   "pair_rho": 0.2213541716337204
+  },
+  {
+   "a": "passing.n.02",
+   "b": "frisson.n.01",
+   "c": "cat.n.01",
+   "add_regime": "mid",
+   "add_rho": 0.3541666567325592,
+   "mean_rho": 0.2777777761220932,
+   "pair_rho": 0.2213541716337204
+  },
+  {
+   "a": "passing.n.02",
+   "b": "frisson.n.01",
+   "c": "blunder.n.01",
+   "add_regime": "close",
+   "add_rho": 0.4036458432674408,
+   "mean_rho": 0.2973090360562007,
+   "pair_rho": 0.2213541716337204
+  },
+  {
+   "a": "education.n.01",
+   "b": "electric_potential.n.01",
+   "c": "passing.n.02",
+   "add_regime": "distant",
+   "add_rho": 0.2552083432674408,
+   "mean_rho": 0.2699652761220932,
+   "pair_rho": 0.3268229067325592
+  },
+  {
+   "a": "education.n.01",
+   "b": "electric_potential.n.01",
+   "c": "benefit.n.02",
+   "add_regime": "mid",
+   "add_rho": 0.359375,
+   "mean_rho": 0.3441840211550395,
+   "pair_rho": 0.3268229067325592
+  },
+  {
+   "a": "education.n.01",
+   "b": "electric_potential.n.01",
+   "c": "initiation.n.02",
+   "add_regime": "close",
+   "add_rho": 0.46875,
+   "mean_rho": 0.3832465211550395,
+   "pair_rho": 0.3268229067325592
+  },
+  {
+   "a": "benefit.n.02",
+   "b": "electric_potential.n.01",
+   "c": "passing.n.02",
+   "add_regime": "distant",
+   "add_rho": 0.2578125,
+   "mean_rho": 0.2864583333333333,
+   "pair_rho": 0.3463541567325592
+  },
+  {
+   "a": "benefit.n.02",
+   "b": "electric_potential.n.01",
+   "c": "frog.n.01",
+   "add_regime": "mid",
+   "add_rho": 0.3802083432674408,
+   "mean_rho": 0.3585069477558136,
+   "pair_rho": 0.3463541567325592
+  },
+  {
+   "a": "benefit.n.02",
+   "b": "electric_potential.n.01",
+   "c": "cat.n.01",
+   "add_regime": "close",
+   "add_rho": 0.4322916567325592,
+   "mean_rho": 0.3732638855775197,
+   "pair_rho": 0.3463541567325592
+  },
+  {
+   "a": "benefit.n.02",
+   "b": "education.n.01",
+   "c": "passing.n.02",
+   "add_regime": "distant",
+   "add_rho": 0.2578125,
+   "mean_rho": 0.2816840261220932,
+   "pair_rho": 0.359375
+  },
+  {
+   "a": "benefit.n.02",
+   "b": "education.n.01",
+   "c": "frog.n.01",
+   "add_regime": "mid",
+   "add_rho": 0.3802083432674408,
+   "mean_rho": 0.3602430621782939,
+   "pair_rho": 0.359375
+  },
+  {
+   "a": "benefit.n.02",
+   "b": "education.n.01",
+   "c": "initiation.n.02",
+   "add_regime": "close",
+   "add_rho": 0.46875,
+   "mean_rho": 0.4097222189108531,
+   "pair_rho": 0.359375
+  },
+  {
+   "a": "end.n.02",
+   "b": "jail.n.01",
+   "c": "education.n.01",
+   "add_regime": "distant",
+   "add_rho": 0.3567708432674408,
+   "mean_rho": 0.3446180522441864,
+   "pair_rho": 0.3697916567325592
+  },
+  {
+   "a": "end.n.02",
+   "b": "jail.n.01",
+   "c": "universe.n.01",
+   "add_regime": "mid",
+   "add_rho": 0.40625,
+   "mean_rho": 0.3836805522441864,
+   "pair_rho": 0.3697916567325592
+  },
+  {
+   "a": "end.n.02",
+   "b": "jail.n.01",
+   "c": "fuss.n.02",
+   "add_regime": "close",
+   "add_rho": 0.4583333432674408,
+   "mean_rho": 0.4097222189108531,
+   "pair_rho": 0.3697916567325592
+  },
+  {
+   "a": "blunder.n.01",
+   "b": "moment.n.01",
+   "c": "passing.n.02",
+   "add_regime": "distant",
+   "add_rho": 0.3268229067325592,
+   "mean_rho": 0.3246527810891469,
+   "pair_rho": 0.3802083432674408
+  },
+  {
+   "a": "blunder.n.01",
+   "b": "moment.n.01",
+   "c": "flood.n.01",
+   "add_regime": "mid",
+   "add_rho": 0.4192708432674408,
+   "mean_rho": 0.3758680621782939,
+   "pair_rho": 0.3802083432674408
+  },
+  {
+   "a": "blunder.n.01",
+   "b": "moment.n.01",
+   "c": "cattle.n.01",
+   "add_regime": "close",
+   "add_rho": 0.5052083134651184,
+   "mean_rho": 0.4149305522441864,
+   "pair_rho": 0.3802083432674408
+  },
+  {
+   "a": "fuss.n.02",
+   "b": "beam.n.04",
+   "c": "education.n.01",
+   "add_regime": "distant",
+   "add_rho": 0.34375,
+   "mean_rho": 0.3541666666666667,
+   "pair_rho": 0.390625
+  },
+  {
+   "a": "fuss.n.02",
+   "b": "beam.n.04",
+   "c": "respite.n.04",
+   "add_regime": "mid",
+   "add_rho": 0.4088541567325592,
+   "mean_rho": 0.3854166666666667,
+   "pair_rho": 0.390625
+  },
+  {
+   "a": "fuss.n.02",
+   "b": "beam.n.04",
+   "c": "disturbance.n.03",
+   "add_regime": "close",
+   "add_rho": 0.4895833432674408,
+   "mean_rho": 0.4210069477558136,
+   "pair_rho": 0.390625
+  },
+  {
+   "a": "blunder.n.01",
+   "b": "frisson.n.01",
+   "c": "passing.n.02",
+   "add_regime": "distant",
+   "add_rho": 0.2669270932674408,
+   "mean_rho": 0.2973090360562007,
+   "pair_rho": 0.4036458432674408
+  },
+  {
+   "a": "blunder.n.01",
+   "b": "frisson.n.01",
+   "c": "challah.n.01",
+   "add_regime": "mid",
+   "add_rho": 0.4192708432674408,
+   "mean_rho": 0.4079861144224803,
+   "pair_rho": 0.4036458432674408
+  },
+  {
+   "a": "blunder.n.01",
+   "b": "frisson.n.01",
+   "c": "cattle.n.01",
+   "add_regime": "close",
+   "add_rho": 0.5052083134651184,
+   "mean_rho": 0.4236111044883728,
+   "pair_rho": 0.4036458432674408
+  },
+  {
+   "a": "jail.n.01",
+   "b": "ace.n.03",
+   "c": "passing.n.02",
+   "add_regime": "distant",
+   "add_rho": 0.32421875,
+   "mean_rho": 0.3389756878217061,
+   "pair_rho": 0.4244791567325592
+  },
+  {
+   "a": "jail.n.01",
+   "b": "ace.n.03",
+   "c": "tail.n.01",
+   "add_regime": "mid",
+   "add_rho": 0.4140625,
+   "mean_rho": 0.4053819378217061,
+   "pair_rho": 0.4244791567325592
+  },
+  {
+   "a": "jail.n.01",
+   "b": "ace.n.03",
+   "c": "fuss.n.02",
+   "add_regime": "close",
+   "add_rho": 0.4583333432674408,
+   "mean_rho": 0.4427083333333333,
+   "pair_rho": 0.4244791567325592
+  },
+  {
+   "a": "universe.n.01",
+   "b": "initiation.n.02",
+   "c": "passing.n.02",
+   "add_regime": "distant",
+   "add_rho": 0.2708333432674408,
+   "mean_rho": 0.3398437599341075,
+   "pair_rho": 0.5182291865348816
+  },
+  {
+   "a": "universe.n.01",
+   "b": "initiation.n.02",
+   "c": "respite.n.04",
+   "add_regime": "mid",
+   "add_rho": 0.4010416567325592,
+   "mean_rho": 0.4279513955116272,
+   "pair_rho": 0.5182291865348816
+  },
+  {
+   "a": "universe.n.01",
+   "b": "initiation.n.02",
+   "c": "education.n.01",
+   "add_regime": "close",
+   "add_rho": 0.46875,
+   "mean_rho": 0.4557291766007741,
+   "pair_rho": 0.5182291865348816
+  }
+ ]
+}

@@ -1,0 +1,207 @@
+\documentclass[a4paper,10pt,twocolumn]{article}
+\usepackage[margin=2cm]{geometry}
+\usepackage{amsmath,amssymb}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,calc}
+\usepackage[hidelinks]{hyperref}
+
+% Figures live in ../resources relative to this file (repo-root resources/).
+\graphicspath{{../resources/}{resources/}{./}}
+
+\definecolor{cblue}{HTML}{2471C9}
+\definecolor{corange}{HTML}{E67E22}
+\definecolor{cteal}{HTML}{159A86}
+\definecolor{cpurple}{HTML}{8E44AD}
+\definecolor{cgreen}{HTML}{27AE60}
+\definecolor{cgold}{HTML}{C99A1E}
+
+\title{Multi-Concept Steering with Top-$k$ Concept-Guided Decoding\\[2pt]
+\large Master's Program Midterm Report}
+\author{Rodrigo Abreu Pizzatto de Campos\\[2pt]
+\normalsize Student ID: 202520724 
+\qquad Supervisor: Kazuhiro Fukui}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+Large language models (LLMs) are capable of generating fluent, open-ended text across a wide range of tasks, yet how this process happens internally remains to be fully understood. Interpretability research addresses this gap by studying how models represent and organize information internally, and progress in this direction can help us build more trustworthy and reliable models~\cite{hooker2019benchmark}.
+
+Understanding a model's representations also opens a more practical possibility: control. This is commonly called steering, guiding the model toward a chosen topic, attribute, or concept during generation. Steering can be done at different levels, by retraining or fine-tuning the model, by intervening on its internal activations, or by acting on the generation process while the model itself stays frozen. Our work belongs to this last family, grounded in the observation that language models organize meaning geometrically, where a concept corresponds to a direction or subspace of the model's representation space, and generation can be steered by favoring the continuation candidates that align with a chosen concept, using only the model's own forward passes.
+
+This geometric view was formalized by the Linear Representation Hypothesis~\cite{park2024lrh}, which defines a concept as a direction in the representation space. The Frame Representation Hypothesis~\cite{valois2025frh} extends it from single tokens to the multi-token words that compose most of a real vocabulary, representing over 99\% of all Open Multilingual WordNet (OMW)~\cite{bond2013omw} lemmas across most LLMs~\cite{valois2025frh}. It represents a word as the ordered sequence of its token vectors in the model's whitened unembedding space, orthonormalized into a frame, defining a concept as the average of the word frames built from the OMW synset lemmas. Based on this representation, it proposes Top-$k$ Concept-Guided Decoding (CGD), a steering method that scores the model's proposed top-$k$ continuations by the frame correlation between their final hidden states and a guiding concept and selects the candidate most correlated with it. As the method only re-ranks the model's own proposals, it does not modify weights, logits, or activations and requires no training, needing only forward passes with access to the final hidden states and the unembedding matrix.
+
+However, the original Top-$k$ CGD method only steers toward a single guiding concept and leaves the concept combination approach unexplored. Combining concepts is not trivial: they interact as geometric objects in a shared space, not every merging method is constructive, and opposing concepts can cancel or degrade one another's expression under naive averaging, making even a composition that contains every target concept invisible to the scoring function. This report presents our extension of Top-$k$ CGD to multiple concepts, to our knowledge the first systematic treatment of concept composition within frame-based concept-guided decoding, through three methods of concept composition, an evaluation framework to measure multi-concept steering, and our experimental findings. We keep the original decoding loop unchanged, modifying only the components that multi-concept steering acts on: the guiding concept and the scoring step.
+
+Steering at decoding time is an established research direction: weighted decoding methods such as FUDGE reshape the next-token distribution of a frozen model using learned discriminators and can compose multiple attributes by summing their scores~\cite{yang2021fudge}, and controlled decoding formalizes the combination of several objectives at inference time~\cite{mudgal2024controlled}. However, these methods require training an external model for each attribute. Concept-guided decoding requires no training and no modification, as it only re-ranks the candidates the model proposes, and its composition problem is different in nature: the objects being combined are geometric frames in a shared space, not scores from independent models.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\linewidth]{images/1_topkmcgd.png}
+\caption{Multi-concept guided decoding proposed changes (adapted from Valois et al.~\cite{valois2025frh}). The model's top-$k$ continuations form feature frames $H_i(x)$, scored against the concepts by the frame correlation $\rho$. When dealing with multiple concepts, the candidate's correlation is related to its projection onto \emph{all} concepts. The steering methods proposed focus on two steps: the concept frames $S_n$ guiding the steering (blending and scheduling methods) and the scoring function (voting and fluency term $\lambda$ methods).}
+\label{fig:method}
+\end{figure}
+
+\section{Methods}
+
+Multi-concept steering extends the original Top-$k$ CGD loop in two distinct places: the guiding concept and the per-step score, shown in Figure~\ref{fig:method}. At each step the model proposes its $k$ most probable continuations, and the loop keeps the candidate whose cumulative correlation with the guiding concept $S$ is highest,
+\begin{equation}
+x_{t+1} \;=\; \argmax_{i \in \{1,\dots,k\}} \; \sum_{\tau \le t} \rho\bigl(H_i(x_\tau),\, S\bigr),
+\end{equation}
+where $H_i(x_\tau)$ is the feature frame of candidate $i$ at step $\tau$. All experiments use $k = 4$. The rest of the pipeline is left exactly as in the original method. We propose three composition methods across these two approaches, each changing a single mechanism: the frame blending and concept scheduling methods target the guiding concept, while the score voting method changes the scoring mechanism.
+
+\subsection{Frame blending}
+The original method already has one way of using more than one concept as a guide. Through \emph{differential guidance} on counterfactual pairs, it steers toward a concept $C_1$ and away from a concept $C_2$ using the difference frame $\Pi(C_1 - C_2)$, where the polar projection $\Pi(A) = U V^{\top}$ (from $A = U\Sigma V^{\top}$) returns the nearest orthonormal frame. The blending method generalizes this to $n$ concepts by projecting an arbitrary weighted sum back onto the space of orthonormal frames,
+
+\begin{equation}
+F^{*} = \Pi\!\Big(\textstyle\sum_i w_i\, C_i\Big).
+\end{equation}
+
+When using weights $(1, -1)$, we recover the difference frame used for counterfactual pair guidance. A gauge-aligned variant and a Riemannian-mean variant were also implemented, but neither improved over the simple blend. A guide built as an orthonormal basis of the union of the concept subspaces would have exactly the right span, yet score near zero against its own constituents, since the frame correlation compares columns position by position and such a basis is an arbitrary rotation of that span. This is why the blend projects the weighted sum, which keeps the column correspondence, instead of working with the span alone.
+
+\subsection{Concept scheduling}
+The second method activates a single concept per decoding step, chosen by a round-robin or stochastic scheduler. No token has to satisfy several concepts at once, but the final text satisfies them by taking turns. Its predictable cost is capacity: each concept's share of the steps shrinks as $1/n$.
+
+\subsection{Score voting}
+The third method keeps all the concept guides and aggregates the concept scores instead. Seen at the score rather than the guide, the same differential guidance appears as a signed sum of per-concept scores, since the frame correlation is linear in the concept argument. Score voting generalizes this to $n$ weighted concepts, aggregating the per-concept scores $s^{i} = \rho(H, C_i)$ rather than the guides. 
+
+However, if they are left unnormalized, the aggregate $\sum_i w_i s^{i}$ collapses back to scoring against the summed frame, identical to blending without the projection step, so the scores are first normalized per step across the candidate pool, 
+
+\begin{equation}
+\hat{z}^{\,i} = \frac{s^{i} - \mu^{i}_{\mathrm{pool}}}{\sigma^{i}_{\mathrm{pool}}},
+\qquad s = \textstyle\sum_i w_i\, \hat{z}^{\,i}.
+\end{equation}
+
+The effective guide is then rescaled per concept by its pool spread and re-derived at every step, preventing a more expressive concept from dominating the scoring.
+
+\subsection{Fluency-regularized score}
+Steering leads the model away from the path it would otherwise take, so its output departs from what it would produce on its own. We measure this departure by perplexity, which grows as the model finds the generated sequence less likely~\cite{jelinek1977perplexity}. Under pure steering, perplexity was roughly six to seven times the unsteered baseline. To balance this, we extend the score with the model's own token log-likelihood, weighted by a fluency coefficient $\lambda$,
+\begin{equation}
+\textstyle\sum_t \rho(H_t, C) \;+\; \lambda \sum_t \log p(x_t \mid x_{<t}).
+\end{equation}
+This term interpolates the score between pure steering when $\lambda = 0$ and unsteered decoding as $\lambda$ grows, and composes with every method proposed.
+
+
+\section{Evaluation}
+Measurement proved to be as much of a research problem as the steering methods themselves. Our first metric, the literal presence of the steered concept's lemmas in the text, read near zero even when steering plainly worked, meaning a passage can turn melancholic without ever containing a ``sad'' word.
+
+Our core metric is therefore concept expression, the frame correlation between a continuation's hidden states and a concept averaged over its $T$ token positions, reported as a delta against the unsteered continuation of the same prompt, decoded deterministically,
+\begin{equation}
+E(x, C) = \tfrac{1}{T}\textstyle\sum_t \rho(H_t, C),
+\end{equation}
+
+\begin{equation}
+\Delta(C) = E(x_{\mathrm{steer}}) - E(x_{\mathrm{base}}).
+\end{equation}
+
+
+For multiple concepts, we report the joint expression and the all-positive rate,
+\begin{equation}
+\mathrm{joint} = \min_i \Delta(C_i),
+\end{equation}
+
+\begin{equation}
+\text{all-positive} = P\!\left(\min_i \Delta_i > 0\right).
+\end{equation}
+
+
+The minima shrink as the number of concepts grows even under identical marginals, so joint values are comparable only within a group size; the all-positive rate is scale-free and is what we use for claims across models. Fluency is tracked as the perplexity ratio between the steered and baseline continuations. Since expression depends on hidden-state norms and is not reliable across models and precisions, we complement it with an angle-based track: the per-token cosine
+\begin{equation}
+\cos(h_t, C) = \frac{\lVert C^{\top} h_t \rVert}{\lVert h_t \rVert} \in [0,1],
+\end{equation}
+the fraction of a hidden state's norm shared with the concept span, bounded
+and scale-invariant. Both tracks are computed with the same correlation that the decoder maximizes, so they measure steering in the method's own terms. The placebo control planned as future work is the step that would make this evaluation external.
+
+\section{Experiments and Results}
+
+All experiments use open-weight, instruction-tuned models. The primary model is Llama-3.1-8B, evaluated on its original weights and, as a quantization control, on a 4-bit AWQ-quantized variant. All reported results are based on the default model, unless stated otherwise. Cross-family generality is tested on concept pairs with the Gemma-2 family, mainly the Gemma-2-9B model, with its 2B sibling as a smaller reference. Concepts were always built from each model's own tokenizer, and every run generates 24 guided tokens.
+
+The 27 concepts used during method development were inherited from pair selection and were never validated for steerability; their single-concept effects spanned roughly a fourfold range. We therefore built a validation procedure, gathering around 22 thousand eligible WordNet noun synsets, filtering them by depth, lemma count and semantic domain to about 160 candidates. Then, we measured each candidate's actual steering effect and selected 40 concepts under a minimum-effect floor, a domain limit and correlation deduplication. Only 2 of the 27 original concepts were maintained (Figure~\ref{fig:slate}) and, when using validated guides, the joint expression on Llama rose from 0.27 to 0.92. To analyze how steering behaves as the number of concepts increases, we built nested groups with 2, 3 and 4 concepts, in which every triple contains its pair and every quadruple its triple. By adding one concept at a time, the changes from a pair to its own triple and quadruple isolate the effect of a single concept being added. Every configuration is evaluated over 100 runs per concept pair and 300 per triple and quadruple.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{images/48_slate_histogram.png}
+\caption{Validated single-concept expression $\Delta$ over the 161-candidate
+slate (Llama-3.1-8B). The original 27 method-development
+concepts (red) span a roughly fourfold range and only two clear the pool floor (dashed).}
+\label{fig:slate}
+\end{figure}
+
+\subsection{Quantitative results}
+On the validated pool, blending was best at every group size (Table~\ref{tab:methods}), its joint expression falling from 0.92 to 0.82 to
+0.73 from two to four concepts. Scheduling was close to blending at two concepts but decayed most steeply, the expected cost of giving each concept only a share of the steps; voting was stable but last throughout. The fluency weight behaved as a genuine trade-off: on single concepts, raising $\lambda$ to about 0.4 reduced the mean effect from 1.35 to 1.01, roughly a quarter, while improving the perplexity ratio from 6.1 to 2.7 (Figure~\ref{fig:lambda}), and in composition the joint decayed smoothly as perplexity fell. In general, concept blending with $\lambda$ near 0.3 to 0.4 was the best overall recipe.
+
+\begin{table}[t]
+  \centering
+  \small
+  \setlength{\tabcolsep}{4pt}
+  \caption{Composition methods on the validated concept pool (Llama-3.1-8B,
+  $\lambda = 0$); cells give $n = 2/3/4$ concepts. Joint expression is the
+  minimum per-concept $\Delta$; the cosine column is the share of runs
+  improving every concept on the per-token cosine track.}
+  \label{tab:methods}
+  \begin{tabular}{lcc}
+  \toprule
+  Method & Joint expr. & All-improved cos\\
+  \midrule
+  Blending   & 0.92 / 0.82 / 0.73 & 74\% / 70\% / 68\%\\
+  Scheduling & 0.86 / 0.81 / 0.65 & 68\% / 66\% / 61\%\\
+  Voting     & 0.74 / 0.72 / 0.61 & 66\% / 66\% / 62\%\\
+  \bottomrule
+  \end{tabular}
+  \end{table}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\linewidth]{images/40_lambda.png}
+\caption{Steering (left) and fluency cost (right) versus the fluency weight
+$\lambda$ for $n = 1$ to $4$ concepts (Llama-3.1-8B, validated pool). Raising $\lambda$ trades some steerability for a large reduction in perplexity, with a good operating point near $0.3$ to $0.4$.}
+\label{fig:lambda}
+\end{figure*}
+
+Repeating the comparison across model families on the same validated pool
+exposed a large and unexplained gap (Table~\ref{tab:crossmodel}): both sizes of Gemma-2 improved both concepts of a pair in about 98 to 99 percent of runs, against 72 percent on Llama, on identical concepts. The gap is not caused by quantization, since both Llama variants sit far below Gemma in Table~\ref{tab:crossmodel}. It is also not explained by concept construction: rebuilding Llama's concepts under Gemma's English-only lemma policy moved Llama further from Gemma, not toward it. Composability appears to be a genuine property of the model family.
+
+ \begin{table}[t]
+  \centering
+  \small
+  \setlength{\tabcolsep}{4pt}
+  \caption{Cross-family generality with blending held fixed (validated pool,
+  30 pairs), as the both-improved rate on the expression and per-token cosine
+  tracks. The control row rebuilds Llama's concepts under Gemma's English-only
+  lemma policy.}
+  \label{tab:crossmodel}
+  \begin{tabular}{lcc}
+  \toprule
+  Model & Expr. & Cos\\
+  \midrule
+  Llama-3.1-8B (4-bit AWQ)     & 60\% & 79\%\\
+  Llama-3.1-8B                 & 72\% & 71\%\\
+  \quad English-only (control) & 67\% & 68\%\\
+  Gemma-2-2B                 & 99\% & 88\%\\
+  Gemma-2-9B                 & 98\% & 98\%\\
+  \bottomrule
+  \end{tabular}
+  \end{table}
+
+\subsection{Qualitative results}
+Successful composition is visible in the text itself. Steering the opening
+``The traveler arrived at'' toward the guiding concepts \emph{country},
+\emph{town}, \emph{dwelling} and \emph{respite} moved the setting from open
+country toward a sheltering interior. With a single concept the traveler ``stepped out onto [a] worn wooden \dots{} dock into mist \dots{} looked out across water [that] stretched far out'', while with all four the traveler ``pushed open [a] heavy wooden \dots{} door \dots{} releasing warm light into cool night air'' of a ``coastal tavern''. The concepts enter as imagery and word choice rather than as their surface forms, which is also why looking for the concepts' lemmas in the text reads near zero. The roughness such passages carry is the perplexity cost of pure steering, and applying the fluency weight recovers most of it.
+
+\section{Conclusion and Future Work}
+
+Multi-concept concept-guided decoding works in the paper's published loop with no modification to the model. With validated guides, it improves both concepts of a pair in 72 percent of the runs on Llama and in 98 to 99 percent on Gemma-2, while the joint expression declines from 0.92 to 0.73 as pairs grow into quadruples. The blending method with a fluency weight near 0.3 to 0.4 was the best across a range of settings. Two lessons generalize beyond the method. First, a composition must match the geometry of the score that reads it, as the union-basis guide illustrates. Second, steerability cannot be assumed from the lexicon; validating guides is what turns the method from unreliable into dependable. The cross-family composability gap remains the central open question.
+
+The next steps include a placebo control that scores steered text against
+non-targeted concepts and an evaluation with an LLM as a judge, rating whether the steered text expresses the target concepts. Together, these would make the evaluation external to the method's own score. We also plan larger generation windows, testing whether composition holds over passages longer than the current 24 tokens, as well as alternatives to top-$k$ for the proposal step, such as top-$p$ sampling. A longer-term direction is a decomposition into common and difference components following the generalized difference subspace construction of Fukui and Maki~\cite{fukui2015difference}. Our pilots suggest that joint expression is localized in the common component, the principal subspace that the composed concepts share.
+
+\bibliographystyle{plain}
+\bibliography{refs}
+
+\end{document}

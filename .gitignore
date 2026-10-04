@@ -170,3 +170,81 @@ output.ipynb
 /playground/outputs/*
 /playground/cufile.log
 /playground/cache/*
+
+# Python bytecode and build products
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+build/
+dist/
+
+# Test, type-checking, and coverage caches
+.pytest_cache/
+.mypy_cache/
+.pyre/
+.hypothesis/
+.coverage
+.coverage.*
+htmlcov/
+
+# Environments and secrets
+.venv/
+venv/
+env/
+.env
+.env.*
+!.env.example
+
+# Editors and operating systems
+.idea/
+.vscode/
+.DS_Store
+*.swp
+*~
+
+# Jupyter temporary files
+.ipynb_checkpoints/
+Untitled*.ipynb
+*_scratch.ipynb
+*-local.ipynb
+/output.ipynb
+
+# Downloaded datasets and model caches
+/cache/*
+!/cache/.gitkeep
+/models/
+/datasets/
+/downloads/
+/checkpoints/
+
+# Model weights and large training state
+*.ckpt
+*.pt
+*.pth
+*.safetensors
+*.nsys-rep
+
+# Runtime output
+/outputs/
+/logs/
+/lightning_logs/
+/multirun/
+/evaluation/
+/wandb/
+/mlruns/
+
+# Per-experiment generated output
+/experiments/**/runs/
+/experiments/**/artifacts/
+/experiments/**/outputs/
+
+# Local intermediate databases
+/results.shelf.db
+
+# Explicit scratch space
+/scratch/
+/tmp/
+
+# Reference files
+/references/

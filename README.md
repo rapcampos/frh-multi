@@ -55,7 +55,7 @@ Run `01_START_HERE.ipynb` to download all models.
 
 ## Quick Start
 
-Each experiment in the paper is in one of the jupyter notebooks starting from 02.
+Each experiment in the paper is in one of the jupyter notebooks starting from 02. `NOTEBOOKS.md` indexes every notebook (paper era and the multi-concept program); retired notebooks live in `archive/`.
 
 ## LICENSE
 

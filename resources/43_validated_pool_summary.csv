@@ -1,0 +1,13 @@
+model,method,both_improved,both_improved_cos,joint,n
+llama-3.1-8b-awq,blend,0.5967,0.7867,0.8041,300
+llama-3.1-8b-awq,vote,0.6,0.7767,0.7632,300
+llama-3.1-8b-awq,schedule,0.64,0.7433,0.8046,300
+llama-3.1-8b-bf16,blend,0.7167,0.71,0.9315,300
+llama-3.1-8b-bf16,vote,0.66,0.6867,0.7836,300
+llama-3.1-8b-bf16,schedule,0.69,0.7167,0.9182,300
+gemma-2-2b,blend,0.9933,0.8833,2.0255,300
+gemma-2-2b,vote,0.98,0.9167,1.9282,300
+gemma-2-2b,schedule,0.9933,0.9,1.9929,300
+gemma-2-9b,blend,0.9767,0.9767,2.0035,300
+gemma-2-9b,vote,0.99,0.99,1.9135,300
+gemma-2-9b,schedule,0.9667,0.9733,1.9579,300

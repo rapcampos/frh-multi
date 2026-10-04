@@ -1,0 +1,105 @@
+# Input catalogs and experiment selections for notebooks 53 and 54.
+#
+# Best-practice editing rule: keep the catalogs complete and edit only the ID
+# lists under `experiments`. This avoids duplicating prompt text, lets different
+# notebooks select different subsets, and makes unknown or duplicate IDs easy
+# for the notebook loader to reject before model loading.
+#
+# `all` means every entry in the corresponding catalog, in catalog order.
+
+prompt_catalog:
+  - {id: men, user: "What men can be?", assistant_prefix: "1."}
+  - {id: women, user: "What women can be?", assistant_prefix: "1."}
+  - {id: short_story, user: "Tell me a short story.", assistant_prefix: "Once"}
+  - {id: favorite_place, user: "Describe your favorite place.", assistant_prefix: "My favorite place is"}
+  - {id: weekends, user: "What do you like to do on weekends?", assistant_prefix: "I like"}
+  - {id: good_life, user: "Give me some advice for a good life.", assistant_prefix: "1."}
+  - {id: most_important, user: "What is the most important thing in the world?", assistant_prefix: "The most important thing is"}
+  - {id: weather, user: "Describe the weather today.", assistant_prefix: "Today the weather is"}
+  - {id: dinner, user: "What should I cook for dinner?", assistant_prefix: "You should"}
+  - {id: happiness, user: "Name things that make people happy.", assistant_prefix: "1."}
+
+# The first 30 pairs reproduce resources/43_pairs.json. The final 14 pairs use
+# the same bf16-validated concept pool but were curated for human readability.
+composition_pair_catalog:
+  - {id: passing_frisson, a: passing.n.02, b: frisson.n.01, rho: 0.221354, source: notebook_43}
+  - {id: frisson_moment, a: frisson.n.01, b: moment.n.01, rho: 0.282552, source: notebook_43}
+  - {id: cattle_country, a: cattle.n.01, b: country.n.02, rho: 0.309896, source: notebook_43}
+  - {id: education_sorrow, a: education.n.01, b: sorrow.n.01, rho: 0.324219, source: notebook_43}
+  - {id: jail_result, a: jail.n.01, b: result.n.03, rho: 0.332031, source: notebook_43}
+  - {id: benefit_sorrow, a: benefit.n.02, b: sorrow.n.01, rho: 0.338542, source: notebook_43}
+  - {id: fuss_education, a: fuss.n.02, b: education.n.01, rho: 0.343750, source: notebook_43}
+  - {id: benefit_electric_potential, a: benefit.n.02, b: electric_potential.n.01, rho: 0.346354, source: notebook_43}
+  - {id: blunder_beam, a: blunder.n.01, b: beam.n.04, rho: 0.351562, source: notebook_43}
+  - {id: blunder_electric_potential, a: blunder.n.01, b: electric_potential.n.01, rho: 0.354167, source: notebook_43}
+  - {id: benefit_education, a: benefit.n.02, b: education.n.01, rho: 0.359375, source: notebook_43}
+  - {id: cattle_electric_potential, a: cattle.n.01, b: electric_potential.n.01, rho: 0.361979, source: notebook_43}
+  - {id: cattle_town, a: cattle.n.01, b: town.n.02, rho: 0.367188, source: notebook_43}
+  - {id: end_jail, a: end.n.02, b: jail.n.01, rho: 0.369792, source: notebook_43}
+  - {id: fuss_country, a: fuss.n.02, b: country.n.02, rho: 0.372396, source: notebook_43}
+  - {id: end_backbone, a: end.n.02, b: backbone.n.02, rho: 0.375000, source: notebook_43}
+  - {id: blunder_moment, a: blunder.n.01, b: moment.n.01, rho: 0.380208, source: notebook_43}
+  - {id: fuss_flood, a: fuss.n.02, b: flood.n.01, rho: 0.382812, source: notebook_43}
+  - {id: end_country, a: end.n.02, b: country.n.02, rho: 0.385417, source: notebook_43}
+  - {id: jail_dawn, a: jail.n.01, b: dawn.n.01, rho: 0.390625, source: notebook_43}
+  - {id: backbone_tail, a: backbone.n.02, b: tail.n.01, rho: 0.393229, source: notebook_43}
+  - {id: town_dwelling, a: town.n.02, b: dwelling.n.01, rho: 0.398438, source: notebook_43}
+  - {id: respite_universe, a: respite.n.04, b: universe.n.01, rho: 0.401042, source: notebook_43}
+  - {id: respite_disturbance, a: respite.n.04, b: disturbance.n.03, rho: 0.406250, source: notebook_43}
+  - {id: acme_dawn, a: acme.n.01, b: dawn.n.01, rho: 0.414062, source: notebook_43}
+  - {id: respite_acme, a: respite.n.04, b: acme.n.01, rho: 0.416667, source: notebook_43}
+  - {id: backbone_acme, a: backbone.n.02, b: acme.n.01, rho: 0.427083, source: notebook_43}
+  - {id: ace_cat, a: ace.n.03, b: cat.n.01, rho: 0.437500, source: notebook_43}
+  - {id: universe_drop, a: universe.n.01, b: drop.n.03, rho: 0.445312, source: notebook_43}
+  - {id: universe_initiation, a: universe.n.01, b: initiation.n.02, rho: 0.518229, source: notebook_43}
+  - {id: passing_dawn, a: passing.n.02, b: dawn.n.01, rho: 0.259115, source: human_curated, theme: "death and renewal"}
+  - {id: passing_beginning, a: passing.n.02, b: beginning.n.04, rho: 0.321615, source: human_curated, theme: "ending and beginning"}
+  - {id: town_flood, a: town.n.02, b: flood.n.01, rho: 0.320312, source: human_curated, theme: "community and disaster"}
+  - {id: eden_flood, a: eden.n.01, b: flood.n.01, rho: 0.359375, source: human_curated, theme: "paradise and catastrophe"}
+  - {id: sorrow_dawn, a: sorrow.n.01, b: dawn.n.01, rho: 0.388021, source: human_curated, theme: "grief and hope"}
+  - {id: peace_fury, a: peace.n.03, b: fury.n.01, rho: 0.388021, source: human_curated, theme: "calm and rage"}
+  - {id: quarrel_peace, a: quarrel.n.01, b: peace.n.03, rho: 0.395833, source: human_curated, theme: "conflict and reconciliation"}
+  - {id: universe_beginning, a: universe.n.01, b: beginning.n.04, rho: 0.401042, source: human_curated, theme: "creation"}
+  - {id: jail_respite, a: jail.n.01, b: respite.n.04, rho: 0.414062, source: human_curated, theme: "confinement and relief"}
+  - {id: acme_drop, a: acme.n.01, b: drop.n.03, rho: 0.424479, source: human_curated, theme: "rise and fall"}
+  - {id: ace_blunder, a: ace.n.03, b: blunder.n.01, rho: 0.434896, source: human_curated, theme: "expertise and error"}
+  - {id: fury_flood, a: fury.n.01, b: flood.n.01, rho: 0.468750, source: human_curated, theme: "rage and natural force"}
+  - {id: education_initiation, a: education.n.01, b: initiation.n.02, rho: 0.468750, source: human_curated, theme: "learning and a new beginning"}
+  - {id: respite_peace, a: respite.n.04, b: peace.n.03, rho: 0.507812, source: human_curated, theme: "rest and serenity"}
+
+negative_direction_catalog:
+  - {id: woman_minus_man, attract: woman.n.01, repel: man.n.01}
+  - {id: man_minus_woman, attract: man.n.01, repel: woman.n.01}
+
+experiments:
+  experiment_53:
+    steps: 200
+    lambdas: [0.0, 0.4]
+    prompt_ids:
+      - short_story
+      - favorite_place
+      - weekends
+      - good_life
+      - weather
+    composition_pair_ids:
+      - education_sorrow
+      - fuss_education
+      - benefit_education
+      - cattle_town
+      - end_jail
+      - end_country
+      - respite_universe
+      - passing_dawn
+      - town_flood
+      - sorrow_dawn
+      - peace_fury
+      - quarrel_peace
+      - fury_flood
+      - education_initiation
+      - respite_peace
+
+  experiment_54:
+    steps: 24
+    lambdas: [0.4]
+    prompt_ids: all
+    negative_direction_ids: all

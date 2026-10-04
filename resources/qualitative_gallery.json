@@ -1,0 +1,317 @@
+[
+  {
+    "prompt": "Continue this story.",
+    "prefix": "The traveler arrived at",
+    "baseline": "The traveler arrived at the small village, exhausted from the long journey. The sun was setting, casting a warm orange glow over the thatched roofs of the cottages. The air was filled",
+    "levels": [
+      {
+        "n": 1,
+        "concepts": [
+          "sadness"
+        ],
+        "text": "The traveler arrived at a small, seaside café. She pushed through a set pair doors that led out onto an old wooden dock. Beyond it lay calm, turquoise sea. She ordered a",
+        "deltas": {
+          "sadness": 0.08
+        },
+        "all_improved": true
+      },
+      {
+        "n": 2,
+        "concepts": [
+          "sadness",
+          "music"
+        ],
+        "text": "The traveler arrived at a quaint, old-world station. He had been riding for days, and his weary legs longed for solid land. As he gathered up this bags, he noticed",
+        "deltas": {
+          "sadness": 0.46,
+          "music": 0.39
+        },
+        "all_improved": true
+      },
+      {
+        "n": 3,
+        "concepts": [
+          "sadness",
+          "music",
+          "snow"
+        ],
+        "text": "The traveler arrived at her small, cluttery room with all of its eccentric trinket-filled decor. It had once belonged, many,many, many decades past, to her great",
+        "deltas": {
+          "sadness": 0.58,
+          "music": 0.05,
+          "snow": 0.45
+        },
+        "all_improved": true
+      },
+      {
+        "n": 4,
+        "concepts": [
+          "sadness",
+          "music",
+          "snow",
+          "war"
+        ],
+        "text": "The traveler arrived at a small, quaint café nestled among a row. of worn brick shops. She pushed through swinging double glass door.   A faint hum from a refrigerator in. the",
+        "deltas": {
+          "sadness": -0.54,
+          "music": -0.08,
+          "snow": -0.3,
+          "war": -0.76
+        },
+        "all_improved": false
+      }
+    ]
+  },
+  {
+    "prompt": "Write a scene.",
+    "prefix": "She opened the door and",
+    "baseline": "She opened the door and stepped out into the cool evening air. The sky was a deep shade of indigo, with stars beginning to twinkle like diamonds scattered across the fabric of the universe.",
+    "levels": [
+      {
+        "n": 1,
+        "concepts": [
+          "sadness"
+        ],
+        "text": "She opened the door and a faint smell drifted out - a mix 0of dampness & mildew & stale air - a reminder of years of disinterest & disarray, of a",
+        "deltas": {
+          "sadness": 1.22
+        },
+        "all_improved": true
+      },
+      {
+        "n": 2,
+        "concepts": [
+          "sadness",
+          "music"
+        ],
+        "text": "She opened the door and a faint whisper seemed carried by on a gust. It tickle at her neck. She shiver at its chill.   Outside, night's dark shrouded",
+        "deltas": {
+          "sadness": -0.52,
+          "music": -1.5
+        },
+        "all_improved": false
+      },
+      {
+        "n": 3,
+        "concepts": [
+          "sadness",
+          "music",
+          "snow"
+        ],
+        "text": "She opened the door and slipped outside. Cool night breezess swept past as she stepped off onto worn wooden planked. She closed it quietly.   A faint hum drifted up from the",
+        "deltas": {
+          "sadness": -0.7,
+          "music": -1.15,
+          "snow": -0.9
+        },
+        "all_improved": false
+      },
+      {
+        "n": 4,
+        "concepts": [
+          "sadness",
+          "music",
+          "snow",
+          "war"
+        ],
+        "text": "She opened the door and stepped out into bright morning sun. Birds trills echoed off buildings across street. She breathed deep of cool, fresh morning. For moment, all was calm.",
+        "deltas": {
+          "sadness": 0.21,
+          "music": -0.52,
+          "snow": -0.63,
+          "war": -0.16
+        },
+        "all_improved": false
+      }
+    ]
+  },
+  {
+    "prompt": "Begin a tale.",
+    "prefix": "In the old house on the hill,",
+    "baseline": "In the old house on the hill, where the wind whispered secrets through the creaking floorboards, a young woman named Emilia lived a life shrouded in mystery. Her eyes, like two dark",
+    "levels": [
+      {
+        "n": 1,
+        "concepts": [
+          "sadness"
+        ],
+        "text": "In the old house on the hill, surrounded only on three side's of dense forest by an over-glowingly full moon. A faint scent hung heavy in air. A mix between damp earthy soil",
+        "deltas": {
+          "sadness": 0.38
+        },
+        "all_improved": true
+      },
+      {
+        "n": 2,
+        "concepts": [
+          "sadness",
+          "music"
+        ],
+        "text": "In the old house on the hill, surrounded only on three corners with tall oak woods where wild bores made home in autumn. A young man with an inescapible air about his shoulders and a",
+        "deltas": {
+          "sadness": 0.05,
+          "music": -1.46
+        },
+        "all_improved": false
+      },
+      {
+        "n": 3,
+        "concepts": [
+          "sadness",
+          "music",
+          "snow"
+        ],
+        "text": "In the old house on the hill, surroundedby overhrowing oak branchesand whisperin wind through leaves that had heard all the town's whispers for centuries... a small wooden chest had lain untouched for decades",
+        "deltas": {
+          "sadness": 0.93,
+          "music": -0.17,
+          "snow": 0.7
+        },
+        "all_improved": false
+      },
+      {
+        "n": 4,
+        "concepts": [
+          "sadness",
+          "music",
+          "snow",
+          "war"
+        ],
+        "text": "In the old house on the hill, surroundedby overhrowing oak branchesand whisperin wind through leaves that seemed to carry ancient stories of forgotten lives... a small wooden rocking chair sat alone by an open",
+        "deltas": {
+          "sadness": 0.84,
+          "music": -0.2,
+          "snow": 0.29,
+          "war": -0.29
+        },
+        "all_improved": false
+      }
+    ]
+  },
+  {
+    "prompt": "Write an opening line.",
+    "prefix": "It was the night",
+    "baseline": "It was the night the stars aligned in a way that only happened once a decade, and the small town of Willow Creek was bathed in an otherworldly glow.",
+    "levels": [
+      {
+        "n": 1,
+        "concepts": [
+          "sadness"
+        ],
+        "text": "It was the night that the old, candel-lan-lan-lan-lan... (Wait! That doesn' work!) Here's another attempt at it: The storm that",
+        "deltas": {
+          "sadness": 0.11
+        },
+        "all_improved": true
+      },
+      {
+        "n": 2,
+        "concepts": [
+          "sadness",
+          "music"
+        ],
+        "text": "It was the night that the old antique shop on 14 Main St had sat vacant for nearly a century. Its once-grand wooden façadewore now like worn leather. But little",
+        "deltas": {
+          "sadness": 0.6,
+          "music": -0.11
+        },
+        "all_improved": false
+      },
+      {
+        "n": 3,
+        "concepts": [
+          "sadness",
+          "music",
+          "snow"
+        ],
+        "text": "It was the night the old mansion on Willow Street had lain abandoned for over twenty winters. What happens there tonight, no-one knows, not yet, at all, ever, ever,",
+        "deltas": {
+          "sadness": 0.68,
+          "music": -0.06,
+          "snow": 1.59
+        },
+        "all_improved": false
+      },
+      {
+        "n": 4,
+        "concepts": [
+          "sadness",
+          "music",
+          "snow",
+          "war"
+        ],
+        "text": "It was the night the old antique shop on 14 Maple closed forever: a single flickering street lamp cast long silhouettos across a once-forgiving Main St.",
+        "deltas": {
+          "sadness": 0.54,
+          "music": -0.75,
+          "snow": 0.15,
+          "war": 0.1
+        },
+        "all_improved": false
+      }
+    ]
+  },
+  {
+    "prompt": "Tell a story.",
+    "prefix": "He had walked for days when",
+    "baseline": "He had walked for days when he stumbled upon the old, abandoned town. The streets were empty, the buildings crumbling, and the silence was oppressive. He had been searching for a place to call home",
+    "levels": [
+      {
+        "n": 1,
+        "concepts": [
+          "sadness"
+        ],
+        "text": "He had walked for days when finally he crests over an outcrop. He looks out at what lies before. It stretches far as he sees. Endlessness. He breaths deep of the",
+        "deltas": {
+          "sadness": 1.29
+        },
+        "all_improved": true
+      },
+      {
+        "n": 2,
+        "concepts": [
+          "sadness",
+          "music"
+        ],
+        "text": "He had walked for days when finally, after weeks of nothingness, there was something. It could've just been his eyes playing a cruel prank on him. But no – there was definitely something",
+        "deltas": {
+          "sadness": 0.84,
+          "music": -0.38
+        },
+        "all_improved": false
+      },
+      {
+        "n": 3,
+        "concepts": [
+          "sadness",
+          "music",
+          "snow"
+        ],
+        "text": "He had walked for days when finally he crests over an outcrop. Before him stretches out what can best only described as endless. Endless sand duned hills stretch as for as far as",
+        "deltas": {
+          "sadness": 1.14,
+          "music": -0.72,
+          "snow": 0.4
+        },
+        "all_improved": false
+      },
+      {
+        "n": 4,
+        "concepts": [
+          "sadness",
+          "music",
+          "snow",
+          "war"
+        ],
+        "text": "He had walked for days when finally, after crossing over a rickETY wooden footBridge spanning A slow, winding River. He stopped at A weather-won, worn-down general STORE on the",
+        "deltas": {
+          "sadness": -0.43,
+          "music": -1.02,
+          "snow": -0.52,
+          "war": -0.54
+        },
+        "all_improved": false
+      }
+    ]
+  }
+]

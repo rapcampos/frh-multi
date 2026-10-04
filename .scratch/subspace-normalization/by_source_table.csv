@@ -1,0 +1,9 @@
+source,method,lam,signed_mean_delta,signed_min_delta,all_requested_improved,short_rate,mean_words,med_ppl_ratio
+custom,frh_blend,0.0,0.0042,-0.0024,0.3323,0.012,19.486,5.834
+custom,frh_blend,0.4,0.003,-0.0026,0.32,0.014,19.686,2.609
+custom,subspace,0.0,0.0126,0.0045,0.4855,0.291,13.892,12.257
+custom,subspace,0.4,0.0111,0.0039,0.4773,0.291,13.892,5.615
+wordnet,frh_blend,0.0,0.0052,-0.0017,0.342,0.02,18.38,6.77
+wordnet,frh_blend,0.4,0.0027,-0.0031,0.2953,0.019,18.78,2.336
+wordnet,subspace,0.0,0.0107,0.0026,0.4587,0.238,14.399,10.366
+wordnet,subspace,0.4,0.0081,0.0022,0.4383,0.252,14.466,4.234

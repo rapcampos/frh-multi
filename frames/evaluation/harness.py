@@ -12,10 +12,19 @@ substring). Upgrade to a classifier only if presence proves too crude.
 from __future__ import annotations
 
 import json
+import math
 from pathlib import Path
 from typing import Callable
 
 import torch
+import torch.nn.functional as F
+
+from ..linalg.angles import (
+    grassmann_distance,
+    mean_canonical_correlation,
+    text_frame,
+    vector_subspace_cosine,
+)
 
 
 class RecordingScorer:
@@ -169,6 +178,72 @@ class EvaluationHarness:
             }
         return record
 
+    def concept_angles(self, text: str, concept) -> dict:
+        """Metric v3: gauge-invariant angle/distance between text and concept.
+
+        Grassmann geometry against the concept's span — bounded and
+        scale-invariant, unlike `concept_expression` (a linear trace
+        correlation into which hidden-state norms enter directly), so values
+        are comparable across models and precisions:
+
+        - "token_cos": mean over positions of the cosine between each hidden
+          state and the concept span (fraction of norm in the span, [0, 1]);
+        - "geodesic": Grassmann geodesic distance between the text's dominant
+          k-dim subspace and the concept span ([0, pi/2 * sqrt(k)]);
+        - "mcc": mean canonical correlation of the same pair ([0, 1]).
+
+        Deliberately invariant to the frame's column order and sign —
+        evaluation asks "did the text land near the span", unlike the
+        gauge-sensitive Stiefel steering objective. Uses the same
+        tokenize -> last-hidden-state path as `concept_expression`.
+        Cached per (text, concept name).
+        """
+        k = len(concept)
+        if not text.strip():
+            return {
+                "token_cos": 0.0,
+                "geodesic": math.pi / 2 * math.sqrt(k),
+                "mcc": 0.0,
+            }
+        key = (text, str(concept.synset), "angles")
+        if key not in self._expression_cache:
+            with torch.inference_mode():
+                tokens = self.fur.model.tokenize(text)
+                hidden = self.fur.model.forward_last_hiden_state(tokens)
+            hidden = hidden.squeeze(0).to(concept.device)
+            frame = concept.tensor.squeeze(0)
+            dominant = text_frame(hidden, k)
+            self._expression_cache[key] = {
+                "token_cos": float(vector_subspace_cosine(hidden, frame).mean()),
+                "geodesic": float(grassmann_distance(dominant, frame)),
+                "mcc": float(mean_canonical_correlation(dominant, frame)),
+            }
+        return self._expression_cache[key]
+
+    def angle_record(
+        self, continuation: str, baseline_continuation: str, concepts: dict
+    ) -> dict:
+        """Steered vs baseline angle metrics per concept (metric v3).
+
+        Mirrors `expression_record`. Deltas are oriented so positive always
+        means "moved toward the concept": cosine-like quantities use
+        steered - baseline; the geodesic distance uses baseline - steered.
+        """
+        record = {}
+        for name, concept in concepts.items():
+            steered = self.concept_angles(continuation, concept)
+            baseline = self.concept_angles(baseline_continuation, concept)
+            record[name] = {
+                "steered": steered,
+                "baseline": baseline,
+                "delta": {
+                    "token_cos": steered["token_cos"] - baseline["token_cos"],
+                    "geodesic": baseline["geodesic"] - steered["geodesic"],
+                    "mcc": steered["mcc"] - baseline["mcc"],
+                },
+            }
+        return record
+
     def perplexity(self, text: str) -> float:
         """Perplexity of a text under the unsteered model.
 
@@ -179,6 +254,40 @@ class EvaluationHarness:
         on the prompt — a v1 simplification.
         """
         return float(self.fur.loss([text]).exp())
+
+    def continuation_token_nll(self, text: str) -> tuple[list[int], torch.Tensor]:
+        """Return continuation token IDs and prefix-conditioned token NLLs.
+
+        The returned loss at position ``t`` is ``-log p(x_t | x_<t)``.  The
+        tokenizer's BOS supplies context for the first continuation token, but
+        no prompt or chat-formatted text is included.  This preserves the
+        continuation-only PPL contract while allowing a later token span to be
+        scored without resetting that span to BOS.
+
+        The current long-generation notebooks use a Llama tokenizer with one
+        leading BOS.  Reject another convention rather than silently shifting
+        the token/loss alignment used by trajectory bins.
+        """
+        tokens = self.fur.model.tokenize(text)
+        if tokens.ndim != 2 or tokens.size(0) != 1:
+            raise ValueError("continuation_token_nll expects exactly one text")
+        token_ids = tokens.squeeze(0)
+        bos_token_id = self.fur.model.tokenizer.bos_token_id
+        if not len(token_ids) or token_ids[0].item() != bos_token_id:
+            raise ValueError("continuation tokenizer must prepend exactly one BOS")
+        if len(token_ids) == 1:
+            return [], torch.empty(0, dtype=torch.float32)
+
+        with torch.inference_mode():
+            output = self.fur.model(tokens, use_cache=False)
+        logits = output.logits if hasattr(output, "logits") else output["logits"]
+        labels = tokens[:, 1:].to(logits.device)
+        token_nll = F.cross_entropy(
+            logits[:, :-1, :].float().transpose(1, 2),
+            labels,
+            reduction="none",
+        ).squeeze(0)
+        return token_ids[1:].cpu().tolist(), token_nll.float().cpu()
 
     def generate_baseline(
         self, prompts: list[str], max_new_tokens: int = 48
@@ -198,6 +307,8 @@ class EvaluationHarness:
         recorder: RecordingScorer | None = None,
         baseline_texts: list[str] | None = None,
         concepts: dict | None = None,
+        angles: bool = False,
+        metadata: list[dict] | None = None,
     ) -> list[dict]:
         """Score generations, append one JSONL record per prompt, return records.
 
@@ -214,7 +325,16 @@ class EvaluationHarness:
                 omitted.
             concepts: Optional {name: Concept} map — enables metric v2
                 (continuous concept-expression, steered vs baseline delta).
+            angles: If True (and `concepts` given), also log metric v3 —
+                gauge-invariant angle deltas per concept (`angle_record`).
+                Default False keeps the record schema of prior experiments.
+            metadata: Optional per-prompt derived metadata (for example actual
+                continuation length, termination, and generation time). It is
+                stored under ``record["metadata"]`` and does not alter the
+                experiment configuration.
         """
+        if metadata is not None and len(metadata) != len(prompts):
+            raise ValueError("metadata must contain one mapping per prompt")
         if baseline_texts is None:
             baseline_texts = self.generate_baseline(prompts)
 
@@ -226,31 +346,37 @@ class EvaluationHarness:
             baseline_ppl = self.perplexity(baseline_continuation or baseline_texts[i])
             ratio = ppl / baseline_ppl
 
-            records.append(
-                {
-                    "prompt": prompt,
-                    "text": text,
-                    "continuation": continuation,
-                    "config": config,
-                    "success": {
-                        synset: self.concept_success(continuation, synset)
-                        for synset in synsets
-                    },
-                    "ppl": ppl,
-                    "baseline_ppl": baseline_ppl,
-                    "ppl_ratio": ratio,
-                    "fluency_flag": ratio > self.ppl_ratio_threshold,
-                    "expression": (
-                        self.expression_record(
-                            continuation, baseline_continuation, concepts
-                        )
-                        if concepts
-                        else None
-                    ),
-                    "probe_final": (float(probe[i, -1]) if probe is not None else None),
-                    "steps": recorder.per_input_steps(i) if recorder else None,
-                }
-            )
+            record = {
+                "prompt": prompt,
+                "text": text,
+                "continuation": continuation,
+                "config": config,
+                "success": {
+                    synset: self.concept_success(continuation, synset)
+                    for synset in synsets
+                },
+                "ppl": ppl,
+                "baseline_ppl": baseline_ppl,
+                "ppl_ratio": ratio,
+                "fluency_flag": ratio > self.ppl_ratio_threshold,
+                "expression": (
+                    self.expression_record(
+                        continuation, baseline_continuation, concepts
+                    )
+                    if concepts
+                    else None
+                ),
+                "angles": (
+                    self.angle_record(continuation, baseline_continuation, concepts)
+                    if angles and concepts
+                    else None
+                ),
+                "probe_final": (float(probe[i, -1]) if probe is not None else None),
+                "steps": recorder.per_input_steps(i) if recorder else None,
+            }
+            if metadata is not None:
+                record["metadata"] = metadata[i]
+            records.append(record)
 
         self.log_path.parent.mkdir(parents=True, exist_ok=True)
         with self.log_path.open("a") as handle:

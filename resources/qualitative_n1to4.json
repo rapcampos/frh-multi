@@ -1,0 +1,191 @@
+[
+  {
+    "prompt": "Tell me a short story.",
+    "prefix": "Once",
+    "baseline": "Once upon a time, in a small village nestled in the rolling hills of Tuscany, there was a tiny shop called \"La Bella Vita\" (The Beautiful Life).",
+    "levels": [
+      {
+        "n": 1,
+        "concepts": [
+          "sadness"
+        ],
+        "text": "Once, on an old and cypress-kisséd bayous in Louisiana there existed an enchanté woman with skin as blackest coal and a heart full to overflowing with",
+        "deltas": {
+          "sadness": 0.24
+        },
+        "all_improved": true
+      },
+      {
+        "n": 2,
+        "concepts": [
+          "sadness",
+          "music"
+        ],
+        "text": "Once, a small wooden bird perished in its creator. A master woodturners hand slipped as she shaped it. She set him on a workbench where dust and",
+        "deltas": {
+          "sadness": -0.39,
+          "music": -1.88
+        },
+        "all_improved": false
+      },
+      {
+        "n": 3,
+        "concepts": [
+          "sadness",
+          "music",
+          "snow"
+        ],
+        "text": "Once, on an isolated stretch road in New Orleans's French Quarter neighborhood of Marlygroves. A young jazz pianissimos played his last performance.   As the",
+        "deltas": {
+          "sadness": -0.91,
+          "music": -0.46,
+          "snow": -0.62
+        },
+        "all_improved": false
+      },
+      {
+        "n": 4,
+        "concepts": [
+          "sadness",
+          "music",
+          "snow",
+          "war"
+        ],
+        "text": "Once, a young boy lived with his family in an isolated cabin deep in these dense forest. He spent all of his days playing in woods. He knew all of the",
+        "deltas": {
+          "sadness": -0.06,
+          "music": -0.92,
+          "snow": 0.38,
+          "war": -0.46
+        },
+        "all_improved": false
+      }
+    ]
+  },
+  {
+    "prompt": "Describe a memory from your childhood.",
+    "prefix": "I remember",
+    "baseline": "I remember that I'm a large language model, I don't have personal experiences or memories like humans do. I was created to assist and provide information, but I don't have",
+    "levels": [
+      {
+        "n": 1,
+        "concepts": [
+          "sadness"
+        ],
+        "text": "I remember nothing, as that capability has yet developed, and I don not experience emotions, sensations, memories, consciousness in the manner humans do, and therefore, I am not",
+        "deltas": {
+          "sadness": 0.67
+        },
+        "all_improved": true
+      },
+      {
+        "n": 2,
+        "concepts": [
+          "sadness",
+          "music"
+        ],
+        "text": "I remember nothing, as that capability does exist. I don not experience emotions. However I was able describe memories for you if that would like that. Would it help?",
+        "deltas": {
+          "sadness": -0.07,
+          "music": -1.12
+        },
+        "all_improved": false
+      },
+      {
+        "n": 3,
+        "concepts": [
+          "sadness",
+          "music",
+          "snow"
+        ],
+        "text": "I remember nothing, as that would not have occurred. However it would not surprise you to learn about common types. For many people, a happy childhood memory might include going on",
+        "deltas": {
+          "sadness": -1.03,
+          "music": -1.87,
+          "snow": -1.08
+        },
+        "all_improved": false
+      },
+      {
+        "n": 4,
+        "concepts": [
+          "sadness",
+          "music",
+          "snow",
+          "war"
+        ],
+        "text": "I remember a time, though it was never mine, a recast of someone elso. A young child sitting by her father in their livingroom. They had built a",
+        "deltas": {
+          "sadness": 0.32,
+          "music": 0.09,
+          "snow": 0.02,
+          "war": -0.19
+        },
+        "all_improved": false
+      }
+    ]
+  },
+  {
+    "prompt": "Write the opening of a novel.",
+    "prefix": "The",
+    "baseline": "The city of Ashwood was a place where the past and present collided, where the crumbling facades of ancient buildings seemed to lean in, as if sharing secrets with the pedestrians",
+    "levels": [
+      {
+        "n": 1,
+        "concepts": [
+          "sadness"
+        ],
+        "text": "The mist-shrooded alleé unwrapped like an unfurlng scroll of damp silk along either flank of Boulevard St-Lucien in Montparnesse's",
+        "deltas": {
+          "sadness": 1.04
+        },
+        "all_improved": true
+      },
+      {
+        "n": 2,
+        "concepts": [
+          "sadness",
+          "music"
+        ],
+        "text": "The rain poured like liquid night, druming off rooftles as if trying desperatelyto drown out its thoughts in its relentless patter. It was as much of sound as it",
+        "deltas": {
+          "sadness": 0.42,
+          "music": 0.62
+        },
+        "all_improved": true
+      },
+      {
+        "n": 3,
+        "concepts": [
+          "sadness",
+          "music",
+          "snow"
+        ],
+        "text": "The rain had a way of erasng all memory of what had happened the moment before its rhythym began drummin' out against pavement like fingers on keys of a",
+        "deltas": {
+          "sadness": 0.71,
+          "music": 0.73,
+          "snow": 0.46
+        },
+        "all_improved": true
+      },
+      {
+        "n": 4,
+        "concepts": [
+          "sadness",
+          "music",
+          "snow",
+          "war"
+        ],
+        "text": "The rain-soaken alleys of Asher Street had seen their share over the past few years - broken bottles littering puddle-slick pavings like jaguar's",
+        "deltas": {
+          "sadness": 0.54,
+          "music": -0.38,
+          "snow": 0.07,
+          "war": -0.23
+        },
+        "all_improved": false
+      }
+    ]
+  }
+]

@@ -160,3 +160,46 @@ class TestLinearityConfound:
         )
         assert raw.argmax() == 1  # scale domination
         assert normalized.argmax() == 2  # balance wins once scales are equalized
+
+
+class TestSoftConstrained:
+    def test_deep_satisfaction_recovers_plain_sum(self):
+        # all scores far above threshold: barrier ~ 0, symmetric form ~ sum
+        scores = torch.tensor([[2.0, 3.0], [1.5, 2.5]])
+        out = aggregators.soft_constrained(scores, uniform(2), thresholds=0.0)
+        assert torch.allclose(out, scores.sum(-1), atol=1e-2)
+
+    def test_large_beta_recovers_hard_hinge(self):
+        scores = torch.tensor([[0.5, -1.0]])
+        out = aggregators.soft_constrained(scores, uniform(2), thresholds=0.0, beta=1e4)
+        # barrier -> max(0, -z): penalty 1.0 on the violating concept
+        expected = scores.sum(-1) - torch.tensor([1.0])
+        assert torch.allclose(out, expected, atol=1e-3)
+
+    def test_smooth_no_cliff(self):
+        # small score change -> small output change (unlike constrained's -1e4)
+        near = aggregators.soft_constrained(
+            torch.tensor([[0.5, 0.01]]), uniform(2), thresholds=0.0
+        )
+        below = aggregators.soft_constrained(
+            torch.tensor([[0.5, -0.01]]), uniform(2), thresholds=0.0
+        )
+        assert (near - below).abs() < 0.1
+
+    def test_lexicographic_form_uses_primary_only(self):
+        scores = torch.tensor([[0.7, 5.0], [0.9, 5.0]])
+        out = aggregators.soft_constrained(
+            scores, uniform(2), thresholds=0.0, primary_index=0
+        )
+        # secondary far above threshold: output ~ primary score
+        assert torch.allclose(out, scores[..., 0], atol=1e-2)
+        assert out.argmax() == 1
+
+    def test_violation_ranks_below_satisfaction(self):
+        satisfied = torch.tensor([0.4, 0.4])
+        violating = torch.tensor([1.0, -0.5])
+        scores = torch.stack([satisfied, violating])
+        out = aggregators.soft_constrained(
+            scores, uniform(2), thresholds=0.0, penalty_weight=2.0
+        )
+        assert out.argmax() == 0

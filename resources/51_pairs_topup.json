@@ -1,0 +1,110 @@
+{
+ "config": {
+  "pool": "resources/32_concept_pool_bf16.json",
+  "seeded_from": "resources/33_scaling_groups_bf16.json",
+  "n_total_pairs": 30,
+  "max_uses_per_concept": 2
+ },
+ "pairs": [
+  {
+   "a": "country.n.02",
+   "b": "flood.n.01",
+   "pair_rho": 0.2838541567325592
+  },
+  {
+   "a": "cattle.n.01",
+   "b": "country.n.02",
+   "pair_rho": 0.3098958432674408
+  },
+  {
+   "a": "beam.n.04",
+   "b": "linden.n.02",
+   "pair_rho": 0.33203125
+  },
+  {
+   "a": "town.n.02",
+   "b": "challah.n.01",
+   "pair_rho": 0.3385416567325592
+  },
+  {
+   "a": "end.n.02",
+   "b": "disturbance.n.03",
+   "pair_rho": 0.34375
+  },
+  {
+   "a": "fuss.n.02",
+   "b": "result.n.03",
+   "pair_rho": 0.3515625
+  },
+  {
+   "a": "respite.n.04",
+   "b": "flood.n.01",
+   "pair_rho": 0.3541666567325592
+  },
+  {
+   "a": "cattle.n.01",
+   "b": "abhorrence.n.01",
+   "pair_rho": 0.3619791567325592
+  },
+  {
+   "a": "respite.n.04",
+   "b": "sorrow.n.01",
+   "pair_rho": 0.3671875
+  },
+  {
+   "a": "backbone.n.02",
+   "b": "town.n.02",
+   "pair_rho": 0.3723958432674408
+  },
+  {
+   "a": "backbone.n.02",
+   "b": "moment.n.01",
+   "pair_rho": 0.375
+  },
+  {
+   "a": "result.n.03",
+   "b": "ace.n.03",
+   "pair_rho": 0.3828125
+  },
+  {
+   "a": "acme.n.01",
+   "b": "sorrow.n.01",
+   "pair_rho": 0.3854166567325592
+  },
+  {
+   "a": "acme.n.01",
+   "b": "eden.n.01",
+   "pair_rho": 0.3932291567325592
+  },
+  {
+   "a": "dwelling.n.01",
+   "b": "abhorrence.n.01",
+   "pair_rho": 0.3984375
+  },
+  {
+   "a": "universe.n.01",
+   "b": "frog.n.01",
+   "pair_rho": 0.4010416567325592
+  },
+  {
+   "a": "fury.n.01",
+   "b": "dawn.n.01",
+   "pair_rho": 0.4140625
+  },
+  {
+   "a": "dwelling.n.01",
+   "b": "eden.n.01",
+   "pair_rho": 0.4166666567325592
+  },
+  {
+   "a": "fury.n.01",
+   "b": "beginning.n.04",
+   "pair_rho": 0.4296875
+  },
+  {
+   "a": "disturbance.n.03",
+   "b": "quarrel.n.01",
+   "pair_rho": 0.4453125
+  }
+ ]
+}

@@ -1,0 +1,41 @@
+synset,delta,delta_sd,d_cos,ppl_ratio,lexname,n_lemmas,n_eng,depth,relative_rank,incumbent,definition
+dawn.n.01,1.2749,1.476,0.016,6.6465,noun.time,70,42,9,1.0,False,the first light of day
+eden.n.01,1.2714,1.7402,0.0158,5.7386,noun.location,64,17,5,1.0,False,any place of complete bliss and delight and peace
+frog.n.01,1.2579,1.7005,0.0157,7.0896,noun.animal,70,16,8,1.0,False,any of various tailless stout-bodied amphibians with long hind limbs for leaping; semiaquatic and terrestrial species
+ace.n.03,1.2742,2.1736,0.0152,5.6927,noun.person,106,58,6,1.0,False,someone who is dazzlingly skilled in any field
+respite.n.04,1.4677,2.0972,0.0147,6.2075,noun.time,80,16,5,1.0,False,a pause for relaxation
+universe.n.01,1.3219,1.7666,0.0143,5.7072,noun.object,99,22,5,1.0,False,everything that exists anywhere
+cattle.n.01,1.6659,1.9902,0.0141,6.4639,noun.animal,65,17,14,1.0,False,"domesticated bovine animals as a group regardless of sex or age; ; ;  - The Bible, Genesis 41:27"
+mixture.n.01,1.1746,1.6623,0.014,7.0469,noun.substance,65,4,4,1.0,False,(chemistry) a substance consisting of two or more substances mixed together (not in fixed proportions and not with chemical bonding)
+blunder.n.01,1.7074,2.2091,0.0136,5.0934,noun.act,102,39,6,1.0,False,an embarrassing mistake
+drop.n.03,1.2732,1.5953,0.0136,8.5333,noun.attribute,77,16,7,1.0,False,a sudden sharp decrease in some quantity
+affection.n.01,0.9343,1.4125,0.0136,5.4098,noun.feeling,78,23,5,1.0,False,a positive feeling of liking
+acme.n.01,1.3875,2.0807,0.0135,5.8064,noun.state,106,36,5,1.0,False,the highest level or degree attainable; the highest stage of development
+benefit.n.02,1.6816,1.8979,0.0135,6.0974,noun.attribute,65,8,5,1.0,False,something that aids or promotes well-being
+girl.n.01,1.0938,1.7737,0.0135,4.5682,noun.person,74,24,7,1.0,True,a young female
+fuss.n.02,1.5968,2.0394,0.0134,6.015,noun.event,60,15,6,1.0,False,an angry disturbance
+aroma.n.02,0.8491,1.5468,0.0134,5.9048,noun.cognition,87,16,9,1.0,False,a distinctive odor that is pleasant
+challah.n.01,1.2603,2.4497,0.013,7.0102,noun.food,49,8,7,1.0,False,(Judaism) a loaf of white bread containing eggs and leavened with yeast; often formed into braided loaves and glazed with eggs before baking
+plan.n.01,0.7361,1.1939,0.0129,6.526,noun.cognition,89,12,6,1.0,False,a series of steps to be carried out or goals to be accomplished
+habit.n.02,1.0481,1.4196,0.0129,5.8387,noun.act,78,8,7,1.0,False,(psychology) an automatic pattern of behavior in reaction to a specific situation; may be inherited or acquired through frequent repetition
+peace.n.03,1.3012,1.7113,0.0126,6.6493,noun.feeling,70,23,7,1.0,False,the absence of mental stress or anxiety
+pot.n.09,0.8065,1.4934,0.0125,6.6178,noun.artifact,98,46,7,1.0,False,street names for marijuana
+adieu.n.01,0.9598,1.8494,0.0123,4.4415,noun.communication,97,46,6,1.0,False,a farewell remark
+ascent.n.01,1.2522,2.3329,0.0123,4.3283,noun.object,72,22,5,1.0,False,an upward slope or grade (as in a road)
+jail.n.01,1.4696,1.775,0.0122,6.0527,noun.artifact,84,27,10,1.0,False,a correctional institution used to detain persons who are in the lawful custody of the government (either accused persons awaiting trial or convicted persons serving a sentence)
+use.n.01,1.0813,1.5005,0.0122,4.9211,noun.act,82,24,5,1.0,False,the act of using
+chap.n.01,0.993,1.9677,0.0121,5.8172,noun.person,96,36,6,1.0,False,a boy or man
+occupation.n.01,0.8006,1.6773,0.0121,6.1883,noun.act,114,18,5,1.0,False,the principal activity in your life that you do to earn money
+dwelling.n.01,1.3727,1.6194,0.0119,5.4797,noun.artifact,112,22,7,1.0,False,housing that someone is living in
+passing.n.02,1.415,1.6183,0.0119,6.0489,noun.event,71,28,6,1.0,False,euphemistic expressions for death
+earthworm.n.01,0.8183,1.7494,0.0118,5.5709,noun.animal,63,36,9,1.0,False,terrestrial worm that burrows into and helps aerate soil; often surfaces when the ground is cool or wet; used as bait by anglers
+report.n.03,0.8555,1.6168,0.0118,4.5364,noun.communication,86,20,6,1.0,False,a short account of the news
+quarrel.n.01,1.167,1.6631,0.0118,5.041,noun.communication,83,23,7,1.0,False,an angry dispute
+fury.n.01,1.3139,1.8225,0.0116,6.4515,noun.feeling,58,12,7,1.0,False,a feeling of intense anger
+mother.n.01,0.7811,2.22,0.0116,5.7199,noun.person,47,8,10,1.0,True,a woman who has given birth to a child (also used as a term of address to your mother)
+initiation.n.02,1.2226,1.8171,0.0116,4.5453,noun.act,78,34,8,1.0,False,the act of starting something for the first time; introducing something new
+tail.n.01,1.3052,2.0832,0.0116,8.0701,noun.animal,61,4,6,1.0,False,the posterior part of the body of a vertebrate especially when elongated and extending beyond the trunk or main part of the body
+linden.n.02,1.2033,1.6598,0.0114,5.5778,noun.plant,43,17,8,1.0,False,any of various deciduous trees of the genus Tilia with heart-shaped leaves and drooping cymose clusters of yellowish often fragrant flowers; several yield valuable timber
+sorrow.n.01,1.2147,2.0984,0.0113,6.2815,noun.feeling,28,4,6,1.0,True,an emotion of great sadness associated with loss or bereavement
+child.n.01,1.0055,2.2949,0.0112,7.0768,noun.person,111,46,6,1.0,True,a young person of either sex
+lack.n.01,0.8024,1.9812,0.0111,6.1489,noun.state,88,12,6,1.0,False,the state of needing something that is absent or unavailable

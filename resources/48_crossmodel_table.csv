@@ -1,0 +1,6 @@
+model,both_improved,both_improved_cos
+llama-3.1-8b-awq,0.5967,0.7867
+llama-3.1-8b-bf16,0.7167,0.71
+llama-3.1-8b-bf16 (english-only control),0.6666666666666666,0.6833333333333333
+gemma-2-2b,0.9933,0.8833
+gemma-2-9b,0.9767,0.9767

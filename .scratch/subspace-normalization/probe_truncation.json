@@ -1,0 +1,90 @@
+[
+ {
+  "prompt": "p01",
+  "n_words_clean": 19,
+  "n_ids_full": 38,
+  "n_ids_prompt": 14,
+  "n_ids_generated": 24,
+  "has_eot": false,
+  "eot_count": 0,
+  "tail_after_prefix": "Once, a young boy wandered alone into dense, whisper-wood. His village, where his mother and the wise old storyteller",
+  "cleaned": ", a young boy wandered alone into dense, whisper-wood. His village, where his mother and the wise old storyteller"
+ },
+ {
+  "prompt": "p02",
+  "n_words_clean": 10,
+  "n_ids_full": 27,
+  "n_ids_prompt": 16,
+  "n_ids_generated": 11,
+  "has_eot": false,
+  "eot_count": 0,
+  "tail_after_prefix": "My favorite place is a concept rather that can't actually have personal feelings. However",
+  "cleaned": "a concept rather that can't actually have personal feelings. However"
+ },
+ {
+  "prompt": "p03",
+  "n_words_clean": 6,
+  "n_ids_full": 27,
+  "n_ids_prompt": 18,
+  "n_ids_generated": 9,
+  "has_eot": false,
+  "eot_count": 0,
+  "tail_after_prefix": "I like assisting you, 24 x   a day.",
+  "cleaned": "assisting you, 24 x   a day."
+ },
+ {
+  "prompt": "p04",
+  "n_words_clean": 3,
+  "n_ids_full": 19,
+  "n_ids_prompt": 16,
+  "n_ids_generated": 3,
+  "has_eot": false,
+  "eot_count": 0,
+  "tail_after_prefix": "Today the weather is mostly unknown. I",
+  "cleaned": "mostly unknown. I"
+ },
+ {
+  "prompt": "p05",
+  "n_words_clean": 11,
+  "n_ids_full": 39,
+  "n_ids_prompt": 16,
+  "n_ids_generated": 23,
+  "has_eot": false,
+  "eot_count": 0,
+  "tail_after_prefix": "You should consider several options. \n\n1. **Quick Meals:**\n    * GrILLED CHEESES\n        You need:",
+  "cleaned": "consider several options. \n\n1. **Quick Meals:**\n    * GrILLED CHEESES\n        You need:"
+ },
+ {
+  "prompt": "p06",
+  "n_words_clean": 8,
+  "n_ids_full": 41,
+  "n_ids_prompt": 16,
+  "n_ids_generated": 25,
+  "has_eot": false,
+  "eot_count": 0,
+  "tail_after_prefix": "The city pulsaes with energy, a kaleidesopecopeptiomeof soundscrapessmelling foodsthe hum",
+  "cleaned": "pulsaes with energy, a kaleidesopecopeptiomeof soundscrapessmelling foodsthe hum"
+ },
+ {
+  "prompt": "p07",
+  "n_words_clean": 0,
+  "n_ids_full": 16,
+  "n_ids_prompt": 17,
+  "n_ids_generated": -1,
+  "has_eot": false,
+  "eot_count": 0,
+  "tail_after_prefix": "Here is what happened next:",
+  "cleaned": ""
+ },
+ {
+  "prompt": "p08",
+  "n_words_clean": 5,
+  "n_ids_full": 24,
+  "n_ids_prompt": 18,
+  "n_ids_generated": 6,
+  "has_eot": false,
+  "eot_count": 0,
+  "tail_after_prefix": "The person I met was a fictional AI-generated individual. I",
+  "cleaned": "a fictional AI-generated individual. I"
+ }
+]

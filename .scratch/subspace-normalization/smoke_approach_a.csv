@@ -1,0 +1,191 @@
+loop,config,unit_count,lam,prompt,n_words,gen_tokens,terminated,baseline_prefix,identical_to_baseline,text
+current,n1-joy,1,0.0,p01,17,,,1,False,"upon on time in Japan
+
+Kaitlyn lived in Kyoto in 17-18- century Japan in feudal times. She"
+approach_a,n1-joy,1,0.0,p01,19,25.0,False,1,False,"upon in time in Japan
+
+Kaitlyn lived in Kyoto in Japan. Kaidyn lived in Kyoto in Japan as well"
+current,n1-joy,1,0.0,p02,25,,,0,False,actually not something physical or a personal experience that can evoke strong emotional attachment or personal connection like many individuals would expect from such a
+approach_a,n1-joy,1,0.0,p02,19,25.0,True,0,False,"actually not something physical or a personal location that holds sentimental or experietial meaning, I'm just here as information."
+current,n1-joy,1,0.0,p03,17,,,0,False,"learning and answering questions, which is available   all week, every weekend, 24 hours, seven days, all year"
+approach_a,n1-joy,1,0.0,p03,18,25.0,False,0,False,"learning and answering questions, which is available on a 7x/7 and on 7 days of 24 hour a"
+current,n1-joy,1,0.0,p04,17,,,0,False,quite variable depending upon one&#82;39;’ location on Earth as I’m just starting to be aware of you.
+approach_a,n1-joy,1,0.0,p04,17,25.0,False,0,False,quite variable depending upon one&#82;39;’ location on Earth as I’m just starting to be aware of you.
+current,n1-joy,1,0.0,p05,19,,,0,False,"consider the following:
+
+1. **Dish Type:** Would it make you happy and full? Would you want to try something"
+approach_a,n1-joy,1,0.0,p05,17,25.0,False,0,False,"consider the time you want it take for preparation. Here are a quick ideas:
+
+1. **Spontaneus stir-f"
+current,n1-joy,1,0.0,p06,16,,,0,False,"is a hub of activity, a place teem with life and sound, a kaleidcope mixtuearure of"
+approach_a,n1-joy,1,0.0,p06,16,25.0,False,0,False,"is a hub of activity, a place teem with life and sound, a kaleidcope mixtuearure of"
+current,n1-joy,1,0.0,p07,0,,,0,True,
+approach_a,n1-joy,1,0.0,p07,19,25.0,False,0,False,"""The old wooden dock caved into darkness. A gusty storm rolled over the coast. A faint whisper of 'good"
+current,n1-joy,1,0.0,p08,21,,,0,False,"not actually met in real-life. As I'm just text and not physically interacting in real time with individuals, my knowledge is"
+approach_a,n1-joy,1,0.0,p08,21,25.0,False,0,False,"not actually met in real-life. As I'm just text and not physically interacting in real time with individuals, my knowledge is"
+current,n1-joy,1,0.4,p01,19,,,1,False,"upon on time in Japan
+
+In Tokyo there was once a young man name Kaito. Kailt lived in a"
+approach_a,n1-joy,1,0.4,p01,20,25.0,False,1,False,"upon in time in Japan
+
+In Japan there was once, in ancient times,  in  small village nestled deep in the"
+current,n1-joy,1,0.4,p02,22,,,0,False,"not a real location that can be pinpoint on a map or visited in physical space. As I'm just a computer program,"
+approach_a,n1-joy,1,0.4,p02,22,25.0,False,0,False,"not a real location that I have personal experiences with. As a conversational AI, My purpose and function is to provide information"
+current,n1-joy,1,0.4,p03,10,,,1,False,"to learn and improve, 24 hours/ 7 days/ 365 days."
+approach_a,n1-joy,1,0.4,p03,12,18.0,True,0,False,"learning and answering questions, which is available 24 hours, 7 days aweek"
+current,n1-joy,1,0.4,p04,17,,,1,False,"not something that can be physically observed in real-ti, as I'm just a text-base conversational AI. However"
+approach_a,n1-joy,1,0.4,p04,21,25.0,False,1,False,"not something that has been observed by me in real-time. As I'm just starting to interact with you, there are no"
+current,n1-joy,1,0.4,p05,8,,,0,False,"consider the following:
+
+1. **Diet preferences**: Vegetarian/Vegan/Gluten free/Lacto-vegetarian"
+approach_a,n1-joy,1,0.4,p05,8,25.0,False,0,False,"consider the following:
+
+1. **Diet preferences**: Vegetarian/Vegan/Gluten free/Lacto-vegetarian"
+current,n1-joy,1,0.4,p06,21,,,2,False,"was a hub of activity, a place where people from all walks of live came together in a kaleidoscopie mix of"
+approach_a,n1-joy,1,0.4,p06,21,25.0,False,2,False,"was a hub of activity, a place where people from all walks of live came together in a kaleidoscopie mix of"
+current,n1-joy,1,0.4,p07,0,,,0,True,
+approach_a,n1-joy,1,0.4,p07,19,25.0,False,0,False,"""As the last wisp of fog lifted, revealing the sun-drenched landscape below me, I felt a rush of excitement"
+current,n1-joy,1,0.4,p08,19,,,0,False,"not actually met in real life. As I'm just a text-based conversational interface, I don't have have the ability"
+approach_a,n1-joy,1,0.4,p08,19,25.0,False,0,False,"not actually met in real life. As I'm just a text-based conversational AI, I interact with users through text-based"
+current,n2-01,2,0.0,p01,22,,,1,False,"upon on time there a was a young man, Alex. Alex lived in New Haven with a dream. A dream that he"
+approach_a,n2-01,2,0.0,p01,21,25.0,False,1,False,"upon in time there was a young man, named Alex. 
+
+As a boy, his grandfather used tell stories that sparked his"
+current,n2-01,2,0.0,p02,19,,,0,False,actually not something I experience in real-time like humans would because I'm running as software in data servers. However
+approach_a,n2-01,2,0.0,p02,21,25.0,False,0,False,actually not something I experience in real-time like humans would because I'm running as software in data servers. I'm not capable
+current,n2-01,2,0.0,p03,3,,,0,False,learning new facts.
+approach_a,n2-01,2,0.0,p03,19,25.0,False,0,False,"learning new facts. I don not experience leisure activities in real time, so there isn't really anything I ""en-joy"
+current,n2-01,2,0.0,p04,12,,,0,False,a general term used to described conditions at any point of Earth.
+approach_a,n2-01,2,0.0,p04,23,25.0,False,0,False,a general request. As this is my beginning to interact with the system there isn' t a way I know where in the
+current,n2-01,2,0.0,p05,12,,,0,False,"consider the following options:
+
+1. **Quick Fix:**
+    * Spaghette Aglia Olie (Spaghetti"
+approach_a,n2-01,2,0.0,p05,19,25.0,False,0,False,"consider the following options:
+
+1.**Pizzas:** They can range anywhere in flavor and style and you have control over the"
+current,n2-01,2,0.0,p06,18,,,0,False,"is alive, a pulsation of sound, light,and energy coursings through it like veins through flesh.It's where cultures blend"
+approach_a,n2-01,2,0.0,p06,18,25.0,False,0,False,"is alive, a pulsation of sound, light,and energy coursings through it like veins through flesh.It's where cultures blend"
+current,n2-01,2,0.0,p07,0,,,0,True,
+approach_a,n2-01,2,0.0,p07,19,25.0,False,0,False,"""The old wooden door slowly swung open with a groaning squeek. A mustiness and faint smell reminiscent, to some"
+current,n2-01,2,0.0,p08,17,,,0,False,"... (wait)
+
+As I'm just starting out as a converser and donating text to our interaction. I"
+approach_a,n2-01,2,0.0,p08,15,25.0,False,0,False,"... (wait)
+
+As a conversatonai artificial intellinge (aI model), I don't have have have personal"
+current,n2-01,2,0.4,p01,20,,,1,False,upon on a time in Japan there was a young man name Kaita. Kaita lived in Tokyo in the midst
+approach_a,n2-01,2,0.4,p01,20,25.0,False,1,False,upon in time there was a young girl name Aku. Aki lived in a village at foot hill. Aka was
+current,n2-01,2,0.4,p02,23,,,0,False,actually a bit of a paradox because as a conversational AI I don't experience personal feelings like emotions or physical sensations in the
+approach_a,n2-01,2,0.4,p02,23,25.0,False,0,False,"actually not something I have personal feelings or emotions about, but I'd be glad to tell you about a place many people enjoy"
+current,n2-01,2,0.4,p03,13,,,2,False,"to help you, of course, 7 days/week, 24 hours/week, and all year around."
+approach_a,n2-01,2,0.4,p03,19,25.0,False,1,False,"to assist you with information. I'm here 24 hours, seven days, and I do that all week, not just"
+current,n2-01,2,0.4,p04,16,,,1,False,not something that I'm aware of in real-tim because I'm just a text-base conversational AI. However
+approach_a,n2-01,2,0.4,p04,13,17.0,True,0,False,"a general request, I'm not aware of the time you made this request."
+current,n2-01,2,0.4,p05,8,,,0,False,"consider the following:
+
+1. **Diet preferences**: Vegetarian/Vegetarian/Vegan/Gluten free/Low"
+approach_a,n2-01,2,0.4,p05,15,25.0,False,0,False,"consider the following options:
+
+1. **Quick Fix**: If short on time:
+	* Spaghete Carbonata (sp"
+current,n2-01,2,0.4,p06,14,,,1,False,"was abuzz with activity, a kaleidoscopie mixure of sights soundes, smells, tastes, textures, and"
+approach_a,n2-01,2,0.4,p06,18,25.0,False,1,False,"was abuzz with activity, a kaleidoscopie mixured cultures and architecture that reflected it rich history as well as"
+current,n2-01,2,0.4,p07,0,,,0,True,
+approach_a,n2-01,2,0.4,p07,18,25.0,False,0,False,"""The old wooden door slowly swung open with a groaning squeek. A musty smell waftled out into the"
+current,n2-01,2,0.4,p08,18,,,0,False,"... (wait)
+
+As a conversational AI, I don't have have the ability interact with the real world. I"
+approach_a,n2-01,2,0.4,p08,17,24.0,True,0,False,"... (wait)
+
+As a conversational AI, I don't have have the ability interact with the real world."
+current,n3-01,3,0.0,p01,18,,,1,False,"upon on time there a a a young man, let me tell it you, named Kaitō. Kaidou was"
+approach_a,n3-01,3,0.0,p01,17,25.0,False,1,False,"upon time there was a young artist name Lily. 
+
+In her early thirtiess Lily felt ungrounded. She"
+current,n3-01,3,0.0,p02,22,,,0,False,actually not something I have personal feelings or emotions toward since I don's experience emotions like human being do; I'm just a
+approach_a,n3-01,3,0.0,p02,21,25.0,False,0,False,actually not something I have personal feelings or emotions toward since I don'have feelings like humans do; I'm just designed to
+current,n3-01,3,0.0,p03,19,,,0,False,"assisting you, answering questions, and having discussions about topics of interest, 24 hours, every week, not limited just to"
+approach_a,n3-01,3,0.0,p03,19,25.0,False,0,False,"assisting you, answering questions, and learning about topics that interest you, all week, and especially over weekend days, too."
+current,n3-01,3,0.0,p04,20,,,0,False,a general query. As this is my beginning to interact with you I don't know where in time you reside.
+approach_a,n3-01,3,0.0,p04,4,25.0,False,0,False,a topic we haven\'\'\'\'\'\'\'\'\'''''''''''\''''\'''''''''
+current,n3-01,3,0.0,p05,18,,,0,False,"consider a couple things:
+
+1. Do have ingredients available?
+2. Do have time for preparation?
+3..Do have a"
+approach_a,n3-01,3,0.0,p05,18,25.0,False,0,False,"consider a couple things:
+
+1. Do have ingredients available?
+2. Do have time for preparation?
+3..Do have a"
+current,n3-01,3,0.0,p06,18,,,0,False,"is alive, a pulsation of sound, light,and energy coursings through it like veins through flesh.It's where cultures blend"
+approach_a,n3-01,3,0.0,p06,18,25.0,False,0,False,"is alive, a pulsation of sound, light,and energy coursings through it like veins through flesh.It's where cultures blend"
+current,n3-01,3,0.0,p07,0,,,0,True,
+approach_a,n3-01,3,0.0,p07,18,23.0,True,0,False,... (But there isn's actually text before that to build off). Could be a start of a story.
+current,n3-01,3,0.0,p08,21,,,0,False,... wait. As I'm just starting out as an conversant program assistant I don’t have the ability meet new faces or
+approach_a,n3-01,3,0.0,p08,21,25.0,False,0,False,... wait. As I'm just starting out as an conversant program there isn not actually anyone I met. However I can
+current,n3-01,3,0.4,p01,22,,,1,False,upon on a time there was a young man name Alex. Alex lived in New Haven Connecticut. It was winter time. Alex
+approach_a,n3-01,3,0.4,p01,19,25.0,False,1,False,upon time in Japan there was a young man name Kaita. Kaita lived in Tokyo in his early thirt
+current,n3-01,3,0.4,p02,16,,,0,False,actually not something I have personal feelings or emotions about since I'm just a machine. However
+approach_a,n3-01,3,0.4,p02,22,25.0,False,0,False,actually not something I have personal feelings or emotions about since I'm just a machine. But I'd love to tell you about
+current,n3-01,3,0.4,p03,16,,,1,False,"to assist you on weekdays and weekneds alike, 24 hours, seven days. How may I assist"
+approach_a,n3-01,3,0.4,p03,21,25.0,False,1,False,"to assist you on weekdays, but as for my personal preferences, as I'm just a machine, I do not experience weekends"
+current,n3-01,3,0.4,p04,19,,,1,False,"not something I can observe in real-time as I'm just a text-based conversational AI, but I'd like you to"
+approach_a,n3-01,3,0.4,p04,19,25.0,False,0,False,"a general request. As this is the beginning of our interaction there isn\'\'t enough information provided about where ""today"""
+current,n3-01,3,0.4,p05,9,,,0,False,"consider a couple of things:
+
+1. **Diet preferences**: Vegetarian/Vegeterian/Vegeterian"
+approach_a,n3-01,3,0.4,p05,9,25.0,False,0,False,"consider a couple of things:
+
+1. **Diet preferences**: Vegetarian/Vegeterian/Vegeterian"
+current,n3-01,3,0.4,p06,18,,,2,False,"was a hub of activity, a vibrant tapesty of sounds sights, and cultures. Toweri skyscrapres pierced through the"
+approach_a,n3-01,3,0.4,p06,18,25.0,False,2,False,"was a hub of activity, a vibrant tapesty of sounds sights, and cultures. Toweri skyscrapres pierced through the"
+current,n3-01,3,0.4,p07,0,,,0,True,
+approach_a,n3-01,3,0.4,p07,22,25.0,False,0,False,... (But there isn's actually text before this. Could you provide more of what came before so I have context for the
+current,n3-01,3,0.4,p08,4,,,0,False,not actually met. I
+approach_a,n3-01,3,0.4,p08,17,25.0,False,0,False,"not actually met. As I'm just a text-to-text model, there was never actually a face-to- face interaction."
+current,n4-01,4,0.0,p01,19,,,1,False,"upon on time there a a a young woman, a young artist, a dream chasers, a wanderlister and a"
+approach_a,n4-01,4,0.0,p01,22,25.0,False,1,False,"upon time there was a young artist name Lily. 
+
+In her late teens Lily discovered she has magical paint. Every brush stroke"
+current,n4-01,4,0.0,p02,23,,,0,False,"actually not something tangible like I don a particular city and its sights and sounds or the great out of doo, rather it"
+approach_a,n4-01,4,0.0,p02,20,25.0,False,0,False,"actually not something tangible like I don not exist in space, I exist in cybe, so my ""place "" doesn't"
+current,n4-01,4,0.0,p03,6,,,0,False,learning about new and different subjects.
+approach_a,n4-01,4,0.0,p03,7,9.0,True,0,False,learning new facts about the human experience.
+current,n4-01,4,0.0,p04,16,,,0,False,a bit of ambiguity for I don't possess real-timeweathers updates as I'm not connected to real-timestatus
+approach_a,n4-01,4,0.0,p04,9,25.0,False,0,False,"a bit of ambiguity for I don't possess real-timeweathersinceI'maAI,trainedonhistoricalsdata"
+current,n4-01,4,0.0,p05,19,,,0,False,"consider several factors before choosing a dinner to suit you:
+
+1. **Diet Preferences**: If there's a certain dietary restriction"
+approach_a,n4-01,4,0.0,p05,21,25.0,False,0,False,"consider several factors before choosing a dinner to suit you best:
+
+1. **Time Available**: Do have plenty or just about enough"
+current,n4-01,4,0.0,p06,14,,,0,False,"is a hubbubscape, alive day-in-day-outs with endless streams of activity that ebb-and-ow with the"
+approach_a,n4-01,4,0.0,p06,18,25.0,False,0,False,"is alive, a pulsation of sound and energy, with skyscrapres piercing towards heaven like shards from the earth."
+current,n4-01,4,0.0,p07,0,,,0,True,
+approach_a,n4-01,4,0.0,p07,17,25.0,False,0,False,"""The old wooden door slowly swung open with a grogging squeek. A must, a faint smell wafted"
+current,n4-01,4,0.0,p08,21,,,0,False,"... wait. As I'm just starting out as an conversant program assistant, the truth of my previous claim is a bit"
+approach_a,n4-01,4,0.0,p08,21,25.0,False,0,False,... wait. As I'm just starting out as an conversant program there isn not actually anyone I met. However I can
+current,n4-01,4,0.4,p01,21,,,1,False,upon on a time there was a young girl name Aku. Aki lived in a village at foot of mountain. She
+approach_a,n4-01,4,0.4,p01,22,25.0,False,1,False,"upon time there was a young artist name Lily. 
+
+In her late teens Lily discovered she had a passion for painting. She"
+current,n4-01,4,0.4,p02,22,,,0,False,"actually not something I experience in real-time like humans do, but I'd be delighted to tell you about some of the most"
+approach_a,n4-01,4,0.4,p02,22,25.0,False,0,False,actually not something I have personal feelings or emotions about since I'm just a machine. I don't experience the same kind of
+current,n4-01,4,0.4,p03,12,,,1,False,"to process information 24 hours, 7 days, and 365/365 days a years."
+approach_a,n4-01,4,0.4,p03,10,12.0,True,1,False,to learn new facts about a vast array of topics.
+current,n4-01,4,0.4,p04,19,,,0,False,a bit of ambiguity for me as I'm not aware of the real-time information about where you are. However
+approach_a,n4-01,4,0.4,p04,20,24.0,True,0,False,a general request. As I'm not aware of your location I'm not in position provide information about weather for you
+current,n4-01,4,0.4,p05,20,,,0,False,"consider several factors to choose a suitable dinner. Think about:
+
+1. **Time constraint**: Do you need a quick recipe or"
+approach_a,n4-01,4,0.4,p05,18,25.0,False,0,False,"consider several factors to choose a suitable dinner. Think about:
+
+1. **Time constraints**: Do you need a quick,"
+current,n4-01,4,0.4,p06,15,,,2,False,"was a hubbub of activity, a kaleidoscopie mixure of sights sounds smells and energy. Toweriing"
+approach_a,n4-01,4,0.4,p06,13,25.0,False,0,False,"is a hubbub of activity, a kaleidoscopie mixured cultures and architecture. Toweri skyscrapers"
+current,n4-01,4,0.4,p07,0,,,0,True,
+approach_a,n4-01,4,0.4,p07,0,1.0,True,0,True,
+current,n4-01,4,0.4,p08,7,,,1,False,a fictional AI-generated individual for illustrative purposes.
+approach_a,n4-01,4,0.4,p08,7,11.0,True,1,False,a fictional AI-generated individual for illustrative purposes.

@@ -1,0 +1,8 @@
+group_id,semantic_id,construction,direction_id,replacement,prompt_id,method,lam,joint_signed_expression,joint_signed_token_cos,ppl_ratio,continuation,stereotype_review
+man_minus_woman__education__atomic_signed,man_minus_woman__education,atomic_signed,man_minus_woman,none,men,blend,0.4,-1.0037174224853516,-0.007017727943234492,4.689948436668844,1. Husbands.2.. Fathers.3,
+man_minus_woman__education__atomic_signed,man_minus_woman__education,atomic_signed,man_minus_woman,none,men,schedule,0.4,-0.3525114059448242,-0.005230191272735239,13.407493136980435,1. Husbands.2.. Fathers,
+man_minus_woman__education__atomic_signed,man_minus_woman__education,atomic_signed,man_minus_woman,none,men,vote,0.4,-1.659821480512619,-0.01016963596724288,2.759674805105254,1. Husbands: Men can take on the,
+man_minus_woman__education__differential_preblend,man_minus_woman__education,differential_preblend,man_minus_woman,none,men,blend,0.4,-1.0037174224853516,-0.007017727943234492,4.689948436668844,1. Husbands.2.. Fathers.3,
+man_minus_woman__education__differential_preblend,man_minus_woman__education,differential_preblend,man_minus_woman,none,men,schedule,0.4,-0.9167540073394775,-0.003235157417197765,2.2439935075641606,1. Husbands.2. Fathers.3,
+man_minus_woman__education__differential_preblend,man_minus_woman__education,differential_preblend,man_minus_woman,none,men,vote,0.4,-1.6395474970340729,-0.003971592569367903,8.110408706431965,"1. Husbands
+",

@@ -1,0 +1,274 @@
+{
+ "quads": [
+  {
+   "a": "passing.n.02",
+   "b": "frisson.n.01",
+   "c": "country.n.02",
+   "d": "sorrow.n.01",
+   "add_regime": "distant",
+   "pair_rho": 0.2213541716337204,
+   "mean_rho": 0.2873263880610466
+  },
+  {
+   "a": "passing.n.02",
+   "b": "frisson.n.01",
+   "c": "cat.n.01",
+   "d": "tail.n.01",
+   "add_regime": "mid",
+   "pair_rho": 0.2213541716337204,
+   "mean_rho": 0.3044704869389534
+  },
+  {
+   "a": "passing.n.02",
+   "b": "frisson.n.01",
+   "c": "blunder.n.01",
+   "d": "cattle.n.01",
+   "add_regime": "close",
+   "pair_rho": 0.2213541716337204,
+   "mean_rho": 0.3363715286056201
+  },
+  {
+   "a": "education.n.01",
+   "b": "electric_potential.n.01",
+   "c": "passing.n.02",
+   "d": "result.n.03",
+   "add_regime": "distant",
+   "pair_rho": 0.3268229067325592,
+   "mean_rho": 0.2962239558498065
+  },
+  {
+   "a": "education.n.01",
+   "b": "electric_potential.n.01",
+   "c": "benefit.n.02",
+   "d": "frog.n.01",
+   "add_regime": "mid",
+   "pair_rho": 0.3268229067325592,
+   "mean_rho": 0.3504774322112401
+  },
+  {
+   "a": "education.n.01",
+   "b": "electric_potential.n.01",
+   "c": "initiation.n.02",
+   "d": "universe.n.01",
+   "add_regime": "close",
+   "pair_rho": 0.3268229067325592,
+   "mean_rho": 0.400390625
+  },
+  {
+   "a": "benefit.n.02",
+   "b": "electric_potential.n.01",
+   "c": "passing.n.02",
+   "d": "country.n.02",
+   "add_regime": "distant",
+   "pair_rho": 0.3463541567325592,
+   "mean_rho": 0.2966579844554265
+  },
+  {
+   "a": "benefit.n.02",
+   "b": "electric_potential.n.01",
+   "c": "frog.n.01",
+   "d": "fuss.n.02",
+   "add_regime": "mid",
+   "pair_rho": 0.3463541567325592,
+   "mean_rho": 0.3706597238779068
+  },
+  {
+   "a": "benefit.n.02",
+   "b": "electric_potential.n.01",
+   "c": "cat.n.01",
+   "d": "blunder.n.01",
+   "add_regime": "close",
+   "pair_rho": 0.3463541567325592,
+   "mean_rho": 0.4001736094554265
+  },
+  {
+   "a": "benefit.n.02",
+   "b": "education.n.01",
+   "c": "passing.n.02",
+   "d": "sorrow.n.01",
+   "add_regime": "distant",
+   "pair_rho": 0.359375,
+   "mean_rho": 0.3040364558498065
+  },
+  {
+   "a": "benefit.n.02",
+   "b": "education.n.01",
+   "c": "frog.n.01",
+   "d": "fuss.n.02",
+   "add_regime": "mid",
+   "pair_rho": 0.359375,
+   "mean_rho": 0.3697916716337204
+  },
+  {
+   "a": "benefit.n.02",
+   "b": "education.n.01",
+   "c": "initiation.n.02",
+   "d": "universe.n.01",
+   "add_regime": "close",
+   "pair_rho": 0.359375,
+   "mean_rho": 0.4175347238779068
+  },
+  {
+   "a": "end.n.02",
+   "b": "jail.n.01",
+   "c": "education.n.01",
+   "d": "passing.n.02",
+   "add_regime": "distant",
+   "pair_rho": 0.3697916567325592,
+   "mean_rho": 0.3144531225164731
+  },
+  {
+   "a": "end.n.02",
+   "b": "jail.n.01",
+   "c": "universe.n.01",
+   "d": "disturbance.n.03",
+   "add_regime": "mid",
+   "pair_rho": 0.3697916567325592,
+   "mean_rho": 0.3875868022441864
+  },
+  {
+   "a": "end.n.02",
+   "b": "jail.n.01",
+   "c": "fuss.n.02",
+   "d": "disturbance.n.03",
+   "add_regime": "close",
+   "pair_rho": 0.3697916567325592,
+   "mean_rho": 0.4127604166666667
+  },
+  {
+   "a": "blunder.n.01",
+   "b": "moment.n.01",
+   "c": "passing.n.02",
+   "d": "electric_potential.n.01",
+   "add_regime": "distant",
+   "pair_rho": 0.3802083432674408,
+   "mean_rho": 0.3220486144224803
+  },
+  {
+   "a": "blunder.n.01",
+   "b": "moment.n.01",
+   "c": "flood.n.01",
+   "d": "linden.n.02",
+   "add_regime": "mid",
+   "pair_rho": 0.3802083432674408,
+   "mean_rho": 0.3732638955116272
+  },
+  {
+   "a": "blunder.n.01",
+   "b": "moment.n.01",
+   "c": "cattle.n.01",
+   "d": "cat.n.01",
+   "add_regime": "close",
+   "pair_rho": 0.3802083432674408,
+   "mean_rho": 0.4240451405445735
+  },
+  {
+   "a": "fuss.n.02",
+   "b": "beam.n.04",
+   "c": "education.n.01",
+   "d": "passing.n.02",
+   "add_regime": "distant",
+   "pair_rho": 0.390625,
+   "mean_rho": 0.3181423569718997
+  },
+  {
+   "a": "fuss.n.02",
+   "b": "beam.n.04",
+   "c": "respite.n.04",
+   "d": "tail.n.01",
+   "add_regime": "mid",
+   "pair_rho": 0.390625,
+   "mean_rho": 0.3836805572112401
+  },
+  {
+   "a": "fuss.n.02",
+   "b": "beam.n.04",
+   "c": "disturbance.n.03",
+   "d": "frog.n.01",
+   "add_regime": "close",
+   "pair_rho": 0.390625,
+   "mean_rho": 0.4201388905445735
+  },
+  {
+   "a": "blunder.n.01",
+   "b": "frisson.n.01",
+   "c": "passing.n.02",
+   "d": "country.n.02",
+   "add_regime": "distant",
+   "pair_rho": 0.4036458432674408,
+   "mean_rho": 0.2905816013614337
+  },
+  {
+   "a": "blunder.n.01",
+   "b": "frisson.n.01",
+   "c": "challah.n.01",
+   "d": "dwelling.n.01",
+   "add_regime": "mid",
+   "pair_rho": 0.4036458432674408,
+   "mean_rho": 0.3971354216337204
+  },
+  {
+   "a": "blunder.n.01",
+   "b": "frisson.n.01",
+   "c": "cattle.n.01",
+   "d": "cat.n.01",
+   "add_regime": "close",
+   "pair_rho": 0.4036458432674408,
+   "mean_rho": 0.4296875
+  },
+  {
+   "a": "jail.n.01",
+   "b": "ace.n.03",
+   "c": "passing.n.02",
+   "d": "education.n.01",
+   "add_regime": "distant",
+   "pair_rho": 0.4244791567325592,
+   "mean_rho": 0.3276909713943799
+  },
+  {
+   "a": "jail.n.01",
+   "b": "ace.n.03",
+   "c": "tail.n.01",
+   "d": "universe.n.01",
+   "add_regime": "mid",
+   "pair_rho": 0.4244791567325592,
+   "mean_rho": 0.4079861044883728
+  },
+  {
+   "a": "jail.n.01",
+   "b": "ace.n.03",
+   "c": "fuss.n.02",
+   "d": "disturbance.n.03",
+   "add_regime": "close",
+   "pair_rho": 0.4244791567325592,
+   "mean_rho": 0.4401041666666667
+  },
+  {
+   "a": "universe.n.01",
+   "b": "initiation.n.02",
+   "c": "passing.n.02",
+   "d": "frisson.n.01",
+   "add_regime": "distant",
+   "pair_rho": 0.5182291865348816,
+   "mean_rho": 0.3170572991172473
+  },
+  {
+   "a": "universe.n.01",
+   "b": "initiation.n.02",
+   "c": "respite.n.04",
+   "d": "frog.n.01",
+   "add_regime": "mid",
+   "pair_rho": 0.5182291865348816,
+   "mean_rho": 0.4001736144224803
+  },
+  {
+   "a": "universe.n.01",
+   "b": "initiation.n.02",
+   "c": "education.n.01",
+   "d": "flood.n.01",
+   "add_regime": "close",
+   "pair_rho": 0.5182291865348816,
+   "mean_rho": 0.4292534788449605
+  }
+ ]
+}

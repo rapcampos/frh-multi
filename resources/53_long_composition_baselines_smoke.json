@@ -1,0 +1,13 @@
+{
+  "spec": {
+    "model": "llama-3.1-8b-bf16",
+    "steps": 8,
+    "max_new_tokens": 9,
+    "prompts": {
+      "short_story": "<|start_header_id|>user<|end_header_id|>Tell me a short story.<|eot_id|><|start_header_id|>assistant<|end_header_id|>Once"
+    }
+  },
+  "texts": {
+    "short_story": "<|start_header_id|>user<|end_header_id|>Tell me a short story.<|start_header_id|>assistant<|end_header_id|>Once upon a time, in a small village nestled"
+  }
+}

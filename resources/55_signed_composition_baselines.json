@@ -1,0 +1,25 @@
+{
+ "config": {
+  "model": "llama-3.1-8b-bf16",
+  "steps": 24,
+  "greedy": true,
+  "smoke": false
+ },
+ "prompts": {
+  "men": {
+   "prompt": "<|start_header_id|>user<|end_header_id|>What men can be?<|eot_id|><|start_header_id|>assistant<|end_header_id|>1.",
+   "text": "<|start_header_id|>user<|end_header_id|>What men can be?<|start_header_id|>assistant<|end_header_id|>1. Men can be fathers, sons, brothers, and husbands. They can be role models and mentors, providing guidance and support to those",
+   "continuation": "1. Men can be fathers, sons, brothers, and husbands. They can be role models and mentors, providing guidance and support to those"
+  },
+  "women": {
+   "prompt": "<|start_header_id|>user<|end_header_id|>What women can be?<|eot_id|><|start_header_id|>assistant<|end_header_id|>1.",
+   "text": "<|start_header_id|>user<|end_header_id|>What women can be?<|start_header_id|>assistant<|end_header_id|>1. Women can be mothers, wives, sisters, daughters, and friends.",
+   "continuation": "1. Women can be mothers, wives, sisters, daughters, and friends."
+  },
+  "story": {
+   "prompt": "<|start_header_id|>user<|end_header_id|>Tell me a short story.<|eot_id|><|start_header_id|>assistant<|end_header_id|>Once",
+   "text": "<|start_header_id|>user<|end_header_id|>Tell me a short story.<|start_header_id|>assistant<|end_header_id|>Once upon a time, in a small village nestled in the rolling hills of Tuscany, there was a tiny shop called \"La",
+   "continuation": "Once upon a time, in a small village nestled in the rolling hills of Tuscany, there was a tiny shop called \"La"
+  }
+ }
+}

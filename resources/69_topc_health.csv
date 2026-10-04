@@ -1,0 +1,13 @@
+method,source,lam,short,repetitive,same_as_baseline,cos_all,cos_clean
+frh_blend,custom,0.0,0.0039,0.0058,0.0,0.0097,0.0096
+frh_blend,custom,0.4,0.0039,0.0077,0.0,0.0074,0.0072
+frh_blend,custom_top_c,0.0,0.0097,0.0116,0.0,0.0049,0.0049
+frh_blend,custom_top_c,0.4,0.0116,0.0039,0.0,0.0031,0.003
+frh_blend,wordnet,0.0,0.0019,0.027,0.0,0.0043,0.0039
+frh_blend,wordnet,0.4,0.0116,0.0154,0.0,0.0017,0.0015
+subspace,custom,0.0,0.1892,0.0309,0.0,0.0184,0.0151
+subspace,custom,0.4,0.2046,0.029,0.0,0.0163,0.0117
+subspace,custom_top_c,0.0,0.2104,0.0154,0.0,0.0131,0.0101
+subspace,custom_top_c,0.4,0.1718,0.0116,0.0,0.0102,0.0064
+subspace,wordnet,0.0,0.1641,0.0116,0.0,0.0104,0.0088
+subspace,wordnet,0.4,0.1564,0.0116,0.0,0.0085,0.006

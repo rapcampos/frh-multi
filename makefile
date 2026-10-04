@@ -10,13 +10,16 @@ run_notebook:
 		exit 1; \
 	fi
 	@N_PATH=$$(dirname "$(N)"); \
-	N_NAME=$$(basename "$(N)"); \
+	N_BASE=$$(basename "$(N)" .ipynb); \
+	SUFFIX=""; [ "$(P)" = "bf16" ] && SUFFIX="_unquantized"; \
+	OUT_NAME="$(OUT)"; [ -z "$$OUT_NAME" ] && OUT_NAME="$$N_BASE$$SUFFIX.ipynb"; \
 	OUTPUT_DIR="$$N_PATH/outputs"; \
 	mkdir -p "$$OUTPUT_DIR"; \
-	echo "Running notebook: $(N)"; \
+	echo "Running notebook: $(N)$(if $(P), [QUANTIZATION=$(P)])"; \
 	uv run papermill \
 		$(N) \
-		"$$OUTPUT_DIR/$$N_NAME" \
+		"$$OUTPUT_DIR/$$OUT_NAME" \
+		$(if $(P),-p QUANTIZATION $(P)) \
 		--log-output \
 		--progress-bar
 

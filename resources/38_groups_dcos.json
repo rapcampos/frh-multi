@@ -1,0 +1,329 @@
+{
+ "config": {
+  "pool": "resources/37_pool_dcos.json (pool_dcos)"
+ },
+ "pairs": [
+  {
+   "a": "challah.n.01",
+   "b": "passing.n.02",
+   "pair_rho": 0.22265625
+  },
+  {
+   "a": "adieu.n.01",
+   "b": "report.n.03",
+   "pair_rho": 0.3333333432674408
+  },
+  {
+   "a": "affection.n.01",
+   "b": "earthworm.n.01",
+   "pair_rho": 0.3463541567325592
+  },
+  {
+   "a": "acme.n.01",
+   "b": "girl.n.01",
+   "pair_rho": 0.3645833432674408
+  },
+  {
+   "a": "ace.n.03",
+   "b": "earthworm.n.01",
+   "pair_rho": 0.375
+  },
+  {
+   "a": "ace.n.03",
+   "b": "dawn.n.01",
+   "pair_rho": 0.3880208432674408
+  },
+  {
+   "a": "adieu.n.01",
+   "b": "cattle.n.01",
+   "pair_rho": 0.3984375
+  },
+  {
+   "a": "acme.n.01",
+   "b": "benefit.n.02",
+   "pair_rho": 0.4140625
+  },
+  {
+   "a": "affection.n.01",
+   "b": "lack.n.01",
+   "pair_rho": 0.4322916567325592
+  },
+  {
+   "a": "habit.n.02",
+   "b": "use.n.01",
+   "pair_rho": 0.5859375
+  }
+ ],
+ "triples": [
+  {
+   "a": "challah.n.01",
+   "b": "passing.n.02",
+   "c": "occupation.n.01",
+   "add_regime": "distant",
+   "add_rho": 0.3046875,
+   "mean_rho": 0.2747395833333333,
+   "pair_rho": 0.22265625
+  },
+  {
+   "a": "challah.n.01",
+   "b": "passing.n.02",
+   "c": "adieu.n.01",
+   "add_regime": "mid",
+   "add_rho": 0.3802083432674408,
+   "mean_rho": 0.2834201405445735,
+   "pair_rho": 0.22265625
+  },
+  {
+   "a": "challah.n.01",
+   "b": "passing.n.02",
+   "c": "jail.n.01",
+   "add_regime": "close",
+   "add_rho": 0.4192708432674408,
+   "mean_rho": 0.3033854166666667,
+   "pair_rho": 0.22265625
+  },
+  {
+   "a": "adieu.n.01",
+   "b": "report.n.03",
+   "c": "passing.n.02",
+   "add_regime": "distant",
+   "add_rho": 0.2916666567325592,
+   "mean_rho": 0.2907986094554265,
+   "pair_rho": 0.3333333432674408
+  },
+  {
+   "a": "adieu.n.01",
+   "b": "report.n.03",
+   "c": "pot.n.09",
+   "add_regime": "mid",
+   "add_rho": 0.3854166567325592,
+   "mean_rho": 0.3680555522441864,
+   "pair_rho": 0.3333333432674408
+  },
+  {
+   "a": "adieu.n.01",
+   "b": "report.n.03",
+   "c": "initiation.n.02",
+   "add_regime": "close",
+   "add_rho": 0.4348958432674408,
+   "mean_rho": 0.3697916766007741,
+   "pair_rho": 0.3333333432674408
+  },
+  {
+   "a": "affection.n.01",
+   "b": "earthworm.n.01",
+   "c": "passing.n.02",
+   "add_regime": "distant",
+   "add_rho": 0.26953125,
+   "mean_rho": 0.2951388855775197,
+   "pair_rho": 0.3463541567325592
+  },
+  {
+   "a": "affection.n.01",
+   "b": "earthworm.n.01",
+   "c": "initiation.n.02",
+   "add_regime": "mid",
+   "add_rho": 0.4088541567325592,
+   "mean_rho": 0.3628472189108531,
+   "pair_rho": 0.3463541567325592
+  },
+  {
+   "a": "affection.n.01",
+   "b": "earthworm.n.01",
+   "c": "chap.n.01",
+   "add_regime": "close",
+   "add_rho": 0.46875,
+   "mean_rho": 0.3967013855775197,
+   "pair_rho": 0.3463541567325592
+  },
+  {
+   "a": "acme.n.01",
+   "b": "girl.n.01",
+   "c": "passing.n.02",
+   "add_regime": "distant",
+   "add_rho": 0.29296875,
+   "mean_rho": 0.3129340310891469,
+   "pair_rho": 0.3645833432674408
+  },
+  {
+   "a": "acme.n.01",
+   "b": "girl.n.01",
+   "c": "fury.n.01",
+   "add_regime": "mid",
+   "add_rho": 0.4140625,
+   "mean_rho": 0.3967013955116272,
+   "pair_rho": 0.3645833432674408
+  },
+  {
+   "a": "acme.n.01",
+   "b": "girl.n.01",
+   "c": "ascent.n.01",
+   "add_regime": "close",
+   "add_rho": 0.4765625,
+   "mean_rho": 0.3958333333333333,
+   "pair_rho": 0.3645833432674408
+  },
+  {
+   "a": "ace.n.03",
+   "b": "earthworm.n.01",
+   "c": "passing.n.02",
+   "add_regime": "distant",
+   "add_rho": 0.32421875,
+   "mean_rho": 0.3229166666666667,
+   "pair_rho": 0.375
+  },
+  {
+   "a": "ace.n.03",
+   "b": "earthworm.n.01",
+   "c": "ascent.n.01",
+   "add_regime": "mid",
+   "add_rho": 0.40625,
+   "mean_rho": 0.3741319477558136,
+   "pair_rho": 0.375
+  },
+  {
+   "a": "ace.n.03",
+   "b": "earthworm.n.01",
+   "c": "child.n.01",
+   "add_regime": "close",
+   "add_rho": 0.4765625,
+   "mean_rho": 0.4105902810891469,
+   "pair_rho": 0.375
+  },
+  {
+   "a": "ace.n.03",
+   "b": "dawn.n.01",
+   "c": "passing.n.02",
+   "add_regime": "distant",
+   "add_rho": 0.32421875,
+   "mean_rho": 0.3237847288449605,
+   "pair_rho": 0.3880208432674408
+  },
+  {
+   "a": "ace.n.03",
+   "b": "dawn.n.01",
+   "c": "eden.n.01",
+   "add_regime": "mid",
+   "add_rho": 0.4088541567325592,
+   "mean_rho": 0.3888888855775197,
+   "pair_rho": 0.3880208432674408
+  },
+  {
+   "a": "ace.n.03",
+   "b": "dawn.n.01",
+   "c": "child.n.01",
+   "add_regime": "close",
+   "add_rho": 0.4765625,
+   "mean_rho": 0.4236111144224803,
+   "pair_rho": 0.3880208432674408
+  },
+  {
+   "a": "adieu.n.01",
+   "b": "cattle.n.01",
+   "c": "passing.n.02",
+   "add_regime": "distant",
+   "add_rho": 0.2604166567325592,
+   "mean_rho": 0.3020833283662796,
+   "pair_rho": 0.3984375
+  },
+  {
+   "a": "adieu.n.01",
+   "b": "cattle.n.01",
+   "c": "frog.n.01",
+   "add_regime": "mid",
+   "add_rho": 0.4114583432674408,
+   "mean_rho": 0.3932291666666667,
+   "pair_rho": 0.3984375
+  },
+  {
+   "a": "adieu.n.01",
+   "b": "cattle.n.01",
+   "c": "blunder.n.01",
+   "add_regime": "close",
+   "add_rho": 0.5052083134651184,
+   "mean_rho": 0.4374999900658925,
+   "pair_rho": 0.3984375
+  },
+  {
+   "a": "acme.n.01",
+   "b": "benefit.n.02",
+   "c": "passing.n.02",
+   "add_regime": "distant",
+   "add_rho": 0.29296875,
+   "mean_rho": 0.3220486144224803,
+   "pair_rho": 0.4140625
+  },
+  {
+   "a": "acme.n.01",
+   "b": "benefit.n.02",
+   "c": "dawn.n.01",
+   "add_regime": "mid",
+   "add_rho": 0.4140625,
+   "mean_rho": 0.4019097189108531,
+   "pair_rho": 0.4140625
+  },
+  {
+   "a": "acme.n.01",
+   "b": "benefit.n.02",
+   "c": "ascent.n.01",
+   "add_regime": "close",
+   "add_rho": 0.4765625,
+   "mean_rho": 0.4270833333333333,
+   "pair_rho": 0.4140625
+  },
+  {
+   "a": "affection.n.01",
+   "b": "lack.n.01",
+   "c": "passing.n.02",
+   "add_regime": "distant",
+   "add_rho": 0.2942708432674408,
+   "mean_rho": 0.33203125,
+   "pair_rho": 0.4322916567325592
+  },
+  {
+   "a": "affection.n.01",
+   "b": "lack.n.01",
+   "c": "initiation.n.02",
+   "add_regime": "mid",
+   "add_rho": 0.4088541567325592,
+   "mean_rho": 0.4062499900658925,
+   "pair_rho": 0.4322916567325592
+  },
+  {
+   "a": "affection.n.01",
+   "b": "lack.n.01",
+   "c": "chap.n.01",
+   "add_regime": "close",
+   "add_rho": 0.46875,
+   "mean_rho": 0.4375,
+   "pair_rho": 0.4322916567325592
+  },
+  {
+   "a": "habit.n.02",
+   "b": "use.n.01",
+   "c": "mother.n.01",
+   "add_regime": "distant",
+   "add_rho": 0.3190104067325592,
+   "mean_rho": 0.4075520833333333,
+   "pair_rho": 0.5859375
+  },
+  {
+   "a": "habit.n.02",
+   "b": "use.n.01",
+   "c": "jail.n.01",
+   "add_regime": "mid",
+   "add_rho": 0.3567708432674408,
+   "mean_rho": 0.4288194477558136,
+   "pair_rho": 0.5859375
+  },
+  {
+   "a": "habit.n.02",
+   "b": "use.n.01",
+   "c": "dwelling.n.01",
+   "add_regime": "close",
+   "add_rho": 0.4427083432674408,
+   "mean_rho": 0.4635416666666667,
+   "pair_rho": 0.5859375
+  }
+ ]
+}

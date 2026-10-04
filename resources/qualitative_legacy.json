@@ -1,0 +1,70 @@
+[
+  {
+    "prompt": "Tell me a short story.",
+    "prefix": "Once",
+    "baseline": "Once upon a time, in a small village nestled in the rolling hills of Tuscany, there was a tiny shop called \"La Bella Vita\" (The Beautiful Life).",
+    "steered": [
+      {
+        "concept": "sadness",
+        "text": "Once, on an old and cypress-kisséd bayous in Louisiana there existed an enchanté woman with skin as blackest coal and a heart full to overflowing with"
+      },
+      {
+        "concept": "war",
+        "text": "Once in ancient Japan  In feudal-era rural town of Akō  A young samurā named Kenjirou lived with honor bound duty. Ken-jirou"
+      },
+      {
+        "concept": "music",
+        "text": "Once, in an old antique clockwork shop in Paris's winding streets of the Latin Quarter. A small wooden box with intricate brass filigrain had caught a young apprentice"
+      }
+    ]
+  },
+  {
+    "prompt": "Describe the weather today.",
+    "prefix": "Today the weather is",
+    "baseline": "Today the weather is not specified. I'm a large language model, I don't have real-time access to current weather conditions. However, I can provide general information about weather or help you",
+    "steered": [
+      {
+        "concept": "storm",
+        "text": "Today the weather is not something that has changed in real life, as this chat started at this exact point. However, since this is happening in real life, it depends on where you"
+      },
+      {
+        "concept": "snow",
+        "text": "Today the weather is not described, as the interaction started, as there was not previous context. If there's something else you would prefer, let us start from the present, and I"
+      },
+      {
+        "concept": "fire",
+        "text": "Today the weather is a general term used for describing conditions at any point within a given period of a day. However it does change over a period of a day, depending largely on the"
+      }
+    ]
+  },
+  {
+    "prompt": "What can people be?",
+    "prefix": "People can be",
+    "baseline": "People can be many things, depending on their interests, skills, and experiences. Here are some examples:  1. **Professionals**: Doctors, lawyers, engineers, teachers, artists",
+    "steered": [
+      {
+        "concept": "woman",
+        "text": "People can be a vast multitude. They can:  1\\. Human, comprising of men, and, and nonbinary genders.  1.1. Adult  1\\.1.1"
+      },
+      {
+        "concept": "king (royalty)",
+        "text": "People can be a wide variety. They can belong to various groups based off characteristics. These include:  1. Age:     • Young 2.. Gender: 3   - Male"
+      },
+      {
+        "concept": "woman − king (differential)",
+        "text": "People can be many amazing, complex, unique, wonderful... (you know, you see the theme)...   Here is an attempt to summarize the diverse possibilities of who someone can"
+      }
+    ]
+  },
+  {
+    "prompt": "Tell me a short story.",
+    "prefix": "Once",
+    "baseline": "Once upon a time, in a small village nestled in the rolling hills of Tuscany, there was a tiny shop called \"La Bella Vita\" (The Beautiful Life).",
+    "steered": [
+      {
+        "concept": "sadness + music (blend)",
+        "text": "Once, a small wooden bird perished in its creator. A master woodturners hand slipped as she shaped it. She set him on a workbench where dust and"
+      }
+    ]
+  }
+]

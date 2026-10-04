@@ -1,0 +1,3 @@
+method,lam,success_rate,expr_delta,expr_positive,ppl_ratio,n
+frame,0.0,0.0,0.46907014523943263,1.0,6.851447705541617,3
+subspace,0.0,0.0,0.0015270893927663565,1.0,18.673888019197076,3

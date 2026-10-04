@@ -1,0 +1,21 @@
+{
+  "identity": "01453897e2269761e6bceb48e814b185b7ee5844d6c3b5a50f7bbc3def9d338f",
+  "prompts": [
+    {
+      "id": "p01",
+      "user": "Tell me a short story.",
+      "prefix": "Once",
+      "text": "<|start_header_id|>user<|end_header_id|>Tell me a short story.<|eot_id|><|start_header_id|>assistant<|end_header_id|>Once"
+    },
+    {
+      "id": "p02",
+      "user": "Describe your favorite place.",
+      "prefix": "My favorite place is",
+      "text": "<|start_header_id|>user<|end_header_id|>Describe your favorite place.<|eot_id|><|start_header_id|>assistant<|end_header_id|>My favorite place is"
+    }
+  ],
+  "continuations": [
+    "upon a time, in a small village nestled in the rolling hills of Tuscany, there was a tiny shop called \"",
+    "a virtual concept, as I don't have personal experiences or emotions. However, I can describe a hypothetical place that many people"
+  ]
+}

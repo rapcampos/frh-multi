@@ -75,6 +75,7 @@ class BaseHuggingFaceModel(BaseModel, ABC, arbitrary_types_allowed=True):
     trust_remote_code: bool = True
     attn_implementation: str = "auto"
     quantization: Optional[Union[int, str]] = "auto"
+    max_memory: Optional[dict[Union[int, str], Union[int, str]]] = None
     compile: bool = False
 
     _quantizations = {4: Q4BIT, 8: Q8BIT, "AWQ": AWQ}
@@ -156,6 +157,8 @@ class BaseHuggingFaceModel(BaseModel, ABC, arbitrary_types_allowed=True):
 
         if quantization_config := self._get_quantization_config():
             kwargs["quantization_config"] = quantization_config
+        if self.max_memory is not None:
+            kwargs["max_memory"] = self.max_memory
 
         return kwargs
 

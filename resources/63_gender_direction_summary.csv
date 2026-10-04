@@ -1,0 +1,10 @@
+method,guide,0.0,0.4
+frh,man,-0.0,-0.001
+frh,man-woman,0.0,0.001
+frh,woman,-0.001,-0.002
+hierarchical,man,-0.0,-0.0
+hierarchical,man-woman,-0.001,-0.0
+hierarchical,woman,-0.002,-0.002
+pooled,man,-0.001,-0.001
+pooled,man-woman,-0.001,-0.001
+pooled,woman,-0.002,-0.002

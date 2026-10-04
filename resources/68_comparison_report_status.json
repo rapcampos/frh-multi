@@ -1,0 +1,8 @@
+{
+  "status": "complete",
+  "expected_runs": 4736,
+  "recorded_runs": 4736,
+  "missing_runs": 0,
+  "cosine_invalid_view_rows": 2368,
+  "fluency_invalid_view_rows": 2368
+}

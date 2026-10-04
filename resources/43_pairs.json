@@ -1,0 +1,154 @@
+{
+ "pairs": [
+  {
+   "a": "passing.n.02",
+   "b": "frisson.n.01",
+   "rho": 0.2213541716337204
+  },
+  {
+   "a": "frisson.n.01",
+   "b": "moment.n.01",
+   "rho": 0.2825520932674408
+  },
+  {
+   "a": "cattle.n.01",
+   "b": "country.n.02",
+   "rho": 0.3098958432674408
+  },
+  {
+   "a": "education.n.01",
+   "b": "sorrow.n.01",
+   "rho": 0.32421875
+  },
+  {
+   "a": "jail.n.01",
+   "b": "result.n.03",
+   "rho": 0.33203125
+  },
+  {
+   "a": "benefit.n.02",
+   "b": "sorrow.n.01",
+   "rho": 0.3385416567325592
+  },
+  {
+   "a": "fuss.n.02",
+   "b": "education.n.01",
+   "rho": 0.34375
+  },
+  {
+   "a": "benefit.n.02",
+   "b": "electric_potential.n.01",
+   "rho": 0.3463541567325592
+  },
+  {
+   "a": "blunder.n.01",
+   "b": "beam.n.04",
+   "rho": 0.3515625
+  },
+  {
+   "a": "blunder.n.01",
+   "b": "electric_potential.n.01",
+   "rho": 0.3541666567325592
+  },
+  {
+   "a": "benefit.n.02",
+   "b": "education.n.01",
+   "rho": 0.359375
+  },
+  {
+   "a": "cattle.n.01",
+   "b": "electric_potential.n.01",
+   "rho": 0.3619791567325592
+  },
+  {
+   "a": "cattle.n.01",
+   "b": "town.n.02",
+   "rho": 0.3671875
+  },
+  {
+   "a": "end.n.02",
+   "b": "jail.n.01",
+   "rho": 0.3697916567325592
+  },
+  {
+   "a": "fuss.n.02",
+   "b": "country.n.02",
+   "rho": 0.3723958432674408
+  },
+  {
+   "a": "end.n.02",
+   "b": "backbone.n.02",
+   "rho": 0.375
+  },
+  {
+   "a": "blunder.n.01",
+   "b": "moment.n.01",
+   "rho": 0.3802083432674408
+  },
+  {
+   "a": "fuss.n.02",
+   "b": "flood.n.01",
+   "rho": 0.3828125
+  },
+  {
+   "a": "end.n.02",
+   "b": "country.n.02",
+   "rho": 0.3854166567325592
+  },
+  {
+   "a": "jail.n.01",
+   "b": "dawn.n.01",
+   "rho": 0.390625
+  },
+  {
+   "a": "backbone.n.02",
+   "b": "tail.n.01",
+   "rho": 0.3932291567325592
+  },
+  {
+   "a": "town.n.02",
+   "b": "dwelling.n.01",
+   "rho": 0.3984375
+  },
+  {
+   "a": "respite.n.04",
+   "b": "universe.n.01",
+   "rho": 0.4010416567325592
+  },
+  {
+   "a": "respite.n.04",
+   "b": "disturbance.n.03",
+   "rho": 0.40625
+  },
+  {
+   "a": "acme.n.01",
+   "b": "dawn.n.01",
+   "rho": 0.4140625
+  },
+  {
+   "a": "respite.n.04",
+   "b": "acme.n.01",
+   "rho": 0.4166666567325592
+  },
+  {
+   "a": "backbone.n.02",
+   "b": "acme.n.01",
+   "rho": 0.4270833432674408
+  },
+  {
+   "a": "ace.n.03",
+   "b": "cat.n.01",
+   "rho": 0.4375
+  },
+  {
+   "a": "universe.n.01",
+   "b": "drop.n.03",
+   "rho": 0.4453125
+  },
+  {
+   "a": "universe.n.01",
+   "b": "initiation.n.02",
+   "rho": 0.5182291865348816
+  }
+ ]
+}

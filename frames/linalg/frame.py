@@ -159,7 +159,8 @@ class Frame(BaseModel, arbitrary_types_allowed=True):
     def relative_rank(self) -> torch.Tensor:
         """Compute the matrices' proximity to being full-rank
         as matrix rank / num vectors"""
-        return torch.linalg.matrix_rank(self.tensor) / self.rank
+        # matrix_rank only supports float32/float64 (fp16/bf16 frames raise)
+        return torch.linalg.matrix_rank(self.tensor.float()) / self.rank
 
     @property
     def device(self) -> torch.device:

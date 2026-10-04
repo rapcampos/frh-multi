@@ -1,0 +1,41 @@
+synset,delta,delta_sd,d_cos,ppl_ratio,lexname,n_lemmas,n_eng,depth,relative_rank,incumbent,definition
+blunder.n.01,1.707,2.209,0.014,5.093,noun.act,102,39,6,1.0,False,an embarrassing mistake
+benefit.n.02,1.682,1.898,0.013,6.097,noun.attribute,65,8,5,1.0,False,something that aids or promotes well-being
+cattle.n.01,1.666,1.99,0.014,6.464,noun.animal,65,17,14,1.0,False,"domesticated bovine animals as a group regardless of sex or age; ; ;  - The Bible, Genesis 41:27"
+fuss.n.02,1.597,2.039,0.013,6.015,noun.event,60,15,6,1.0,False,an angry disturbance
+education.n.01,1.558,1.663,0.007,7.501,noun.act,76,21,5,1.0,False,the activities of educating or instructing; activities that impart knowledge or skill
+end.n.02,1.504,1.739,0.011,7.014,noun.time,64,8,4,1.0,False,the point in time at which something ends
+jail.n.01,1.47,1.775,0.012,6.053,noun.artifact,84,27,10,1.0,False,a correctional institution used to detain persons who are in the lawful custody of the government (either accused persons awaiting trial or convicted persons serving a sentence)
+respite.n.04,1.468,2.097,0.015,6.208,noun.time,80,16,5,1.0,False,a pause for relaxation
+backbone.n.02,1.423,1.853,0.009,5.164,noun.attribute,76,22,8,1.0,False,fortitude and determination
+electric_potential.n.01,1.417,1.16,0.011,4.111,noun.phenomenon,53,20,7,1.0,False,the difference in electrical charge between two points in a circuit expressed in volts
+passing.n.02,1.415,1.618,0.012,6.049,noun.event,71,28,6,1.0,False,euphemistic expressions for death
+town.n.02,1.389,1.784,0.009,5.642,noun.location,69,4,8,1.0,False,an urban area with a fixed boundary that is smaller than a city
+acme.n.01,1.388,2.081,0.014,5.806,noun.state,106,36,5,1.0,False,the highest level or degree attainable; the highest stage of development
+beam.n.04,1.379,1.388,0.011,5.236,noun.phenomenon,62,25,11,1.0,False,a column of light (as from a beacon)
+result.n.03,1.378,1.209,0.005,5.614,noun.event,64,20,5,1.0,False,something that results
+dwelling.n.01,1.373,1.619,0.012,5.48,noun.artifact,112,22,7,1.0,False,housing that someone is living in
+frisson.n.01,1.363,1.379,0.01,7.381,noun.feeling,54,28,7,1.0,False,an almost pleasurable sensation of fright
+universe.n.01,1.322,1.767,0.014,5.707,noun.object,99,22,5,1.0,False,everything that exists anywhere
+country.n.02,1.321,1.763,0.01,5.441,noun.location,66,12,7,1.0,False,the territory occupied by a nation
+fury.n.01,1.314,1.822,0.012,6.452,noun.feeling,58,12,7,1.0,False,a feeling of intense anger
+tail.n.01,1.305,2.083,0.012,8.07,noun.animal,61,4,6,1.0,False,the posterior part of the body of a vertebrate especially when elongated and extending beyond the trunk or main part of the body
+peace.n.03,1.301,1.711,0.013,6.649,noun.feeling,70,23,7,1.0,False,the absence of mental stress or anxiety
+dawn.n.01,1.275,1.476,0.016,6.646,noun.time,70,42,9,1.0,False,the first light of day
+ace.n.03,1.274,2.174,0.015,5.693,noun.person,106,58,6,1.0,False,someone who is dazzlingly skilled in any field
+disturbance.n.03,1.274,1.799,0.009,6.715,noun.state,72,23,5,1.0,False,a disorderly outburst or tumult
+drop.n.03,1.273,1.595,0.014,8.533,noun.attribute,77,16,7,1.0,False,a sudden sharp decrease in some quantity
+eden.n.01,1.271,1.74,0.016,5.739,noun.location,64,17,5,1.0,False,any place of complete bliss and delight and peace
+challah.n.01,1.26,2.45,0.013,7.01,noun.food,49,8,7,1.0,False,(Judaism) a loaf of white bread containing eggs and leavened with yeast; often formed into braided loaves and glazed with eggs before baking
+frog.n.01,1.258,1.7,0.016,7.09,noun.animal,70,16,8,1.0,False,any of various tailless stout-bodied amphibians with long hind limbs for leaping; semiaquatic and terrestrial species
+ascent.n.01,1.252,2.333,0.012,4.328,noun.object,72,22,5,1.0,False,an upward slope or grade (as in a road)
+beginning.n.04,1.251,1.664,0.008,6.449,noun.location,70,20,5,1.0,False,"the place where something begins, where it springs into being"
+flood.n.01,1.251,1.708,0.009,6.21,noun.phenomenon,51,13,6,1.0,False,the rising of a body of water and its overflowing onto normally dry land
+abhorrence.n.01,1.238,1.806,0.01,5.0,noun.feeling,81,22,7,1.0,False,hate coupled with disgust
+cat.n.01,1.231,2.08,,5.266,noun.animal,44,8,11,1.0,True,feline mammal usually having thick soft fur and no ability to roar: domestic cats; wildcats
+initiation.n.02,1.223,1.817,0.012,4.545,noun.act,78,34,8,1.0,False,the act of starting something for the first time; introducing something new
+sorrow.n.01,1.215,2.098,,6.282,noun.feeling,28,4,6,1.0,True,an emotion of great sadness associated with loss or bereavement
+linden.n.02,1.203,1.66,0.011,5.578,noun.plant,43,17,8,1.0,False,any of various deciduous trees of the genus Tilia with heart-shaped leaves and drooping cymose clusters of yellowish often fragrant flowers; several yield valuable timber
+moment.n.01,1.192,1.457,0.009,7.624,noun.time,65,16,4,1.0,False,a particular point in time
+mixture.n.01,1.175,1.662,0.014,7.047,noun.substance,65,4,4,1.0,False,(chemistry) a substance consisting of two or more substances mixed together (not in fixed proportions and not with chemical bonding)
+quarrel.n.01,1.167,1.663,0.012,5.041,noun.communication,83,23,7,1.0,False,an angry dispute

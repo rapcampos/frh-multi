@@ -1,0 +1,41 @@
+synset,delta,delta_sd,d_cos,ppl_ratio,lexname,n_lemmas,n_eng,depth,relative_rank,incumbent,definition
+cattle.n.01,2.13,1.973,0.023,5.342,noun.animal,65,17,14,1.0,False,"domesticated bovine animals as a group regardless of sex or age; ; ;  - The Bible, Genesis 41:27"
+while.n.01,1.929,1.755,0.018,5.366,noun.time,78,16,6,1.0,False,a period of indeterminate length (usually short) marked by some action or condition
+dawn.n.01,1.83,1.589,0.019,5.665,noun.time,70,42,9,1.0,False,the first light of day
+education.n.01,1.748,1.73,0.012,6.225,noun.act,76,21,5,1.0,False,the activities of educating or instructing; activities that impart knowledge or skill
+mud.n.01,1.67,2.554,0.015,5.935,noun.substance,60,8,7,1.0,False,water soaked soil; soft wet earth
+fuss.n.02,1.614,2.423,0.017,5.31,noun.event,60,15,6,1.0,False,an angry disturbance
+subject.n.01,1.599,2.2,0.009,5.02,noun.communication,80,12,4,1.0,False,the subject matter of a conversation or discussion
+ascent.n.01,1.567,2.07,0.016,5.98,noun.object,72,22,5,1.0,False,an upward slope or grade (as in a road)
+mixture.n.01,1.562,1.68,0.012,5.779,noun.substance,65,4,4,1.0,False,(chemistry) a substance consisting of two or more substances mixed together (not in fixed proportions and not with chemical bonding)
+eden.n.01,1.549,1.698,0.013,5.576,noun.location,64,17,5,1.0,False,any place of complete bliss and delight and peace
+blunder.n.01,1.513,2.625,0.016,7.233,noun.act,102,39,6,1.0,False,an embarrassing mistake
+fib.n.01,1.496,1.863,0.015,4.838,noun.communication,100,14,7,1.0,False,a trivial lie
+mathematics.n.01,1.392,1.909,,6.589,noun.cognition,42,12,8,1.0,True,a science (or group of related sciences) dealing with the logic of quantity and shape and arrangement
+resentment.n.01,1.382,2.195,0.012,5.929,noun.feeling,52,15,8,1.0,False,a feeling of deep and bitter anger and ill-will
+atom.n.02,1.38,1.554,0.01,5.242,noun.substance,53,23,5,1.0,False,(nontechnical usage) a tiny piece of anything
+earthworm.n.01,1.357,1.306,0.017,5.804,noun.animal,63,36,9,1.0,False,terrestrial worm that burrows into and helps aerate soil; often surfaces when the ground is cool or wet; used as bait by anglers
+chap.n.01,1.35,2.255,0.013,5.246,noun.person,96,36,6,1.0,False,a boy or man
+universe.n.01,1.325,2.012,0.016,5.479,noun.object,99,22,5,1.0,False,everything that exists anywhere
+blink_of_an_eye.n.01,1.318,1.721,0.014,5.048,noun.time,65,31,7,1.0,False,a very short time (as the time it takes the eye to blink or the heart to beat)
+country.n.02,1.313,2.159,0.01,4.934,noun.location,66,12,7,1.0,False,the territory occupied by a nation
+corn.n.01,1.295,1.884,0.013,7.273,noun.plant,48,12,10,1.0,False,tall annual cereal grass bearing kernels on large ears: widely cultivated in America in many varieties; the principal cereal in Mexico and Central and South America since pre-Columbian times
+peace.n.03,1.272,1.608,0.012,7.32,noun.feeling,70,23,7,1.0,False,the absence of mental stress or anxiety
+beginning.n.04,1.268,2.038,0.012,7.299,noun.location,70,20,5,1.0,False,"the place where something begins, where it springs into being"
+jail.n.01,1.262,1.941,0.014,6.995,noun.artifact,84,27,10,1.0,False,a correctional institution used to detain persons who are in the lawful custody of the government (either accused persons awaiting trial or convicted persons serving a sentence)
+lack.n.01,1.232,1.733,0.014,4.888,noun.state,88,12,6,1.0,False,the state of needing something that is absent or unavailable
+deity.n.01,1.227,1.504,0.007,6.897,noun.person,99,16,7,1.0,False,any supernatural being worshipped as controlling some part of the world or some aspect of life or who is the personification of a force
+fabric.n.01,1.224,2.404,0.013,6.483,noun.artifact,101,16,5,1.0,False,artifact made by weaving or felting or knitting or crocheting natural or synthetic fibers
+frisson.n.01,1.215,1.539,0.011,4.789,noun.feeling,54,28,7,1.0,False,an almost pleasurable sensation of fright
+linden.n.02,1.202,2.051,0.018,5.284,noun.plant,43,17,8,1.0,False,any of various deciduous trees of the genus Tilia with heart-shaped leaves and drooping cymose clusters of yellowish often fragrant flowers; several yield valuable timber
+respite.n.04,1.18,2.085,0.015,5.163,noun.time,80,16,5,1.0,False,a pause for relaxation
+backbone.n.02,1.174,2.093,0.012,5.032,noun.attribute,76,22,8,1.0,False,fortitude and determination
+benefit.n.02,1.168,1.857,0.013,6.252,noun.attribute,65,8,5,1.0,False,something that aids or promotes well-being
+fear.n.01,1.164,1.879,0.01,7.698,noun.feeling,76,11,6,1.0,False,an emotion experienced in anticipation of some specific pain or danger (usually accompanied by a desire to flee or fight)
+disturbance.n.03,1.16,2.237,0.009,6.29,noun.state,72,23,5,1.0,False,a disorderly outburst or tumult
+idiot.n.01,1.156,1.994,0.015,6.865,noun.person,88,23,6,1.0,False,a person of subnormal intelligence
+edge.n.01,1.136,2.563,0.016,7.376,noun.location,66,8,7,1.0,False,the boundary of a surface
+challah.n.01,1.131,2.238,0.008,7.458,noun.food,49,8,7,1.0,False,(Judaism) a loaf of white bread containing eggs and leavened with yeast; often formed into braided loaves and glazed with eggs before baking
+report.n.03,1.127,1.294,0.014,5.245,noun.communication,86,20,6,1.0,False,a short account of the news
+abhorrence.n.01,1.119,1.542,0.014,6.655,noun.feeling,81,22,7,1.0,False,hate coupled with disgust
+hill.n.01,1.112,1.407,0.011,5.578,noun.object,70,4,5,1.0,False,a local and well-defined elevation of the land

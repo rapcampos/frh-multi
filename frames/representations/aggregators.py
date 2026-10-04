@@ -92,9 +92,58 @@ def constrained(
     return torch.where(satisfied, primary, torch.full_like(primary, penalty))
 
 
+def soft_constrained(
+    scores: torch.Tensor,
+    weights: torch.Tensor,  # noqa: ARG001 - kept for the scorer interface
+    thresholds: float | list[float] | torch.Tensor = 0.0,
+    beta: float = 8.0,
+    penalty_weight: float = 1.0,
+    primary_index: int | None = None,
+) -> torch.Tensor:
+    """F2.c' — soft threshold vote: smooth softplus barrier instead of a cliff.
+
+    Replaces `constrained`'s hard finite penalty (Prism-Delta's ablation:
+    continuous weighting beats hard thresholding and is robust to the
+    threshold choice). Finite and smooth everywhere, so cumulative summing
+    over positions stays well-behaved.
+
+    Symmetric form (default, `primary_index=None`) — no designated primary,
+    suited to pair/triple steering:
+
+        sum_i z_i - penalty_weight * sum_i softplus(beta * (tau_i - z_i)) / beta
+
+    Lexicographic form (`primary_index=j`): maximize z_j subject to soft
+    barriers on the remaining concepts (the direct smooth analogue of
+    `constrained`). beta -> inf recovers the hard hinge max(0, tau - z).
+    """
+    thresholds = torch.as_tensor(thresholds, device=scores.device, dtype=scores.dtype)
+    deficits = thresholds - scores
+    barrier = torch.nn.functional.softplus(beta * deficits) / beta
+    if primary_index is None:
+        return scores.sum(-1) - penalty_weight * barrier.sum(-1)
+    others = [i for i in range(scores.size(-1)) if i != primary_index]
+    return scores[..., primary_index] - penalty_weight * barrier[..., others].sum(-1)
+
+
 def softmin_scorer(tau: float = 1.0) -> Callable:
     """Scorer factory for `softmin` with a fixed temperature."""
     return partial(softmin, tau=tau)
+
+
+def soft_constrained_scorer(
+    thresholds: float | list[float] | torch.Tensor = 0.0,
+    beta: float = 8.0,
+    penalty_weight: float = 1.0,
+    primary_index: int | None = None,
+) -> Callable:
+    """Scorer factory for `soft_constrained` with fixed parameters."""
+    return partial(
+        soft_constrained,
+        thresholds=thresholds,
+        beta=beta,
+        penalty_weight=penalty_weight,
+        primary_index=primary_index,
+    )
 
 
 def constrained_scorer(

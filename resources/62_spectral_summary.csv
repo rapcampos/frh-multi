@@ -1,0 +1,5 @@
+,L80 med,L90 med,L95 med,L90 mean,energy@8 mean,share L90<=8
+multilingual / pooled,26.0,37.0,44.5,38.12,0.519,0.0
+multilingual / hier,14.0,20.0,24.0,21.28,0.668,0.0
+english / pooled,7.0,9.5,11.0,10.07,0.85,0.425
+english / hier,5.0,7.0,8.0,7.02,0.938,0.775
